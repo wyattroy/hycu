@@ -321,6 +321,15 @@ export function initScene(projects, { onSelect } = {}) {
   let depthLabelOpacity = 0;
   let hasInteracted = false;
 
+  // Rotated labels flip 180° so they read the right way up. Near ±90° a plain threshold flips
+  // every frame and the label flickers; keep the last decision until the angle clearly crosses.
+  const flipState = {};
+  function stableFlip(key, deg) {
+    const a = Math.abs(deg);
+    if (a > 93) flipState[key] = 180; else if (a < 87) flipState[key] = 0; else if (flipState[key] == null) flipState[key] = a > 90 ? 180 : 0;
+    return flipState[key];
+  }
+
   function resetView() { zoom.target = CAM_START_FRAC; theta.target = START_THETA; phi.target = START_PHI; }
 
   // ─── Pointer: drag to orbit ─────────────────────────────────────────────────
@@ -516,7 +525,7 @@ export function initScene(projects, { onSelect } = {}) {
       const a = project(new THREE.Vector3(0, R * 0.55, 0));
       const b = project(new THREE.Vector3(0, R * 0.95, 0));
       const deg = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
-      const flip = Math.abs(deg) > 90 ? 180 : 0;
+      const flip = stableFlip('system', deg);
       placeLabel(systemEl, (a.x + b.x) / 2 + 14, (a.y + b.y) / 2, `rotate(${deg + flip}deg)`);
       systemEl.style.opacity = 1;
     }
@@ -532,7 +541,7 @@ export function initScene(projects, { onSelect } = {}) {
       reachEl.style.opacity = depthLabelOpacity;
       if (depthLabelOpacity > 0.01 && !a.behind && !b.behind) {
         const deg = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
-        const flip = Math.abs(deg) > 90 ? 180 : 0;
+        const flip = stableFlip('reach', deg);
         placeLabel(reachEl, (a.x + b.x) / 2, (a.y + b.y) / 2 + 18, `rotate(${deg + flip}deg)`);
       }
     }

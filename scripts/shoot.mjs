@@ -14,7 +14,7 @@ import path from 'node:path';
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const OUT = path.join(ROOT, '.claude/shots');
 const BASE = process.env.BASE || 'http://127.0.0.1:8787';
-const PAGES = ['/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/'];
+const PAGES = ['/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/', '/work/pour/', '/work/how-to-change-institutions/'];
 
 let chromium;
 try { ({ chromium } = await import('playwright')); }
@@ -99,7 +99,7 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         const hits = await page.evaluate(() => {
           const rects = window.__graph?.screenRects() || [];
           const out = [];
-          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea']) {
+          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea', 'label-system']) {
             const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
             const l = el.getBoundingClientRect();
             for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);
@@ -117,7 +117,7 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         await page.waitForTimeout(700);
         const hits = await page.evaluate(() => {
           const rects = window.__graph?.screenRects() || []; const out = [];
-          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea']) {
+          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea', 'label-system']) {
             const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
             const l = el.getBoundingClientRect();
             for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);

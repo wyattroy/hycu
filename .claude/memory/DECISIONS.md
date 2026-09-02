@@ -109,7 +109,8 @@ Polycam · Harvard Human Flourishing Program / Global Forgiveness Movement · Pa
 eyebrow "Studio · hycu" (the Nava Labs convention), not in a separate lane.
 
 **Index (further work, text only):** How to Change Institutions, Pour, Taxonomy of Narrative
-Conventions — and nothing else from wyattroy.com. Wyatt struck unstudio, GRE Admissions, MDes NPS,
+Conventions — and nothing else from wyattroy.com. *(Superseded 2026-09-02: the Index section was
+removed; Pour and How to Change Institutions became full studies; Taxonomy stays a small graph tile.)* Wyatt struck unstudio, GRE Admissions, MDes NPS,
 Storytelling Affordances, Harvard Memorial, Haaaard, Mediums Proseminar, Arena, Tonos, Digital
 Typewriter, and Sorry (Sorry may be mentioned in the forgiveness study's background only). All
 pre-Harvard film work stays off: "I don't wanna be doing videos anymore."

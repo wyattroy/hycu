@@ -252,22 +252,6 @@ main.has-hero { padding-top: 0; }
 .cap p { color: var(--ink-2); font-size: 16px; }
 .cap .where { margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: .04em; }
 
-/* ── Index ──────────────────────────────────────────────────────────────── */
-.index { list-style: none; margin: 0; padding: 0; }
-.index li {
-  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) auto;
-  gap: 16px 40px; align-items: baseline;
-  padding: 26px 0; border-top: 1px solid var(--rule);
-}
-.index li:last-child { border-bottom: 1px solid var(--rule); }
-.index .name { font-weight: 500; }
-.index .what { color: var(--ink-2); font-size: 16px; }
-.index .year { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: .06em; }
-@media (max-width: 640px) {
-  .index li { grid-template-columns: 1fr auto; }
-  .index .what { grid-column: 1 / -1; }
-}
-
 /* ── Statement / thesis band ────────────────────────────────────────────── */
 .statement { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(48px, 8vw, 140px); align-items: start; }
 @media (max-width: 860px) { .statement { grid-template-columns: 1fr; } }

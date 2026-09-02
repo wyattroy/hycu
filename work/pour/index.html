@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pour · Hycu</title>
+  <meta name="description" content="Systems design for a residential eating-disorder facility: a care manifesto, maps of where care flows and where it dries up, and a dashboard that reports on the system rather than the person.">
+  <link rel="canonical" href="https://hycudesign.com/work/pour/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav id="nav" aria-label="Main">
+  <a class="brand" href="/" aria-label="Hycu home">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"><rect x="1.5" y="1.5" width="21" height="21"/><rect x="7.5" y="7.5" width="9" height="9"/><path d="M1.5 1.5l6 6M22.5 1.5l-6 6M1.5 22.5l6-6M22.5 22.5l-6-6"/></g></svg>
+    hycu
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <div class="nav-links" id="nav-links">
+    <a href="/#work">Work</a>
+    <a href="/studio/">Studio</a>
+    <a href="/contact/">Contact</a>
+    <a class="btn sm" href="/contact/">Get in touch</a>
+  </div>
+</nav>
+
+<main>
+  <header class="wrap study-head">
+    <p class="eyebrow">A residential eating-disorder facility &middot; Systems design &middot; 2026</p>
+    <h1 class="h-lg">Care flows like water. We mapped where it dried up inside a treatment facility, then built a dashboard that reports on the system, never on the person.</h1>
+    <p class="lede">Residential counsellors are the people who actually deliver care in an eating-disorder facility, hour by hour. Nobody was delivering it to them. Pour is a care manifesto, a set of maps, and a working dashboard that make the facility's own health visible.</p>
+  </header>
+
+  <div class="wrap study-body">
+    <article>
+      <section class="beat">
+        <p class="eyebrow">Starting point</p>
+        <h2 class="h-md">A counsellor's Tuesday.</h2>
+        <p>Picture a residential counsellor at an eating-disorder facility. Yesterday one patient hurt themselves with the metal blinds and went to the emergency room, another described in detail how they would kill the people around them, and a third had blood pressure so low they were technically dead. This morning all three are back on the floor. So are you, alone, for nine hours, with ten times the patients you're supposed to have, because nobody else is certified to hand out medication, your manager quit from burnout last week, and everyone else called in.</p>
+        <p>That is not an unusual day. It is the reason the facility's pattern is hire, burn out, quit, repeat. The ask was to help a manager see the flow of care through the organization. We took it as a systems problem: where does care come in, where does it go out, and where does it run dry?</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What we found</p>
+        <h2 class="h-md">By mid-shift the counsellor is running a deficit, and the schedule was designed that way.</h2>
+        <p>We began with a manifesto, rewritten as our understanding changed, and it turned on one metaphor an urban planner offered us: care is like water. It takes many forms and passes from one to the next, rain to stream to river to cloud, and when it is consistently lost at the same point in a system, that point has been cut off from its supply. Then we drew the facility. A relationship map of everything a counsellor gives to and receives from the owner, the doctors, the therapists, and the patients. A journey map of the hire-burnout-quit loop. And a map organized around the clock, from the 7am shift start to the afternoon, showing when care flows into the counsellor and when it flows out.</p>
+        <p>That last map made the problem plain. Care leaves the counsellor all day. It arrives in trickles, and never at the moments she needs it. Breaks, supervision, and the counsellor's own therapy weren't missing from the values of the organization; they were missing from its timetable.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">Where we went</p>
+        <h2 class="h-md">A dashboard for the facility's health, audited so it could never become a report card.</h2>
+        <p>We considered four kinds of interface and chose a large, always-on screen in the counsellors' office. It shows every stakeholder how healthy the system is right now: a System Health score computed from every task the facility owes its people and whether each is late, therapy tracked in five stages rather than a checkbox, daily tasks alongside long-term care goals, and a role switch so counsellors, managers, owners, and clinicians each see the view that serves them.</p>
+        <p>Then we audited our own design three ways. A perception audit showed what the interface was hiding and who its real user was. A discrimination audit showed how a manager could turn it against the counsellors, so we removed every column that could punish an individual, such as arrival time, reframed the whole thing as a report on the facility, and added a place for a counsellor to record why a task was missed. A maintenance audit asked who keeps it alive on day two, so the columns are editable by managers and the people who maintain it are credited on screen. We also took out the flashing alerts: they reward speed over care.</p>
+        <p>Because a system change has to be adopted before it can work, we made two more artifacts for the people who would decide: a three-panel watercolor showing the counsellor stretched thin today, the redesigned flow of care, and the ecosystem that grows when care flows; and a sectional drawing of the real building with the flow of care traced through its rooms.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What changed</p>
+        <h2 class="h-md">A working prototype, and a way of seeing the building that the facility can keep.</h2>
+        <p>The dashboard exists as an <a class="link" href="https://rc-dashboard-179957537949.us-west1.run.app">interactive prototype</a>, built from a written product requirements document. More durable than the prototype is the map underneath it: a facility that can see when its caregivers are running dry can schedule care for them the way it schedules everything else. That is the intervention. The screen is how it stays visible.</p>
+      </section>
+    </article>
+
+    <aside class="study-rail" aria-label="Project details">
+      <ul class="rail">
+        <li><span class="k">For</span><span>A residential eating-disorder facility, unnamed by agreement</span></li>
+        <li><span class="k">Capabilities</span><span>Systems design, product design</span></li>
+        <li><span class="k">Engagement</span><span>Systems design study, from manifesto to prototype</span></li>
+        <li><span class="k">Duration</span><span>Spring 2026</span></li>
+        <li><span class="k">Delivered</span><span>Care manifesto, relationship and journey maps, a time-based map of the flow of care, dashboard prototype, watercolor triptych, sectional map</span></li>
+        <li><span class="k">With</span><span>Julia Mattis</span></li>
+      </ul>
+    </aside>
+  </div>
+
+  <section class="wrap study-next">
+    <p class="eyebrow">Next</p>
+    <a class="h-md link" href="/work/spatial-equity/">Spatial equity in Gund Hall &rarr;</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hycu &middot; a design studio for products, systems, and ideas</span>
+    <span><a href="/studio/">Studio</a> &middot; <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script type="module" src="/js/site.js"></script>
+</body>
+</html>

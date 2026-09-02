@@ -7,8 +7,15 @@
     "name": "Spatial equity in Gund Hall",
     "headline": "A third of the school had no desk. We showed the Dean why it mattered, and what to do about it, from free fixes to a new building.",
     "year": 2026,
-    "capabilities": ["User research", "Strategy"],
-    "axes": { "make": 0.22, "idea": 0.7, "reach": 0.62 }
+    "capabilities": [
+      "User research",
+      "Strategy"
+    ],
+    "axes": {
+      "make": 0.22,
+      "idea": 0.7,
+      "reach": 0.62
+    }
   },
   {
     "id": "oral-care-research",
@@ -18,8 +25,15 @@
     "name": "What people are really buying",
     "headline": "Before the product launches, find out what people are really buying. It turns out to be a routine that holds.",
     "year": 2026,
-    "capabilities": ["User research", "Strategy"],
-    "axes": { "make": 0.14, "idea": 0.34, "reach": 0.84 }
+    "capabilities": [
+      "User research",
+      "Strategy"
+    ],
+    "axes": {
+      "make": 0.14,
+      "idea": 0.34,
+      "reach": 0.84
+    }
   },
   {
     "id": "polycam",
@@ -29,8 +43,15 @@
     "name": "Nine markets, one launch",
     "headline": "Nine markets, four channels, one launch: a brand-awareness plan tailored to every locality, built as a tool the team could use the same day.",
     "year": 2026,
-    "capabilities": ["Strategy", "Product design"],
-    "axes": { "make": 0.6, "idea": 0.5, "reach": 0.92 }
+    "capabilities": [
+      "Strategy",
+      "Product design"
+    ],
+    "axes": {
+      "make": 0.6,
+      "idea": 0.5,
+      "reach": 0.92
+    }
   },
   {
     "id": "forgiveness",
@@ -40,8 +61,16 @@
     "name": "A platform for forgiveness",
     "headline": "From a one-day workshop to a platform built to teach the next billion people how to forgive.",
     "year": 2026,
-    "capabilities": ["Strategy", "Product design", "Systems design"],
-    "axes": { "make": 0.82, "idea": 0.36, "reach": 0.98 }
+    "capabilities": [
+      "Strategy",
+      "Product design",
+      "Systems design"
+    ],
+    "axes": {
+      "make": 0.82,
+      "idea": 0.36,
+      "reach": 0.98
+    }
   },
   {
     "id": "pastry-pirates",
@@ -51,8 +80,15 @@
     "name": "Pastry Pirates",
     "headline": "Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.",
     "year": 2026,
-    "capabilities": ["Systems design", "Product design"],
-    "axes": { "make": 0.9, "idea": 0.2, "reach": 0.48 }
+    "capabilities": [
+      "Systems design",
+      "Product design"
+    ],
+    "axes": {
+      "make": 0.9,
+      "idea": 0.2,
+      "reach": 0.48
+    }
   },
   {
     "id": "claude-kit",
@@ -62,40 +98,66 @@
     "name": "ClaudeKit",
     "headline": "An operating system for AI teams that run like a company, and teach the person running them.",
     "year": 2026,
-    "capabilities": ["Systems design", "Product design"],
-    "axes": { "make": 0.84, "idea": 0.64, "reach": 0.14 }
+    "capabilities": [
+      "Systems design",
+      "Product design"
+    ],
+    "axes": {
+      "make": 0.92,
+      "idea": 0.76,
+      "reach": 0.14
+    }
   },
   {
     "id": "how-to-change-institutions",
-    "url": "/#work",
-    "selected": false,
-    "client": "Index",
+    "url": "/work/how-to-change-institutions/",
+    "selected": true,
+    "client": "Studio · Hycu",
     "name": "How to Change Institutions",
-    "headline": "A palm-sized field guide for people who work inside institutions and want lasting change.",
+    "headline": "A palm-sized field guide to changing an institution from the inside, by working with it rather than against it.",
     "year": 2026,
-    "capabilities": ["Systems design"],
-    "axes": { "make": 0.42, "idea": 0.94, "reach": 0.66 }
+    "capabilities": [
+      "Systems design"
+    ],
+    "axes": {
+      "make": 0.28,
+      "idea": 0.92,
+      "reach": 0.66
+    }
   },
   {
     "id": "pour",
-    "url": "/#work",
-    "selected": false,
-    "client": "Index",
+    "url": "/work/pour/",
+    "selected": true,
+    "client": "A residential eating-disorder facility",
     "name": "Pour",
-    "headline": "A clinical operations dashboard for a residential eating-disorder facility.",
+    "headline": "Care flows like water. We mapped where it dried up inside a treatment facility, then built a dashboard that reports on the system, never on the person.",
     "year": 2026,
-    "capabilities": ["Systems design", "Product design"],
-    "axes": { "make": 0.64, "idea": 0.46, "reach": 0.4 }
+    "capabilities": [
+      "Systems design",
+      "Product design"
+    ],
+    "axes": {
+      "make": 0.64,
+      "idea": 0.46,
+      "reach": 0.4
+    }
   },
   {
     "id": "taxonomy",
     "url": "/#work",
     "selected": false,
-    "client": "Index",
+    "client": "Further work",
     "name": "Taxonomy of Narrative Conventions",
     "headline": "A classification system for design research methods.",
     "year": 2021,
-    "capabilities": ["User research"],
-    "axes": { "make": 0.3, "idea": 0.9, "reach": 0.16 }
+    "capabilities": [
+      "User research"
+    ],
+    "axes": {
+      "make": 0.3,
+      "idea": 0.9,
+      "reach": 0.16
+    }
   }
 ]
