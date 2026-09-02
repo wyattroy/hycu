@@ -5,6 +5,17 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 4 — 2026-09-02 · commit 85e93d2, the answer to Review 3
+reviewed-commit: 85e93d2
+**One sentence:** *"Push 85e93d2 — both things Wyatt asked for are now visibly done in the session's own screenshots and backed by a test that lives in the repo, and the fault the last CEO caught (phone headline at the screen edge) is fixed rather than re-dressed; what remains is three small things worth knowing, none of which should hold the push."* **PUSH.**
+
+- **Asked for / delivered:** graph clickable DONE (hero copy is transparent to clicks; test hovers, clicks, taps the tile nearest the headline and lands on its study); padding DONE (all study text at x=216 under the brand at 1440, x=32 on the phone; phone home headline fixed); QA + CEO gate DONE (test in repo, wired to `npm test`, report tracked and timestamped to the commit; pre-push hook installed).
+- **Delivered but not asked for:** headline narrowed 720→620px and capped at 66px, graph offset 17%→23%, so text and graph stop overlapping. A design change Wyatt should know about. Test plumbing (`window.__graph`, `screenPositions()`).
+- **Unsupported claims:** the red-proof FAIL run exists only in the session's terminal (the report is overwritten by design); a PASS is one blanket line; the gutter test measures alignment to the brand, not the amount of gutter (would pass if everything were at 0); DECISIONS.md still described the old `.wrap`-only test.
+- **Recurrence:** fixed, not re-dressed: proof widened rather than tuned, first time in the series. Leftovers: EDITING.md teaches `--no-verify`; the hook is per-machine.
+- **Three small things, not blocking:** `pointer-events: none` on `.hero-copy` also blocks text selection on the phone where it buys nothing; widths 720–900px untested (headline overlays an unshifted graph); `--edge` uses `100vw`, ~8px off on Windows scrollbars.
+- **Working session's response:** pushed as instructed. The three small things and the gutter-amount check are queued for the next reviewed commit (BACKLOG HY-1..HY-4).
+
 ## Review 3 — 2026-09-02 · graph unclickable + study padding, before push
 reviewed-commit: f38db93
 **One sentence:** *"Don't push f38db93 yet — the work pages are fixed and the graph clicks again, but the session's own phone screenshot shows the home-page headline jammed against the left edge of the screen (the same padding fault, one rule over, at style.css:211), and its new test could not see that because it only checks boxes named `.wrap` — and the test itself lives in a temp folder, not the repo."*

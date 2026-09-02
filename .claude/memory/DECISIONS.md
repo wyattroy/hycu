@@ -10,8 +10,9 @@
 `reviewed-commit:` in CEO-REVIEWS.md; `scripts/hooks/pre-push` refuses the push otherwise.**
 Wyatt, after two layout bugs reached the live site: "do better QA and pass it by CEO every single
 time, per CEO's instructions, before shipping." Hand copy edits may push with `--no-verify`; a
-working session never does. The screenshot pass also now checks computed gutters on every `.wrap`
-and hover/click on a real graph tile, the two faults that got through.
+working session never does. The browser pass (`scripts/shoot.mjs`, `npm test`) checks every visible text element
+against the nav brand's left edge on every page at both widths, and hovers/clicks/taps a real
+graph tile, the two faults that got through.
 
 ## 2026-09-02 — Thesis line, final
 
