@@ -5,6 +5,16 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 11 — 2026-09-02 · editor commits a586575 + a8e198b + 97a44c2 (rebased)
+reviewed-commit: 97a44c2
+**One sentence:** *"PUSH 97a44c2 — Review 10's fault is fixed for real (the editor now matches whole elements and refuses when the page and file disagree on how many there are, with a test in the repo whose PASS is stamped the same second the commit was finalised), Wyatt's own copy edits are untouched by every commit, and what remains is the un-fixed half of his drag-select complaint plus four proof gaps, none of which can corrupt his site or his edits."* **PUSH.**
+
+- **Asked for / delivered:** drag-select PARTIAL (headline proven; the cards, where his edits actually are, still HY-18); HTTPS DONE and recorded; "are you seeing my edits" answered, with a discrepancy for Wyatt: his 13 lines on disk are home-page card copy, nothing on the spatial-equity page itself.
+- **Delivered but not asked for:** element-level matching with the agreement rule (the right direction: refusal replaces a guess); caret collapse after double-click; records. Nothing swept in.
+- **Unsupported claims:** the refusal branch is untested; the Review 10 fault was never shown failing against the old code; the caret collapse is bypassed by the test; "no commit while failing" overstated (a commit was made during failure, then amended before push); a8e198b's message "proven on a real duplicate" stays in history without proof; test depends on another project's Playwright; `data-failed` is never removed (fails safe: refuses); trailing-nbsp strip untested; two `&nbsp;` remain in Wyatt's own diff.
+- **Recurrence:** Review 10's fault fixed, not re-dressed; stale-report habit fixed; proof written to the happy path recurred (milder).
+- **Working session's response:** pushed. Backlog HY-19..22 filed (refusal test and red-proof, data-failed removal, nbsp test, Playwright in this repo).
+
 ## Review 10 — 2026-09-02 · editor commits 12a9d4e + 026ec12
 reviewed-commit: 026ec12
 **One sentence:** *"HOLD — the sweeping-in-Wyatt's-edits fault is genuinely fixed and the Send/Origin fixes are real and tested, but the second commit (026ec12) swaps the editor's 'refuse when the text is ambiguous' rule for a guess that is provably wrong on the home page's own tagline, and that commit carries a test report that ran before its code existed."* **HOLD.**

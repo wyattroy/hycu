@@ -22,3 +22,7 @@ Item ids are `HY-<n>`. Each needs a reviewed commit to ship.
 - **HY-15** Fix the "whatever the angle" comment in `js/scene.js` (placement is safe; the margin clamp was the fault). (CEO Review 8)
 - ~~HY-16~~ done 2026-09-02 (submit blocked while editing). Was: In editing mode, intercept the contact form's submit so a stray click on Send does not mail a test through Formspree. (CEO Review 8)
 - ~~HY-17~~ done 2026-09-02: hero copy is unselectable/uneditable in the editor because the site passes clicks through it to the graph; the editor now overrides that. (Wyatt)
+- **HY-19** Editor test: exercise the refusal branch (page/file count disagreement) and red-proof the meta-tag case against the substring matcher. (CEO Review 11)
+- **HY-20** Editor: remove `data-failed` on the next successful edit or after a delay; today one failed save leaves the element unmatchable until reload (fails safe). (CEO Review 11)
+- **HY-21** Editor test: cover the trailing-nbsp strip and the caret collapse. (CEO Review 11)
+- **HY-22** `npm install` Playwright in this repo so `scripts/*.mjs` stop falling back to the portfolio's node_modules. (CEO Review 11)
