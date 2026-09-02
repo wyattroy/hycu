@@ -26,3 +26,4 @@ Item ids are `HY-<n>`. Each needs a reviewed commit to ship.
 - **HY-20** Editor: remove `data-failed` on the next successful edit or after a delay; today one failed save leaves the element unmatchable until reload (fails safe). (CEO Review 11)
 - **HY-21** Editor test: cover the trailing-nbsp strip and the caret collapse. (CEO Review 11)
 - **HY-22** `npm install` Playwright in this repo so `scripts/*.mjs` stop falling back to the portfolio's node_modules. (CEO Review 11)
+- **HY-23** `js/scene.js`: remove the dead `C.bg` constant and its invented comment. (CEO Review 13)
