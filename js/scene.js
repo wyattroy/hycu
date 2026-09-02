@@ -326,7 +326,9 @@ export function initScene(projects, { onSelect } = {}) {
   const flipState = {};
   function stableFlip(key, deg) {
     const a = Math.abs(deg);
-    if (a > 93) flipState[key] = 180; else if (a < 87) flipState[key] = 0; else if (flipState[key] == null) flipState[key] = a > 90 ? 180 : 0;
+    // Inside the band on the first frame, read upward (0): deciding on rounding noise there made the
+    // label read upward on some page loads and downward on others.
+    if (a > 93) flipState[key] = 180; else if (a < 87) flipState[key] = 0; else if (flipState[key] == null) flipState[key] = 0;
     return flipState[key];
   }
 
