@@ -24,8 +24,8 @@ const R = 5.5;             // half-extent of the x/y plane
 const Z_FAR = -6;          // one person
 const Z_NEAR = 6;          // a public
 
-const TILE = { w: 2.05, h: 1.2, d: 0.06 };        // selected work
-const TILE_SMALL = { w: 1.25, h: 0.72, d: 0.04 };  // index
+const TILE = { w: 2.05, h: 1.2, d: 0.14 };        // selected work
+const TILE_SMALL = { w: 1.25, h: 0.72, d: 0.08 };  // index
 
 // ─── Palette — the site's own tokens, repeated here because WebGL cannot read CSS ──
 const C = {
@@ -40,6 +40,16 @@ const C = {
   faceSmall: '#F7F7F8',
   accent: '#0A5CFF',
 };
+
+// The one place the site uses colour: a tile's thickness carries the hue of its primary
+// capability, and the quadrant captions on the back wall share it. Same values as style.css.
+export const CAP_COLORS = {
+  'User research':  '#D9622B',
+  'Strategy':       '#0A5CFF',
+  'Product design': '#1FA084',
+  'Systems design': '#7A4FD6',
+};
+const capColor = (p) => CAP_COLORS[(p.capabilities || [])[0]] || C.ruleMid;
 
 // ─── Camera / interaction feel ────────────────────────────────────────────────
 const CAM_ZOOM_MIN = 0.6;
@@ -154,8 +164,8 @@ function makeQuadrantPanel(q) {
   const cv = document.createElement('canvas');
   cv.width = S; cv.height = S;
   const ctx = cv.getContext('2d');
-  ctx.fillStyle = C.ink3;
-  ctx.globalAlpha = 0.55;
+  ctx.fillStyle = CAP_COLORS[q.label] || C.ink3;
+  ctx.globalAlpha = 0.42;
   ctx.font = `500 26px ${MONO}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -277,7 +287,7 @@ export function initScene(projects, { onSelect } = {}) {
     const z = Z_FAR + p.axes.reach * (Z_NEAR - Z_FAR);
 
     const geo = new THREE.BoxGeometry(size.w, size.h, size.d);
-    const edge = new THREE.MeshBasicMaterial({ color: p.selected ? C.ruleMid : C.rule, transparent: true, opacity: 0 });
+    const edge = new THREE.MeshBasicMaterial({ color: capColor(p), transparent: true, opacity: 0 });
     const face = new THREE.MeshBasicMaterial({ map: makeFace(p), transparent: true, opacity: 0 });
     const back = new THREE.MeshBasicMaterial({ color: C.faceSmall, transparent: true, opacity: 0 });
     const mesh = new THREE.Mesh(geo, [edge, edge, edge, edge, face, back]);
@@ -474,7 +484,7 @@ export function initScene(projects, { onSelect } = {}) {
       u.opacity += (entry - u.opacity) * fade;
       u.face.opacity = u.opacity; u.edge.opacity = u.opacity; u.back.opacity = u.opacity;
       u.outline.material.opacity = u.opacity * (hovered === mesh ? 1 : 0.9);
-      u.outline.material.color.set(hovered === mesh ? C.accent : (u.project.selected ? C.ruleStrong : C.ruleMid));
+      u.outline.material.color.set(hovered === mesh ? capColor(u.project) : (u.project.selected ? C.ruleStrong : C.ruleMid));
       u.scale.target = hovered === mesh ? HOVER_SCALE : 1;
       mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING));
     });
@@ -571,7 +581,7 @@ export function initScatter2D(projects, { onSelect } = {}) {
   for (const p of projects) {
     const r = (p.selected ? 14 : 7) + p.axes.reach * 10;
     svg.push(`<g class="s2d-node" data-id="${esc(p.id)}" style="cursor:pointer">` +
-      `<circle cx="${sx(p.axes.make).toFixed(1)}" cy="${sy(p.axes.idea).toFixed(1)}" r="${r.toFixed(1)}" fill="${p.selected ? C.ink : C.ink3}"/>` +
+      `<circle cx="${sx(p.axes.make).toFixed(1)}" cy="${sy(p.axes.idea).toFixed(1)}" r="${r.toFixed(1)}" fill="${capColor(p)}" fill-opacity="${p.selected ? 1 : 0.55}"/>` +
       `<text x="${(sx(p.axes.make) + r + 8).toFixed(1)}" y="${(sy(p.axes.idea) + 4).toFixed(1)}" font-family="Geist, sans-serif" font-size="14" fill="${C.ink2}">${esc(p.name)}</text>` +
       `<title>${esc(p.client)} — ${esc(p.name)}</title></g>`);
   }

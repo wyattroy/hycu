@@ -13,6 +13,12 @@
   --accent: #0a5cff;
   --accent-ink: #ffffff;
 
+  /* The four capabilities, the only colour on the site. Same values as js/scene.js. */
+  --c-research: #d9622b;
+  --c-strategy: #0a5cff;
+  --c-product: #1fa084;
+  --c-systems: #7a4fd6;
+
   --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
@@ -215,7 +221,13 @@ main.has-hero { padding-top: 0; }
 .work-item h3 { transition: color var(--t-fast); }
 .work-item:hover h3 { color: var(--accent); }
 .work-item .sub { margin: 12px 0 18px; color: var(--ink-2); max-width: 34em; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-3); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-3); }
+[data-cap]::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; background: var(--c, var(--ink-3)); }
+[data-cap="research"] { --c: var(--c-research); }
+[data-cap="strategy"] { --c: var(--c-strategy); }
+[data-cap="product"] { --c: var(--c-product); }
+[data-cap="systems"] { --c: var(--c-systems); }
+.cap h3[data-cap]::before { width: 9px; height: 9px; margin-right: 10px; vertical-align: 2px; }
 
 /* ── Capabilities ───────────────────────────────────────────────────────── */
 .caps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px clamp(24px, 3vw, 48px); }
