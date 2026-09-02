@@ -5,6 +5,16 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 8 — 2026-09-02 · commit e331a7f: inline editor, vendored Three.js, Review 7 leftovers
+reviewed-commit: e331a7f
+**One sentence:** *"PUSH e331a7f — the editor Wyatt asked for exists, runs only on his machine, writes his double-click edits straight into the source files (the right hand-back choice, with the 'Copy all changes' button as a fallback), all four Review 7 leftovers and the uBlock fix are done and checked, and what remains is one small hole in the editor's front door and the same terminal-only proof habit, neither of which touches what he asked for."* **PUSH.**
+
+- **Asked for / delivered:** editor DONE (local only, cannot reach the live site; misses the one placeholder, graph tile names, axis labels, titles); hand-back DONE (write to source, copy list as fallback); aria-labelledby, novalidate, stale Calendly DONE; dragged-angle check PARTIAL (one corner of the orbit, desktop only, labelled as such); Three.js vendored DONE (r160 header, revision string, byte count).
+- **Delivered but not asked for:** desktop label bottom margin 30% → 120px, which is what made the dragged check pass; PRODUCT now at its tip, confirmed in the screenshot.
+- **Unsupported or risky:** red-proof and the editor's Playwright proof exist only in the session's terminal (fifth review running); the save endpoint has no Origin/Host check (a page open in the browser could post to 127.0.0.1:8788 while the editor runs; bounded by unique-match, .html-only, repo-only and git); `fileFor` uses `startsWith(ROOT)` without a trailing slash; a click on Send while editing still submits the real form; the wrong "whatever the angle" comment left in scene.js; Google Fonts still third-party (fallback stack exists; backlog, not blocking).
+- **Recurrence:** Review 7's leftovers fixed, not re-dressed; screenshot looked at and agreeing with the claim. Terminal-only proof recurred in two forms.
+- **Working session's response:** pushed. Backlog HY-11..16 filed for the next reviewed commit.
+
 ## Review 7 — 2026-09-02 · commit e1d0e5e: front-face labels, Formspree, Calendly removed
 reviewed-commit: e1d0e5e
 **One sentence:** *"PUSH e1d0e5e — all three things Wyatt asked for are done on the site as it stands, the four screenshots agree with the claims for the first time in this series (no axis label touches a tile, the contact form sits under the brand at reading width, Calendly is gone from every page), and what remains is one honest trade-off already put to him (the phone headline), one thing only a live push can prove (a real Formspree submission), and three small leftovers that do not touch his asks."* **PUSH.**
