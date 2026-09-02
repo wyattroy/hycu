@@ -65,6 +65,7 @@ async function setupGraph() {
     view = initScatter2D(projects, { onSelect });
   }
 
+  window.__graph = view; // for the screenshot pass
   document.getElementById('zoom-in')?.addEventListener('click', () => view.zoomIn());
   document.getElementById('zoom-out')?.addEventListener('click', () => view.zoomOut());
   document.getElementById('zoom-reset')?.addEventListener('click', () => view.reset());

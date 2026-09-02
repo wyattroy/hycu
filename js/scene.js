@@ -549,6 +549,11 @@ export function initScene(projects, { onSelect } = {}) {
   frame();
 
   return {
+    /* For tests: where each tile currently is on the canvas, in CSS pixels. */
+    screenPositions() {
+      const r = canvas.getBoundingClientRect();
+      return tiles.map((m) => { const s = project(m.position); return { id: m.userData.project.id, url: m.userData.project.url, selected: m.userData.project.selected, x: r.left + s.x, y: r.top + s.y }; });
+    },
     zoomIn() { hasInteracted = true; zoom.target = clamp(zoom.target - ZOOM_STEP, 0, 1); },
     zoomOut() { hasInteracted = true; zoom.target = clamp(zoom.target + ZOOM_STEP, 0, 1); },
     reset() { resetView(); hasInteracted = false; },
@@ -591,7 +596,7 @@ export function initScatter2D(projects, { onSelect } = {}) {
     const p = projects.find((x) => x.id === n.dataset.id);
     if (p && onSelect) onSelect(p);
   }));
-  return { zoomIn() {}, zoomOut() {}, reset() {}, dispose() {} };
+  return { screenPositions() { return []; }, zoomIn() {}, zoomOut() {}, reset() {}, dispose() {} };
 }
 
 export function hasWebGL() {
