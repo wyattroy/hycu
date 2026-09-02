@@ -1,0 +1,101 @@
+[
+  {
+    "id": "spatial-equity",
+    "url": "/work/spatial-equity/",
+    "selected": true,
+    "client": "Harvard Graduate School of Design",
+    "name": "Spatial equity in Gund Hall",
+    "headline": "A third of the school had no desk. We showed the Dean why it mattered, and what to do about it, from free fixes to a new building.",
+    "year": 2026,
+    "capabilities": ["User research", "Strategy"],
+    "axes": { "make": 0.22, "idea": 0.7, "reach": 0.62 }
+  },
+  {
+    "id": "oral-care-research",
+    "url": "/work/oral-care-research/",
+    "selected": true,
+    "client": "A consumer oral-care brand",
+    "name": "What people are really buying",
+    "headline": "Before the product launches, find out what people are really buying. It turns out to be a routine that holds.",
+    "year": 2026,
+    "capabilities": ["User research", "Strategy"],
+    "axes": { "make": 0.14, "idea": 0.34, "reach": 0.84 }
+  },
+  {
+    "id": "polycam",
+    "url": "/work/polycam/",
+    "selected": true,
+    "client": "Polycam",
+    "name": "Nine markets, one launch",
+    "headline": "Nine markets, four channels, one launch: a brand-awareness plan tailored to every locality, built as a tool the team could use the same day.",
+    "year": 2026,
+    "capabilities": ["Strategy", "Product design"],
+    "axes": { "make": 0.6, "idea": 0.5, "reach": 0.92 }
+  },
+  {
+    "id": "forgiveness",
+    "url": "/work/forgiveness/",
+    "selected": true,
+    "client": "Human Flourishing Program, Harvard",
+    "name": "A platform for forgiveness",
+    "headline": "From a one-day workshop to a platform built to teach the next billion people how to forgive.",
+    "year": 2026,
+    "capabilities": ["Strategy", "Product design", "Systems design"],
+    "axes": { "make": 0.82, "idea": 0.36, "reach": 0.98 }
+  },
+  {
+    "id": "pastry-pirates",
+    "url": "/work/pastry-pirates/",
+    "selected": true,
+    "client": "Studio · Hycu",
+    "name": "Pastry Pirates",
+    "headline": "Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.",
+    "year": 2026,
+    "capabilities": ["Systems design", "Product design"],
+    "axes": { "make": 0.9, "idea": 0.2, "reach": 0.48 }
+  },
+  {
+    "id": "claude-kit",
+    "url": "/work/claude-kit/",
+    "selected": true,
+    "client": "Studio · Hycu",
+    "name": "ClaudeKit",
+    "headline": "An operating system for AI teams that run like a company, and teach the person running them.",
+    "year": 2026,
+    "capabilities": ["Systems design", "Product design"],
+    "axes": { "make": 0.84, "idea": 0.64, "reach": 0.14 }
+  },
+  {
+    "id": "how-to-change-institutions",
+    "url": "/#index",
+    "selected": false,
+    "client": "Index",
+    "name": "How to Change Institutions",
+    "headline": "A palm-sized field guide for people who work inside institutions and want lasting change.",
+    "year": 2026,
+    "capabilities": ["Systems design"],
+    "axes": { "make": 0.42, "idea": 0.94, "reach": 0.66 }
+  },
+  {
+    "id": "pour",
+    "url": "/#index",
+    "selected": false,
+    "client": "Index",
+    "name": "Pour",
+    "headline": "A clinical operations dashboard for a residential eating-disorder facility.",
+    "year": 2026,
+    "capabilities": ["Systems design", "Product design"],
+    "axes": { "make": 0.64, "idea": 0.46, "reach": 0.4 }
+  },
+  {
+    "id": "taxonomy",
+    "url": "/#index",
+    "selected": false,
+    "client": "Index",
+    "name": "Taxonomy of Narrative Conventions",
+    "headline": "A classification system for design research methods.",
+    "year": 2021,
+    "capabilities": ["User research"],
+    "axes": { "make": 0.3, "idea": 0.9, "reach": 0.16 }
+  }
+]

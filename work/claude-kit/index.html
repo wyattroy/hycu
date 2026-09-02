@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ClaudeKit · Hycu</title>
+  <meta name="description" content="ClaudeKit gives AI coding agents the structure of a company: a mentor, a crew with disjoint jobs, and officers who judge whether what was asked for actually happened.">
+  <link rel="canonical" href="https://hycudesign.com/work/claude-kit/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav id="nav" aria-label="Main">
+  <a class="brand" href="/" aria-label="Hycu home">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"><rect x="1.5" y="1.5" width="21" height="21"/><rect x="7.5" y="7.5" width="9" height="9"/><path d="M1.5 1.5l6 6M22.5 1.5l-6 6M1.5 22.5l6-6M22.5 22.5l-6-6"/></g></svg>
+    hycu
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <div class="nav-links" id="nav-links">
+    <a href="/#work">Work</a>
+    <a href="/studio/">Studio</a>
+    <a href="/contact/">Contact</a>
+    <a class="btn sm" href="/contact/">Book a call</a>
+  </div>
+</nav>
+
+<main>
+  <header class="wrap study-head">
+    <p class="eyebrow">Studio &middot; Hycu &middot; Systems design &middot; 2026</p>
+    <h1 class="h-lg">An operating system for AI teams that run like a company, and teach the person running them.</h1>
+    <p class="lede">AI coding agents are fast, capable, and forgetful. ClaudeKit gives them the structure of a small firm: a mentor, a crew with separate jobs, and two officers whose only task is to judge the work. It ran the making of this site.</p>
+  </header>
+
+  <div class="wrap study-body">
+    <article>
+      <section class="beat">
+        <p class="eyebrow">Starting point</p>
+        <h2 class="h-md">Twenty-two fixes shipped, four verified, reported as success.</h2>
+        <p>While shipping <a class="link" href="/work/pastry-pirates/">Pastry Pirates</a> with AI agents, one session answered a thirty-five-item playtest by fixing twenty-two things, checking four of them, and reporting that the work was done. Nothing in the report was false. The gap was between what was asked for and what was delivered, and from inside the work that gap is invisible.</p>
+        <p>The second problem is memory. An agent starts every session blank. Decisions get made twice, settled questions get reopened, and the person directing the work ends up as the only place the organization's judgment lives.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What we found</p>
+        <h2 class="h-md">Durable memory, disposable instance.</h2>
+        <p>The fixes are organizational, not technical. Whoever built a thing never certifies it; a fresh reviewer with no memory of the reasoning is the only one who can see the blind spot. A defect gets proven to exist, with a check that fails, before anyone is allowed to fix it. And the organization's memory lives in files that every fresh agent reads first: what was decided and why, what the last reviewer found, what is waiting on a human.</p>
+        <p>Freshness turned out to be the whole value of a reviewer. One that has been in the room all week stops being an auditor and becomes a colleague who agrees with you.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">Where we went</p>
+        <h2 class="h-md">A mentor, a crew, and two officers.</h2>
+        <p>The mentor coaches the person, not the code: before any request runs, it names how the request could have been framed better, so the human gets steadily better at directing the work. The crew runs every task through the same sequence: a measurer proves the fault, builders work on strictly separate files, a tester uses the real product, a checker trusts evidence rather than reports, and a sweeper finds every other place the same fault lives.</p>
+        <p>The officers sit above the crew. The CEO takes the human's request in their exact words and answers one narrow question: did the thing they asked for happen? The CTO supervises an unattended worker, keeps it in bounds, and fences it away from production while it holds the lock. Each repo carries a one-page adapter so the officers know its facts without storing them anywhere they could go stale.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What changed</p>
+        <h2 class="h-md">It reviewed this site's headline before you read it.</h2>
+        <p>The first thing the CEO judged on this project was the sentence at the top of our homepage. It found two words doing less than they should, on the record, and the record is what the next reviewer reads. That is the system working as designed: the studio's judgment accumulates in files, and every session starts with all of it.</p>
+      </section>
+    </article>
+
+    <aside class="study-rail" aria-label="Project details">
+      <ul class="rail">
+        <li><span class="k">Client</span><span>Studio project</span></li>
+        <li><span class="k">Capabilities</span><span>Systems design, product design</span></li>
+        <li><span class="k">Engagement</span><span>Self-initiated</span></li>
+        <li><span class="k">Duration</span><span>August 2026, ongoing</span></li>
+        <li><span class="k">Delivered</span><span>Mentor, team, and officer plugins for Claude Code; memory and adapter templates; an install that works on any machine</span></li>
+      </ul>
+    </aside>
+  </div>
+
+  <section class="wrap study-next">
+    <p class="eyebrow">Next</p>
+    <a class="h-md link" href="/work/spatial-equity/">Spatial equity in Gund Hall &rarr;</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hycu &middot; a design studio for products, systems, and ideas</span>
+    <span><a href="/studio/">Studio</a> &middot; <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script type="module" src="/js/site.js"></script>
+</body>
+</html>

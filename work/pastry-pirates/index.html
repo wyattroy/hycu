@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pastry Pirates · Hycu</title>
+  <meta name="description" content="A board game balanced by fifty thousand simulated games and shipped as an online multiplayer game in seven weeks.">
+  <link rel="canonical" href="https://hycudesign.com/work/pastry-pirates/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav id="nav" aria-label="Main">
+  <a class="brand" href="/" aria-label="Hycu home">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"><rect x="1.5" y="1.5" width="21" height="21"/><rect x="7.5" y="7.5" width="9" height="9"/><path d="M1.5 1.5l6 6M22.5 1.5l-6 6M1.5 22.5l6-6M22.5 22.5l-6-6"/></g></svg>
+    hycu
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <div class="nav-links" id="nav-links">
+    <a href="/#work">Work</a>
+    <a href="/studio/">Studio</a>
+    <a href="/contact/">Contact</a>
+    <a class="btn sm" href="/contact/">Book a call</a>
+  </div>
+</nav>
+
+<main>
+  <header class="wrap study-head">
+    <p class="eyebrow">Studio &middot; Hycu &middot; Game &amp; systems design &middot; 2026</p>
+    <h1 class="h-lg">Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.</h1>
+    <p class="lede">A board game about plundering the Caribbean for baking ingredients. We treated its rules as a system, simulated it until the numbers settled, and shipped it online at <a class="link" href="https://playpastrypirates.com/">playpastrypirates.com</a>.</p>
+  </header>
+
+  <div class="wrap study-body">
+    <article>
+      <section class="beat">
+        <p class="eyebrow">Starting point</p>
+        <h2 class="h-md">A game that was fun and not fair.</h2>
+        <p>Pastry Pirates started as a physical board game: sail between islands, buy cocoa and flour, dodge the other captains, get home and bake. Everyone who played it liked it. Everyone who played it twice noticed that one strategy won too often. That's a rules problem, and a rules problem is a systems problem: which rules produce games that are close, quick, and different from each other?</p>
+        <p>We took it on as a studio project, which is how we test our own methods before we use them on a client's money.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What we found</p>
+        <h2 class="h-md">Play it fifty thousand times and the rules tell you what they do.</h2>
+        <p>We wrote a simulation engine in Python and ran tournaments between strategies: the hoarder, the trader, the raider, the one who sails straight home. Roughly 50,000 games later we had win rates for every rule variant, the exact odds behind the coin flips, and a ruleset where no strategy wins more than its share. Several rules we were attached to went. One we'd thought was decorative turned out to be what kept games close.</p>
+        <p>The lesson we keep reusing: if you can simulate a system, do that before you argue about it.</p>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">Where we went</p>
+        <h2 class="h-md">Shipped online, with the lab left open.</h2>
+        <p>The game now runs in the browser for two to four people, each on their own device, with bots filling empty seats. Alongside it is a rules lab where anyone can change any rule, watch bot games play out, scrub the timeline, and run a 400-game balance check of their own. A physical edition is in production from the same rules.</p>
+        <p>Building it this fast was its own experiment. Most of the code was written by AI agents working under a process we designed: one agent proves a defect exists before another is allowed to fix it, a tester plays the real game, and a checker trusts evidence rather than reports. That process became <a class="link" href="/work/claude-kit/">ClaudeKit</a>.</p>
+        <div class="figures">
+          <div class="figure"><span class="n num">50,000</span><span class="l">simulated games behind the ruleset</span></div>
+          <div class="figure"><span class="n num">2,134</span><span class="l">commits between July 14 and September 1</span></div>
+          <div class="figure"><span class="n num">2&ndash;4</span><span class="l">players online, bots fill the rest</span></div>
+        </div>
+      </section>
+
+      <section class="beat">
+        <p class="eyebrow">What changed</p>
+        <h2 class="h-md">A working game, and a working method.</h2>
+        <p>People play it. More usefully for the studio, we now have a repeatable way to balance any rule-based system by simulation, and a way to run AI teams that we trust with real work.</p>
+      </section>
+    </article>
+
+    <aside class="study-rail" aria-label="Project details">
+      <ul class="rail">
+        <li><span class="k">Client</span><span>Studio project</span></li>
+        <li><span class="k">Capabilities</span><span>Systems design, product design</span></li>
+        <li><span class="k">Engagement</span><span>Self-initiated</span></li>
+        <li><span class="k">Duration</span><span>July to September 2026</span></li>
+        <li><span class="k">Delivered</span><span>Balanced ruleset, simulation engine, online multiplayer game, rules lab, physical edition</span></li>
+      </ul>
+    </aside>
+  </div>
+
+  <section class="wrap study-next">
+    <p class="eyebrow">Next</p>
+    <a class="h-md link" href="/work/claude-kit/">ClaudeKit &rarr;</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hycu &middot; a design studio for products, systems, and ideas</span>
+    <span><a href="/studio/">Studio</a> &middot; <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script type="module" src="/js/site.js"></script>
+</body>
+</html>

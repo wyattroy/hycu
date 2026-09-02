@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Hycu</title>
+  <meta name="description" content="Hycu is a design studio for products, systems, and ideas. User research, strategy, product design, and systems design for startups, nonprofits, and large companies.">
+  <meta property="og:title" content="Hycu">
+  <meta property="og:description" content="A design studio for products, systems, and ideas.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hycudesign.com/">
+  <link rel="canonical" href="https://hycudesign.com/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav id="nav" aria-label="Main">
+  <a class="brand" href="/" aria-label="Hycu home">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"><rect x="1.5" y="1.5" width="21" height="21"/><rect x="7.5" y="7.5" width="9" height="9"/><path d="M1.5 1.5l6 6M22.5 1.5l-6 6M1.5 22.5l6-6M22.5 22.5l-6-6"/></g></svg>
+    hycu
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <div class="nav-links" id="nav-links">
+    <a href="/#work">Work</a>
+    <a href="/studio/">Studio</a>
+    <a href="/contact/">Contact</a>
+    <a class="btn sm" href="/contact/">Book a call</a>
+  </div>
+</nav>
+
+<main class="has-hero">
+
+  <section id="hero" aria-label="Our work, arranged by what we did and what it produced">
+    <div class="graph-stage">
+    <canvas id="graph-canvas" aria-hidden="true"></canvas>
+    <div id="graph-2d" hidden></div>
+    <div id="axis-labels" aria-hidden="true">
+      <span class="axis-label" id="label-understand">Understand</span>
+      <span class="axis-label" id="label-make">Make</span>
+      <span class="axis-label" id="label-product">Product</span>
+      <span class="axis-label" id="label-idea">Idea</span>
+      <span class="axis-label helper" id="label-system">system</span>
+      <span class="axis-label helper" id="label-reach">reach</span>
+      <span class="axis-label helper" id="label-one">one person</span>
+      <span class="axis-label helper" id="label-public">a public</span>
+    </div>
+    <div id="graph-hover" role="tooltip" hidden></div>
+    </div>
+    <p class="visually-hidden">An interactive map of our work. Left to right runs from understanding to making. Bottom to top runs from products to ideas. Depth shows reach, from one person to a public. Each tile opens a case study; the same studies are listed below.</p>
+
+    <div class="hero-copy">
+      <div class="hero-text">
+        <h1 class="display">We discover where you are, then design where you'll go.</h1>
+        <p class="lede">Hycu is a design studio for products, systems, and ideas.</p>
+        <a class="link arrow" href="#work">Selected work</a>
+      </div>
+      <div class="hero-controls" aria-label="Graph controls">
+        <span class="hero-hint">Drag to orbit</span>
+        <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+        <button id="zoom-in" aria-label="Zoom in">+</button>
+        <button id="zoom-reset">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="band flush" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 class="eyebrow" id="work-title">Selected work</h2>
+        <span class="eyebrow">2026</span>
+      </div>
+      <div class="work-list">
+
+        <a class="work-item" href="/work/spatial-equity/">
+          <p class="eyebrow">Harvard Graduate School of Design <span class="year">Design research</span></p>
+          <h3 class="h-md">A third of the school had no desk. We showed the Dean why it mattered, and what to do about it, from free fixes to a new building.</h3>
+          <p class="sub">Seven days of observation, a survey of 162 students, and a set of recommendations the administration could act on the same semester.</p>
+          <p class="tags"><span>User research</span><span>Strategy</span></p>
+        </a>
+
+        <a class="work-item" href="/work/oral-care-research/">
+          <p class="eyebrow">A consumer oral-care brand <span class="year">User research</span></p>
+          <h3 class="h-md">Before the product launches, find out what people are really buying. It turns out to be a routine that holds.</h3>
+          <p class="sub">An external research arm for a new product, from interview design through an interactive map of what we found.</p>
+          <p class="tags"><span>User research</span><span>Strategy</span></p>
+        </a>
+
+        <a class="work-item" href="/work/polycam/">
+          <p class="eyebrow">Polycam <span class="year">Marketing strategy</span></p>
+          <h3 class="h-md">Nine markets, four channels, one launch: a brand-awareness plan for every locality, built as a tool the team could use the same day.</h3>
+          <p class="sub">507 contacts across influencers, podcasts, press, and newsletters, each with a drafted note in the language that channel publishes in.</p>
+          <p class="tags"><span>Strategy</span><span>Product design</span></p>
+        </a>
+
+        <a class="work-item" href="/work/forgiveness/">
+          <p class="eyebrow">Human Flourishing Program, Harvard <span class="year">Strategy &amp; platform</span></p>
+          <h3 class="h-md">From a one-day workshop to a platform built to teach the next billion people how to forgive.</h3>
+          <p class="sub">Vision, scope, and the web platform itself for the Global Forgiveness Movement, launching November 2026.</p>
+          <p class="tags"><span>Strategy</span><span>Product design</span><span>Systems design</span></p>
+        </a>
+
+        <a class="work-item" href="/work/pastry-pirates/">
+          <p class="eyebrow">Studio &middot; Hycu <span class="year">Game &amp; systems design</span></p>
+          <h3 class="h-md">Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.</h3>
+          <p class="sub">A board game balanced by simulation and shipped online, with bots, a rules lab, and a physical edition on the way.</p>
+          <p class="tags"><span>Systems design</span><span>Product design</span></p>
+        </a>
+
+        <a class="work-item" href="/work/claude-kit/">
+          <p class="eyebrow">Studio &middot; Hycu <span class="year">Systems design</span></p>
+          <h3 class="h-md">An operating system for AI teams that run like a company, and teach the person running them.</h3>
+          <p class="sub">A mentor, a crew with disjoint jobs, and two officers who judge the work. It ran the making of this site.</p>
+          <p class="tags"><span>Systems design</span><span>Product design</span></p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="capabilities" aria-labelledby="caps-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 class="eyebrow" id="caps-title">What we do</h2>
+        <a class="eyebrow link" href="/studio/">How we work &rarr;</a>
+      </div>
+      <div class="caps">
+        <div class="cap">
+          <h3 class="h-sm">User research</h3>
+          <p>Interviews, observation, and surveys that find out what people actually do, and why. We deliver findings you can brief from, not a deck to admire.</p>
+          <p class="where">Gund Hall &middot; Oral care</p>
+        </div>
+        <div class="cap">
+          <h3 class="h-sm">Strategy</h3>
+          <p>Where you are, where you want to go, and a set of routes between them at more than one budget. We stay until the plan is one you can execute.</p>
+          <p class="where">Polycam &middot; Forgiveness &middot; Gund Hall</p>
+        </div>
+        <div class="cap">
+          <h3 class="h-sm">Product design</h3>
+          <p>Web platforms, tools, and games, designed and built. Most of our strategy work ends with us making the thing.</p>
+          <p class="where">Forgiveness &middot; Polycam &middot; Pastry Pirates</p>
+        </div>
+        <div class="cap">
+          <h3 class="h-sm">Systems design</h3>
+          <p>The rules, roles, and feedback loops behind a product, a team, or an institution. Often the real project underneath the one we were hired for.</p>
+          <p class="where">ClaudeKit &middot; Pastry Pirates &middot; Forgiveness</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="index" aria-labelledby="index-title">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 class="eyebrow" id="index-title">Index</h2>
+        <span class="eyebrow">Further work</span>
+      </div>
+      <ul class="index">
+        <li><span class="name">How to Change Institutions</span><span class="what">A palm-sized field guide for people who work inside schools, governments, and hospitals and want lasting change. Illustrated by Julia Mattis.</span><span class="year">2026</span></li>
+        <li><span class="name">Pour</span><span class="what">A clinical operations dashboard for a residential eating-disorder facility, with a daily score of how well the system is caring for its frontline caregivers.</span><span class="year">2026</span></li>
+        <li><span class="name">Taxonomy of Narrative Conventions</span><span class="what">A classification system for design research methods.</span><span class="year">2021</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band" id="about" aria-labelledby="about-title">
+    <div class="wrap statement">
+      <h2 class="h-lg" id="about-title">The name is short for hypercube.</h2>
+      <div class="prose">
+        <p>Extend a point and you get a line. Extend the line and you get a square, then a cube. Extend the cube one more time and you get a shape that is hard to picture and easy to reason about: a hypercube, one dimension up from the space you are standing in. From there, everything below it is clear.</p>
+        <p>That is the move we make on every project. Step one level above the product, the team, or the routine, look at the whole system, and come back with something new and useful: a table, a bus route, a way to teach forgiveness.</p>
+        <p><a class="link arrow" href="/studio/">About the studio</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-strip">
+      <div>
+        <h2 class="h-lg" id="contact-title">Tell us where you are.</h2>
+        <p class="lede">Thirty minutes is enough to know whether we can help.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/contact/">Book a call</a>
+        <a class="btn quiet" href="/contact/#write">Write to us</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Hycu &middot; a design studio for products, systems, and ideas</span>
+    <span><a href="/studio/">Studio</a> &middot; <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script type="module" src="/js/site.js"></script>
+</body>
+</html>
