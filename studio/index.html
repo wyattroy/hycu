@@ -132,7 +132,7 @@
       var w = 1 / (2.6 - p[3]);               // 4D → 3D perspective
       var x = p[0] * w * 2.2, y = p[1] * w * 2.2, z = p[2] * w * 2.2;
       var s = 1 / (4.2 - z);                  // 3D → 2D perspective
-      return [x * s * 3.3, -y * s * 3.3];
+      return [x * s * 2.7, -y * s * 2.7];
     });
     lines.forEach(function (l, k) {
       var e = edges[k];
