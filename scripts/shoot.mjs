@@ -97,6 +97,24 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         if (hits.length) { errors.push(`${label} home: axis label on a tile: ${hits.join(', ')}`); break; }
         await page.waitForTimeout(400);
       }
+      // ...and once more after dragging the view hard to one side, near the orbit limit.
+      if (!touch) {
+        const c = await page.evaluate(() => { const r = document.getElementById('graph-canvas').getBoundingClientRect(); return { x: r.left + r.width * 0.7, y: r.top + r.height * 0.5 }; });
+        await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x - 500, c.y + 120, { steps: 12 }); await page.mouse.up();
+        await page.waitForTimeout(700);
+        const hits = await page.evaluate(() => {
+          const rects = window.__graph?.screenRects() || []; const out = [];
+          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea']) {
+            const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
+            const l = el.getBoundingClientRect();
+            for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);
+          }
+          return out;
+        });
+        ran.labels++;
+        if (hits.length) errors.push(`${label} home (dragged): axis label on a tile: ${hits.join(', ')}`);
+        await page.click('#zoom-reset'); await page.waitForTimeout(600);
+      }
     }
 
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,

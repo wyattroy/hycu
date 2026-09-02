@@ -6,11 +6,6 @@ until he rules; mechanism questions may take a default and say which default was
 ## Open
 
 
-- **2026-09-02 · Formspree endpoint.** `js/site.js` has `FORMSPREE_ENDPOINT` as a placeholder. Until
-  a real form id is pasted in, the contact form tells the visitor it is not connected. Create one at
-  formspree.io (a new form, not the wyattroy.com notify list) and paste the URL.
-- **2026-09-02 · Calendly link.** `js/site.js` has `CALENDLY_URL` as a placeholder. Until set, the
-  contact page hides the embed and shows a note. Paste the event link.
 - **2026-09-02 · Studio email.** The site has no email address on it. Does Hycu get one
   (hello@hycudesign.com via Squarespace forwarding, say), or does the form suffice?
 - ~~Names on study pages~~ answered, see below.
@@ -28,4 +23,4 @@ until he rules; mechanism questions may take a default and say which default was
 
 - **2026-09-02 · Names.** Wyatt: strike Dean Sarah Whiting, Lee Cott, Martin Bechthold; keep Kalana White, Xavaar Quaranto, Irys Kornbluth ("they were collaborators"). Done.
 - **2026-09-02 · Repo visibility.** Wyatt: "make the repo public and push it." Done.
-- **2026-09-02 · Formspree and Calendly.** Wyatt is setting them up; placeholders stay until then.
+- **2026-09-02 · Formspree and Calendly.** Formspree wired (`maeyjowq`). Calendly removed by ruling: "i don't trust calendly."

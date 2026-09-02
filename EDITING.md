@@ -13,7 +13,7 @@ Everything on the site is plain HTML you can open in VS Code. There is no build 
 | Contact page copy and form labels | `contact/index.html` |
 | The names on the graph tiles, and where each tile sits | `data/projects.json` (`client`, `name`, `headline`, `axes` from 0 to 1) |
 | The footer line | at the bottom of every page (search for "a design studio for products") |
-| Formspree and Calendly | the two constants at the top of `js/site.js` |
+| The Formspree endpoint | the constant at the top of `js/site.js` |
 | Colours, type sizes, spacing | `style.css` (tokens at the top) |
 
 Each study page has the same five parts, in order: the eyebrow (client · capability · year), the

@@ -17,7 +17,9 @@
  * type has to carry it.
  */
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+// Vendored (vendor/three.module.js, r160) rather than loaded from a CDN: a content blocker
+// blanked the whole hero for Wyatt on 2026-09-02, and the graph is the first thing a visitor sees.
+import * as THREE from '/vendor/three.module.js';
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 const R = 5.5;             // half-extent of the x/y plane
