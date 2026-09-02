@@ -17,6 +17,13 @@ catch { ({ chromium } = await import('/Users/wyattroy/Documents/Projects/wyattro
 
 const errors = [];
 const check = (ok, msg) => { if (!ok) errors.push(msg); };
+// Double-click selects a word and End only reaches the end of a visual line: place the caret at
+// the very end of the element before typing.
+async function typeAtEnd(page, locator, text) {
+  await locator.dblclick();
+  await locator.evaluate((el) => { const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); });
+  await page.keyboard.type(text); await page.keyboard.press('Enter'); await page.waitForTimeout(400);
+}
 const FILE = path.join(ROOT, 'work/polycam/index.html');
 const original = fs.readFileSync(FILE, 'utf8');
 
@@ -29,9 +36,9 @@ try {
   await p.goto(BASE + '/work/polycam/', { waitUntil: 'networkidle' });
   check((await p.locator('.edit-bar').count()) === 1, 'editor bar not injected');
   const para = p.locator('.beat p:not(.eyebrow)').first();
-  await para.dblclick(); await p.keyboard.press('End'); await p.keyboard.type(' EDIT-TEST-ONE'); await p.keyboard.press('Enter'); await p.waitForTimeout(400);
+  await typeAtEnd(p, para, ' EDIT-TEST-ONE');
   const eyebrow = p.locator('.study-head .eyebrow');
-  await eyebrow.dblclick(); await p.keyboard.press('End'); await p.keyboard.type(' EDIT-TEST-TWO'); await p.keyboard.press('Enter'); await p.waitForTimeout(400);
+  await typeAtEnd(p, eyebrow, ' EDIT-TEST-TWO');
   await p.locator('.nav-links a[href="/studio/"]').click(); await p.waitForTimeout(300);
   check(p.url().endsWith('/work/polycam/'), `link click navigated to ${p.url()}`);
   const now = fs.readFileSync(FILE, 'utf8');
@@ -43,6 +50,28 @@ try {
   await p.mouse.move(r.x + 5, r.y + r.height / 2); await p.mouse.down(); await p.mouse.move(r.x + 200, r.y + r.height / 2, { steps: 8 }); await p.mouse.up();
   check((await p.evaluate(() => window.getSelection().toString())).length > 0, 'home headline cannot be drag-selected in the editor');
   check((await p.evaluate(([x, y]) => document.elementFromPoint(x, y)?.tagName, [r.x + 20, r.y + 20])) === 'H1', 'home headline is not under the pointer in the editor');
+
+  // The tagline's text also lives inside the page's meta description (index.html): an edit must
+  // change the visible tagline, never the meta tag. And a tag that appears twice must land on the
+  // one that was edited. (CEO Review 10 found the substring version rewriting the meta tag.)
+  const HOME = path.join(ROOT, 'index.html'); const homeOriginal = fs.readFileSync(HOME, 'utf8');
+  try {
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' }); await p.waitForTimeout(1200);
+    await typeAtEnd(p, p.locator('.hero-text .lede'), ' TAGLINE-EDIT');
+    let home = fs.readFileSync(HOME, 'utf8');
+    check(/<p class="lede">[^<]*TAGLINE-EDIT<\/p>/.test(home), 'tagline edit did not land on the visible tagline');
+    check(!/<meta[^>]*TAGLINE-EDIT/.test(home), 'tagline edit rewrote the meta description');
+    // Locate without touching the element: adding an id would change its markup and its twin count.
+    const dupTags = p.locator('.tags span', { hasText: 'User research' });
+    const dup = await dupTags.count();
+    check(dup >= 2, `expected a duplicated "User research" tag, found ${dup}`);
+    await typeAtEnd(p, dupTags.last(), ' DUP-EDIT');
+    home = fs.readFileSync(HOME, 'utf8');
+    const hits = home.split('DUP-EDIT').length - 1;
+    check(hits === 1, `duplicate edit landed ${hits} time(s), expected 1`);
+    // the last unedited TAG (not the capability heading later in the page) must sit before the edit
+    check(home.lastIndexOf('<span data-cap="research">User research</span>') < home.indexOf('DUP-EDIT'), 'duplicate edit did not land on the last tag');
+  } finally { fs.writeFileSync(HOME, homeOriginal); }
 
   await p.goto(BASE + '/contact/', { waitUntil: 'networkidle' });
   await p.fill('#f-name', 'Test'); await p.fill('#f-email', 'test@example.com'); await p.fill('#f-now', 'testing');
@@ -59,7 +88,7 @@ for (const origin of ['https://evil.example', 'http://127.0.0.1:8787']) {
   check(res.status === 403, `save with Origin ${origin} answered ${res.status}, expected 403`);
 }
 
-const report = [`## Editor pass — ${new Date().toISOString()}`, errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS edits reach the source with entity spelling kept, links do not navigate, hero headline selectable, Send blocked while editing, foreign/wrong-port Origin refused', ''].join('\n');
+const report = [`## Editor pass — ${new Date().toISOString()}`, errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS edits reach the source with entity spelling kept, links do not navigate, hero headline selectable, tagline edit never touches the meta tag, duplicate tag edit lands once on the edited one, Send blocked while editing, foreign/wrong-port Origin refused', ''].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
 console.log(report);
 process.exit(errors.length ? 1 : 0);

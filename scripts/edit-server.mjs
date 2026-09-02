@@ -38,7 +38,7 @@ function countOccurrences(hay, needle) {
   return n;
 }
 
-function save({ page, before, after, occurrence = 0 }) {
+function save({ page, before, after, occurrence = 0, pageCount = 1 }) {
   const file = fileFor(page);
   if (!file || !file.endsWith('.html')) return { ok: false, reason: 'no source file for this page' };
   if (typeof before !== 'string' || typeof after !== 'string' || before.trim().length < 3) return { ok: false, reason: 'original text too short to locate safely' };
@@ -46,7 +46,7 @@ function save({ page, before, after, occurrence = 0 }) {
   for (const [candidate, encoded] of [[before, false], [encode(before), true]]) {
     const n = countOccurrences(src, candidate);
     if (n === 0) continue;
-    if (occurrence >= n) return { ok: false, reason: `that text appears ${n} times in ${path.relative(ROOT, file)} but the page showed it ${occurrence + 1} times; reload the page` };
+    if (n !== pageCount || occurrence >= n) return { ok: false, reason: `the page shows that element ${pageCount} time(s) but ${path.relative(ROOT, file)} has it ${n} time(s); reload the page` };
     // Replace the same occurrence the page was showing: document order is source order here.
     let idx = -1;
     for (let k = 0; k <= occurrence; k++) idx = src.indexOf(candidate, idx + 1);
@@ -112,11 +112,17 @@ const EDITOR = String.raw`
     if (active) commit();
     e.preventDefault();
     active = t;
-    t.dataset.before = t.innerHTML;
-    t.dataset.occurrence = String([...document.querySelectorAll('*')].filter((el) => el.innerHTML === t.innerHTML).indexOf(t));
+    // Whole elements, tag and attributes included: text alone can also live inside a meta tag or a
+    // longer sentence, and a match there would rewrite the wrong thing.
+    // Count twins BEFORE stamping any data-* attribute on the element, or it has none.
+    const twins = [...document.querySelectorAll('*')].filter((el) => el.outerHTML === t.outerHTML);
+    t.dataset.before = t.outerHTML;
+    t.dataset.occurrence = String(twins.indexOf(t));
+    t.dataset.pageCount = String(twins.length);
     t.setAttribute('contenteditable', 'true');
     t.dataset.editing = '1';
     t.focus();
+    const sel = window.getSelection(); if (sel && sel.rangeCount) sel.collapseToEnd();
     say('Editing. Enter or click away to save, Esc to cancel.');
   });
 
@@ -132,15 +138,17 @@ const EDITOR = String.raw`
   }
   function cancel() {
     const t = active; active = null;
-    t.innerHTML = t.dataset.before; delete t.dataset.before; cleanup(t); say('Cancelled.');
+    t.outerHTML = t.dataset.before; say('Cancelled.');
   }
   async function commit() {
     const t = active; active = null;
-    const before = t.dataset.before; const occurrence = Number(t.dataset.occurrence || 0); delete t.dataset.before; delete t.dataset.occurrence; cleanup(t);
-    const after = t.innerHTML.replace(/(&nbsp;|\u00a0)+$/, '');
+    const before = t.dataset.before; const occurrence = Number(t.dataset.occurrence || 0); const pageCount = Number(t.dataset.pageCount || 1);
+    delete t.dataset.before; delete t.dataset.occurrence; delete t.dataset.pageCount; cleanup(t);
+    t.innerHTML = t.innerHTML.replace(/(&nbsp;|\u00a0)+$/, '');
+    const after = t.outerHTML;
     if (after === before) { say('No change.'); return; }
     try {
-      const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after, occurrence }) });
+      const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after, occurrence, pageCount }) });
       const r = await res.json();
       if (r.ok) { t.dataset.saved = '1'; setTimeout(() => delete t.dataset.saved, 1500); say('Saved to ' + r.file, true); return; }
       throw new Error(r.reason);

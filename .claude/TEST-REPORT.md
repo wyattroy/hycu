@@ -12,3 +12,24 @@ Pages: 18 (desktop + phone) · gutter checks: 18 (alignment and amount) · headl
 
 ## Editor pass — 2026-09-02T19:30:12.715Z
 - PASS edits reach the source with entity spelling kept, links do not navigate, hero headline selectable, Send blocked while editing, foreign/wrong-port Origin refused
+
+## Editor pass — 2026-09-02T19:36:34.119Z
+- FAIL tagline edit did not land on the visible tagline
+- FAIL duplicate edit landed 0 time(s), expected 1
+- FAIL duplicate edit did not land on the last occurrence
+
+## Editor pass — 2026-09-02T19:37:23.734Z
+- FAIL tagline edit did not land on the visible tagline
+- FAIL duplicate edit landed 0 time(s), expected 1
+- FAIL duplicate edit did not land on the last tag
+
+## Editor pass — 2026-09-02T19:38:24.936Z
+- FAIL tagline edit did not land on the visible tagline
+- FAIL duplicate edit landed 0 time(s), expected 1
+- FAIL duplicate edit did not land on the last tag
+
+## Editor pass — 2026-09-02T19:39:22.076Z
+- FAIL tagline edit did not land on the visible tagline
+
+## Editor pass — 2026-09-02T19:41:06.389Z
+- PASS edits reach the source with entity spelling kept, links do not navigate, hero headline selectable, tagline edit never touches the meta tag, duplicate tag edit lands once on the edited one, Send blocked while editing, foreign/wrong-port Origin refused
