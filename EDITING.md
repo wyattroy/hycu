@@ -20,6 +20,21 @@ Each study page has the same five parts, in order: the eyebrow (client · capabi
 headline, the lede, four "beats" (Starting point / What we found / Where we went / What changed or
 What's next), and the rail on the right (`<ul class="rail">`).
 
+## Edit the words in the browser
+
+```bash
+cd ~/Documents/Projects/hycu && npm run edit
+```
+
+Then open http://127.0.0.1:8788. Double-click any piece of text, change it, press Enter (or click
+away). It is written straight into the source file, and the bar at the top says which one. Esc
+cancels. Links don't navigate while editing; ⌘-click one to follow it. If an edit can't be
+located uniquely in the file, it goes in a list and a "Copy all changes" button appears; paste
+that to Claude.
+
+When you're done, `git diff` shows every change, or just say "I edited copy" in a Claude session
+and it will review, test, and push.
+
 ## See it while you edit
 
 ```bash

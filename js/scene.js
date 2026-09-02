@@ -457,7 +457,7 @@ export function initScene(projects, { onSelect } = {}) {
     const h = canvas.offsetHeight;
     return narrow
       ? { side: 36, top: 52, bottom: 44 }
-      : { side: LABEL_MARGIN, top: LABEL_MARGIN + 24, bottom: Math.round(h * 0.3) };
+      : { side: LABEL_MARGIN, top: LABEL_MARGIN + 24, bottom: 120 };
   }
 
   // ─── Render loop ────────────────────────────────────────────────────────────
