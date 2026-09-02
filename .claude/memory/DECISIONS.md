@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-09-02 — No Calendly
+
+**No booking widget. Contact is the form (Formspree `maeyjowq`) and nothing else.** Wyatt: "i don't
+trust calendly -- so please remove that option from the website." Every "Book a call" became "Get in
+touch" / "Write to us". Reverses the 2026-09-02 site-map ruling's "Calendly embed + Formspree form".
+
 ## 2026-09-02 — Nothing ships without a CEO verdict
 
 **Every push to `main` is preceded by a fresh CEO review of that commit, recorded with

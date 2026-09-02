@@ -317,8 +317,8 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 560px) { .not-list li { grid-template-columns: 1fr; } }
 
 /* ── Contact page ───────────────────────────────────────────────────────── */
-.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
-@media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-single { padding-bottom: clamp(96px, 12vw, 200px); }
+.contact-single #write { max-width: var(--measure); }
 .field { display: grid; gap: 8px; margin-bottom: 22px; }
 .field label { font-size: 14px; font-weight: 500; color: var(--ink-2); }
 .field input, .field textarea {
@@ -331,8 +331,6 @@ footer a:hover { color: var(--ink); }
 .field input:focus, .field textarea:focus { outline: none; border-bottom-color: var(--ink); }
 .field .hint { font-size: 13px; color: var(--ink-3); }
 .form-status { margin-top: 14px; font-size: 14px; color: var(--ink-2); min-height: 1.4em; }
-.calendly { width: 100%; min-height: 660px; border: 0; }
-.contact-alt { margin-top: 24px; font-size: 15px; color: var(--ink-2); }
 
 /* ── 404 ────────────────────────────────────────────────────────────────── */
 .four-oh-four { min-height: 60vh; display: grid; align-content: center; padding-top: 64px; padding-bottom: 64px; }

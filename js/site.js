@@ -5,9 +5,7 @@
  */
 
 // ─── Settings a human fills in once ──────────────────────────────────────────
-// Both are placeholders until Wyatt supplies them (see .claude/CTO-QUESTIONS.md).
 export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/maeyjowq';
-export const CALENDLY_URL = 'https://calendly.com/REPLACE_WITH_HANDLE';
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 function setupNav() {
@@ -82,7 +80,7 @@ function setupContact() {
     e.preventDefault();
     if (form.querySelector('[name="_gotcha"]')?.value) return;
     if (FORMSPREE_ENDPOINT.includes('REPLACE')) {
-      status.textContent = 'The form is not connected yet. Email us instead, or book a call.';
+      status.textContent = 'The form is not connected yet.';
       return;
     }
     button.disabled = true;
@@ -97,22 +95,11 @@ function setupContact() {
       form.reset();
       status.textContent = 'Sent. We read everything and reply within two working days.';
     } catch {
-      status.textContent = 'That did not go through. Try again, or book a call instead.';
+      status.textContent = 'That did not go through. Please try again.';
     } finally {
       button.disabled = false;
     }
   });
-
-  const cal = document.getElementById('calendly');
-  if (cal) {
-    if (CALENDLY_URL.includes('REPLACE')) {
-      cal.remove();
-      const note = document.getElementById('calendly-note');
-      if (note) { note.hidden = false; }
-    } else {
-      cal.src = `${CALENDLY_URL}?hide_gdpr_banner=1&background_color=ffffff&text_color=111112&primary_color=0a5cff`;
-    }
-  }
 }
 
 // ─── The mark, alive ─────────────────────────────────────────────────────────
