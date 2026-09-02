@@ -247,12 +247,13 @@ export function initScene(projects, { onSelect } = {}) {
   const isTouch = window.matchMedia('(hover: none)').matches;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); // transparent: the page's gradient shows through
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(C.bg);
+  scene.background = null;
+  renderer.setClearColor(0x000000, 0);
   const camera = new THREE.PerspectiveCamera(44, canvas.offsetWidth / canvas.offsetHeight, 0.1, 400);
 
   // On desktop the headline sits bottom-left over the canvas, so the volume is pushed right by

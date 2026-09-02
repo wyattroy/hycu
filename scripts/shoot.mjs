@@ -70,13 +70,14 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     if (p === '/' && !touch) {
       const h = await page.evaluate(() => {
         const h1 = document.querySelector('.hero-text h1');
-        const rg = document.createRange(); const t = h1.firstChild; rg.setStart(t, 0); rg.setEnd(t, t.length);
+        const lines = h1.innerText.split('\n').map((l) => l.trim()).filter(Boolean);
         const tops = new Set(); const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT); let n;
-        while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) tops.add(Math.round(rect.top)); }
-        return { firstLineText: t.textContent, firstLineRects: rg.getClientRects().length, lines: tops.size };
+        while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) if (rect.width) tops.add(Math.round(rect.top)); }
+        const purple = [...h1.querySelectorAll('.hl')].map((e) => e.textContent);
+        return { firstLine: lines[0], lines: lines.length, renderedLines: tops.size, purple };
       });
-      ran.headline++;
-      if (h.firstLineText.trim() !== 'We see where you are,' || h.firstLineRects !== 1 || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+      if (h.firstLine !== 'We see where you are,' || h.lines !== 3 || h.renderedLines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+      if (h.purple.join(' ') !== 'see design') errors.push(`${label} home: purple words are ${JSON.stringify(h.purple)}, expected see + design`);
     }
 
     // Axis labels must not sit on a tile. Sampled three times over a second, because the graph
