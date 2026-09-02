@@ -435,8 +435,8 @@ export function initScene(projects, { onSelect } = {}) {
     el.style.transform = `translate(-50%, -50%) translate(${cx}px, ${cy}px) ${rotate}`;
   }
   const endpoints = [
-    { id: 'label-understand', pos: new THREE.Vector3(-R * 1.14, 0, 0) },
-    { id: 'label-make',       pos: new THREE.Vector3( R * 1.14, 0, 0) },
+    { id: 'label-understand', pos: new THREE.Vector3(-R * 1.16, 0, 0) },
+    { id: 'label-make',       pos: new THREE.Vector3( R * 1.42, 0, 0) },
     { id: 'label-product',    pos: new THREE.Vector3(0, -R * 1.14, 0) },
     { id: 'label-idea',       pos: new THREE.Vector3(0,  R * 1.14, 0) },
   ].map((e) => ({ ...e, el: document.getElementById(e.id) }));

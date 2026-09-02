@@ -62,6 +62,10 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     if (intruders.length) errors.push(`${label} ${p}: text inside the gutter: ${intruders.join(' | ')}`);
 
     // Headline: Wyatt's ruling, 2026-09-02: "are" ends the first line. Three lines on desktop.
+    if (p === '/') {
+      const rendered = await page.evaluate(() => document.querySelector('.hero-text h1').innerText.replace(/\s+/g, ' ').trim());
+      if (rendered !== 'We see where you are, then design the way forward with you.') errors.push(`${label} home: headline renders as "${rendered}"`);
+    }
     if (p === '/' && !touch) {
       const h = await page.evaluate(() => {
         const h1 = document.querySelector('.hero-text h1');
@@ -70,7 +74,7 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) tops.add(Math.round(rect.top)); }
         return { firstLineText: t.textContent, firstLineRects: rg.getClientRects().length, lines: tops.size };
       });
-      if (h.firstLineText !== 'We see where you are,' || h.firstLineRects !== 1 || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+      if (h.firstLineText.trim() !== 'We see where you are,' || h.firstLineRects !== 1 || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
     }
 
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
@@ -102,7 +106,7 @@ await browser.close();
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
   `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline break check: 1 · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, no text inside the gutter, graph tile opens its study on click and on tap',
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, headline reads as words on both viewports and breaks after "are," on desktop, graph tile opens its study on click and on tap',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
