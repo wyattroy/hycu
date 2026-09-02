@@ -67,7 +67,7 @@
   },
   {
     "id": "how-to-change-institutions",
-    "url": "/#index",
+    "url": "/#work",
     "selected": false,
     "client": "Index",
     "name": "How to Change Institutions",
@@ -78,7 +78,7 @@
   },
   {
     "id": "pour",
-    "url": "/#index",
+    "url": "/#work",
     "selected": false,
     "client": "Index",
     "name": "Pour",
@@ -89,7 +89,7 @@
   },
   {
     "id": "taxonomy",
-    "url": "/#index",
+    "url": "/#work",
     "selected": false,
     "client": "Index",
     "name": "Taxonomy of Narrative Conventions",

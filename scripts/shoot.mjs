@@ -35,6 +35,11 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     await page.goto(BASE + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(p === '/' ? 3500 : 600);
     ran.pages++;
+    // "Pronounced: Hi-Q" sits under the hypercube line on the home and Studio pages, italic (Wyatt, 2026-09-02).
+    if (p === '/' || p === '/studio/') {
+      const pr = await page.evaluate(() => { const el = document.querySelector('.pronounce'); return el ? { text: el.textContent.trim(), italic: getComputedStyle(el).fontStyle } : null; });
+      if (!pr || pr.text !== 'Pronounced: Hi-Q' || pr.italic !== 'italic') errors.push(`${label} ${p}: pronunciation line wrong: ${JSON.stringify(pr)}`);
+    }
     // The ground gradient must span the whole document, not one window (CEO Review 12).
     const ground = await page.evaluate(() => {
       const html = document.documentElement; const cs = getComputedStyle(html);

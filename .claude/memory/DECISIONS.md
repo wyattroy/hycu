@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-09-02 — No Index section on the home page
+
+**The "Index / Further work" list (How to Change Institutions, Pour, Taxonomy) is removed from the
+home page.** Wyatt: "remove this section from the homepage." The three stay in the graph as small
+tiles (the session's call, pending his word), and clicking one scrolls to Selected work.
+
 ## 2026-09-02 — Wyatt's copy edits are his
 
 **A session never commits Wyatt's in-progress copy edits, and never uses `git add -A`.** Found by

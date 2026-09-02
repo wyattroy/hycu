@@ -40,7 +40,7 @@ const C = {
   ruleStrong: '#9C9CA2',
   face: '#FFFFFF',
   faceSmall: '#F7F7F8',
-  accent: '#0A5CFF',
+  accent: '#7A4FD6',
 };
 
 // The one place the site uses colour: a tile's thickness carries the hue of its primary

@@ -52,7 +52,7 @@ async function setupGraph() {
   const { initScene, initScatter2D, hasWebGL } = await import('/js/scene.js');
   const onSelect = (p) => {
     if (p.selected) { window.location.href = p.url; return; }
-    document.getElementById('index')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // index tiles: the Index section was removed 2026-09-02
   };
 
   let view;

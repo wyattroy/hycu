@@ -10,7 +10,7 @@
   --ink-3: #9c9ca2;
   --rule: #e8e8eb;
   --rule-mid: #c9c9ce;
-  --accent: #0a5cff;
+  --accent: #7a4fd6; /* hover and focus: the systems purple (Wyatt, 2026-09-02); strategy blue stays a data colour */
   --accent-ink: #ffffff;
 
   /* The four capabilities, the only colour on the site. Same values as js/scene.js. */
@@ -273,6 +273,8 @@ main.has-hero { padding-top: 0; }
 @media (max-width: 860px) { .statement { grid-template-columns: 1fr; } }
 .statement .h-lg { max-width: 14em; }
 .statement .prose p { font-size: 18px; }
+.pronounce { font-style: italic; font-size: 15px; color: var(--ink-2); margin: 10px 0 0; }
+.studio-hero .pronounce { margin-top: 14px; }
 
 /* ── Contact strip ──────────────────────────────────────────────────────── */
 .contact-strip { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
