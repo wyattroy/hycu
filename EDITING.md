@@ -37,8 +37,9 @@ Before publishing, run:
 node scripts/check.mjs
 ```
 
-It fails, and says why, if any page contains the oral-care client's name or the word "floss", or
-if site copy uses "I", "I'm", "my". Fix the line it points at and run it again.
+It fails, and says why, if any file contains the oral-care client's brand name or its product
+category (the list is `scripts/scrub.json`), or if site copy slips into first-person singular.
+Fix the line it points at and run it again.
 
 ## Publish
 
