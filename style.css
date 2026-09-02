@@ -109,13 +109,13 @@ section.band.flush { border-top: 0; }
   padding: 13px 20px;
   border-radius: 999px;
   border: 1px solid var(--ink);
-  background: var(--ink); color: var(--bg);
+  background: var(--ink); color: var(--bg) !important;
   cursor: pointer; white-space: nowrap;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), opacity var(--t-fast);
 }
-.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.btn.quiet { background: transparent; color: var(--ink); }
-.btn.quiet:hover { background: transparent; color: var(--accent); border-color: var(--accent); }
+.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) !important; }
+.btn.quiet { background: transparent; color: var(--ink) !important; }
+.btn.quiet:hover { background: transparent; color: var(--accent) !important; border-color: var(--accent); }
 .btn.sm { font-size: 14px; padding: 10px 16px; }
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
@@ -133,8 +133,8 @@ section.band.flush { border-top: 0; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
 .brand .mark { display: block; width: 20px; height: 20px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
-.nav-links a { color: var(--ink-2); transition: color var(--t-fast); }
-.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); }
+.nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
+.nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
 .nav-links .btn { margin-left: 8px; }
 .nav-toggle { display: none; background: none; border: 0; font: inherit; color: var(--ink); padding: 8px; cursor: pointer; }
 @media (max-width: 720px) {

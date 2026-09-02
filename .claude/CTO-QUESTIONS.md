@@ -5,9 +5,6 @@ until he rules; mechanism questions may take a default and say which default was
 
 ## Open
 
-- **2026-09-02 · Thesis line.** CEO Review 1 found "design" omits building and "you'll" makes the
-  destination the studio's. Three rewrites offered; the site ships with his original until he
-  chooses. See `.claude/CEO-REVIEWS.md`, Review 1.
 
 - **2026-09-02 · Formspree endpoint.** `js/site.js` has `FORMSPREE_ENDPOINT` as a placeholder. Until
   a real form id is pasted in, the contact form tells the visitor it is not connected. Create one at
@@ -26,6 +23,8 @@ until he rules; mechanism questions may take a default and say which default was
   sensitive; the client name is scrubbed and the check enforces it).
 
 ## Answered
+
+- **2026-09-02 · Thesis line.** Wyatt chose "We see where you are, then design the way forward with you." Live.
 
 - **2026-09-02 · Names.** Wyatt: strike Dean Sarah Whiting, Lee Cott, Martin Bechthold; keep Kalana White, Xavaar Quaranto, Irys Kornbluth ("they were collaborators"). Done.
 - **2026-09-02 · Repo visibility.** Wyatt: "make the repo public and push it." Done.

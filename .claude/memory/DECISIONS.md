@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-09-02 — Thesis line, final
+
+**"We see where you are, then design the way forward with you."** Chosen (option 1 of 7) over his
+original "We discover where you are, then design where you'll go." after CEO Review 1 and his
+own objection that rewrite "build where you're going" sounded like building to order. *See*
+carries the hypercube's clarity, *with you* the collaboration, *the way forward* a destination
+that is theirs. It does not say "build"; the six cards beneath it do.
+
 ## 2026-09-02 — Names on the site
 
 **Collaborators are named; people who were merely present are not.** Wyatt struck Dean Sarah
