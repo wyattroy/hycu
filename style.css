@@ -211,7 +211,7 @@ main.has-hero { padding-top: 0; }
 @media (max-width: 800px) { .work-list { grid-template-columns: 1fr; } }
 .work-item { display: block; padding: 28px 0 40px; border-top: 1px solid var(--rule); }
 .work-item .eyebrow { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-.work-item .eyebrow .year { color: var(--ink-3); letter-spacing: .06em; }
+.work-item .eyebrow .year { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-2); white-space: nowrap; }
 .work-item h3 { transition: color var(--t-fast); }
 .work-item:hover h3 { color: var(--accent); }
 .work-item .sub { margin: 12px 0 18px; color: var(--ink-2); max-width: 34em; }
@@ -288,7 +288,8 @@ footer a:hover { color: var(--ink); }
 /* ── Studio page ────────────────────────────────────────────────────────── */
 .studio-hero { padding: clamp(56px, 8vw, 120px) 0 clamp(40px, 6vw, 80px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: center; }
 @media (max-width: 860px) { .studio-hero { grid-template-columns: 1fr; } }
-#tesseract { width: min(100%, 360px); aspect-ratio: 1; display: block; margin: 0 auto; color: var(--ink); }
+.tesseract { width: min(100%, 360px); aspect-ratio: 1; display: block; margin: 0 auto; color: var(--ink); }
+.statement .tesseract { width: min(100%, 260px); margin: 8px 0 0; }
 .two-col { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px clamp(32px, 6vw, 96px); }
 @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
 .not-list { list-style: none; margin: 0; padding: 0; }

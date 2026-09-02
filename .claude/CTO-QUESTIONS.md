@@ -16,7 +16,8 @@ until he rules; mechanism questions may take a default and say which default was
   contact page hides the embed and shows a note. Paste the event link.
 - **2026-09-02 · Studio email.** The site has no email address on it. Does Hycu get one
   (hello@hycudesign.com via Squarespace forwarding, say), or does the form suffice?
-- **2026-09-02 · Names on study pages.** The site names: Dean Sarah Whiting and Lee Cott (from the
+- ~~Names on study pages~~ answered, see below.
+- **(was) Names on study pages.** The site names: Dean Sarah Whiting and Lee Cott (from the
   public wyattroy.com study); Kalana White, Xavaar Quaranto, Martin Bechthold (collaborators);
   Irys Kornbluth (oral-care research collaborator). Confirm each, or say who to drop. The
   oral-care page never names the client; check the collaborator name does not link to it.
@@ -26,4 +27,6 @@ until he rules; mechanism questions may take a default and say which default was
 
 ## Answered
 
-(none yet)
+- **2026-09-02 · Names.** Wyatt: strike Dean Sarah Whiting, Lee Cott, Martin Bechthold; keep Kalana White, Xavaar Quaranto, Irys Kornbluth ("they were collaborators"). Done.
+- **2026-09-02 · Repo visibility.** Wyatt: "make the repo public and push it." Done.
+- **2026-09-02 · Formspree and Calendly.** Wyatt is setting them up; placeholders stay until then.

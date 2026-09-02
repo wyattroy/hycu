@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-09-02 — Names on the site
+
+**Collaborators are named; people who were merely present are not.** Wyatt struck Dean Sarah
+Whiting, Lee Cott and Martin Bechthold from the Spatial Equity page and kept Kalana White, Xavaar
+Quaranto and Irys Kornbluth: "they were collaborators." The Dean is still referred to by title.
+
+## 2026-09-02 — Thesis line, second pass
+
+**Rewrite 1 ("We see where you are, then build where you're going") rejected: "it sounds like
+we're just building what they tell us to."** The line must carry that Hycu designs the way forward
+*collaboratively, with the client*. His own closest-to-true version: "we see where you are, then
+design a way to get you where you want to be going," which he calls convoluted. New options
+requested.
+
 ## 2026-09-02 — Graph interaction and theme (session defaults, not asked of Wyatt)
 
 **The wheel is not captured over the graph; zoom is the +/− buttons and pinch.** Chosen over

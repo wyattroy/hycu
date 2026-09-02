@@ -35,7 +35,7 @@
       <h1 class="display" style="margin:18px 0 22px">One dimension up.</h1>
       <p class="lede">Hycu is short for hypercube. It's the shape you get when you extend a cube in a direction that isn't there yet, and it's the way we look at a client's problem.</p>
     </div>
-    <svg id="tesseract" viewBox="-2.3 -2.3 4.6 4.6" aria-label="A rotating hypercube, drawn in lines" role="img"></svg>
+    <svg class="tesseract" viewBox="-2.3 -2.3 4.6 4.6" aria-label="A rotating hypercube, drawn in lines" role="img"></svg>
   </section>
 
   <section class="band">
@@ -110,42 +110,5 @@
 </footer>
 
 <script type="module" src="/js/site.js"></script>
-<script>
-/* The mark, alive: sixteen vertices in four dimensions, rotated in two planes, projected to three
-   and then to two. Drawn with lines only, like the nav mark. Respects reduced motion. */
-(function () {
-  var svg = document.getElementById('tesseract');
-  if (!svg) return;
-  var NS = 'http://www.w3.org/2000/svg';
-  var verts = [];
-  for (var i = 0; i < 16; i++) verts.push([(i & 1) ? 1 : -1, (i & 2) ? 1 : -1, (i & 4) ? 1 : -1, (i & 8) ? 1 : -1]);
-  var edges = [];
-  for (var a = 0; a < 16; a++) for (var b = a + 1; b < 16; b++) { var d = a ^ b; if (d && !(d & (d - 1))) edges.push([a, b]); }
-  var lines = edges.map(function () { var l = document.createElementNS(NS, 'line'); l.setAttribute('stroke', 'currentColor'); l.setAttribute('stroke-width', '0.024'); l.setAttribute('stroke-linecap', 'round'); svg.appendChild(l); return l; });
-  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function rot(p, i, j, t) { var c = Math.cos(t), s = Math.sin(t); var q = p.slice(); q[i] = p[i] * c - p[j] * s; q[j] = p[i] * s + p[j] * c; return q; }
-  function draw(t) {
-    var pts = verts.map(function (v) {
-      var p = rot(v, 0, 3, t * 0.00035);      // x–w
-      p = rot(p, 1, 2, t * 0.00021);          // y–z
-      p = rot(p, 0, 2, 0.5);                  // a fixed tilt so the cube reads as a cube
-      var w = 1 / (2.6 - p[3]);               // 4D → 3D perspective
-      var x = p[0] * w * 2.2, y = p[1] * w * 2.2, z = p[2] * w * 2.2;
-      var s = 1 / (4.2 - z);                  // 3D → 2D perspective
-      return [x * s * 2.7, -y * s * 2.7];
-    });
-    lines.forEach(function (l, k) {
-      var e = edges[k];
-      l.setAttribute('x1', pts[e[0]][0]); l.setAttribute('y1', pts[e[0]][1]);
-      l.setAttribute('x2', pts[e[1]][0]); l.setAttribute('y2', pts[e[1]][1]);
-    });
-  }
-  if (still) { draw(2400); return; }
-  var running = true;
-  function frame(t) { if (running) draw(t); requestAnimationFrame(frame); }
-  requestAnimationFrame(frame);
-  document.addEventListener('visibilitychange', function () { running = !document.hidden; });
-})();
-</script>
 </body>
 </html>
