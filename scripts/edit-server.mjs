@@ -38,20 +38,22 @@ function countOccurrences(hay, needle) {
   return n;
 }
 
-function save({ page, before, after }) {
+function save({ page, before, after, occurrence = 0 }) {
   const file = fileFor(page);
   if (!file || !file.endsWith('.html')) return { ok: false, reason: 'no source file for this page' };
   if (typeof before !== 'string' || typeof after !== 'string' || before.trim().length < 3) return { ok: false, reason: 'original text too short to locate safely' };
   const src = fs.readFileSync(file, 'utf8');
   for (const [candidate, encoded] of [[before, false], [encode(before), true]]) {
     const n = countOccurrences(src, candidate);
-    if (n === 1) {
-      // Keep the file's own spelling: if the original was found via entities, write entities back.
-      const replacement = encoded ? encode(after) : after;
-      fs.writeFileSync(file, src.replace(candidate, () => replacement));
-      return { ok: true, file: path.relative(ROOT, file) };
-    }
-    if (n > 1) return { ok: false, reason: `that text appears ${n} times in ${path.relative(ROOT, file)}` };
+    if (n === 0) continue;
+    if (occurrence >= n) return { ok: false, reason: `that text appears ${n} times in ${path.relative(ROOT, file)} but the page showed it ${occurrence + 1} times; reload the page` };
+    // Replace the same occurrence the page was showing: document order is source order here.
+    let idx = -1;
+    for (let k = 0; k <= occurrence; k++) idx = src.indexOf(candidate, idx + 1);
+    // Keep the file's own spelling: if the original was found via entities, write entities back.
+    const replacement = encoded ? encode(after) : after;
+    fs.writeFileSync(file, src.slice(0, idx) + replacement + src.slice(idx + candidate.length));
+    return { ok: true, file: path.relative(ROOT, file), occurrence: n > 1 ? `${occurrence + 1} of ${n}` : undefined };
   }
   return { ok: false, reason: `could not find the original text in ${path.relative(ROOT, file)}` };
 }
@@ -111,6 +113,7 @@ const EDITOR = String.raw`
     e.preventDefault();
     active = t;
     t.dataset.before = t.innerHTML;
+    t.dataset.occurrence = String([...document.querySelectorAll('*')].filter((el) => el.innerHTML === t.innerHTML).indexOf(t));
     t.setAttribute('contenteditable', 'true');
     t.dataset.editing = '1';
     t.focus();
@@ -133,11 +136,11 @@ const EDITOR = String.raw`
   }
   async function commit() {
     const t = active; active = null;
-    const before = t.dataset.before; delete t.dataset.before; cleanup(t);
+    const before = t.dataset.before; const occurrence = Number(t.dataset.occurrence || 0); delete t.dataset.before; delete t.dataset.occurrence; cleanup(t);
     const after = t.innerHTML.replace(/(&nbsp;|\u00a0)+$/, '');
     if (after === before) { say('No change.'); return; }
     try {
-      const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after }) });
+      const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after, occurrence }) });
       const r = await res.json();
       if (r.ok) { t.dataset.saved = '1'; setTimeout(() => delete t.dataset.saved, 1500); say('Saved to ' + r.file, true); return; }
       throw new Error(r.reason);

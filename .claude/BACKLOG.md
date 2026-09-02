@@ -16,6 +16,7 @@ Item ids are `HY-<n>`. Each needs a reviewed commit to ship.
 - ~~HY-10~~ done 2026-09-02 (label check also sampled after a hard drag, desktop). Was: Label-on-tile check samples only the resting view; also sample a dragged view near the 55° limit. (CEO Review 7)
 - ~~HY-11~~ done 2026-09-02 (Origin/Host check, path boundary). Was: `scripts/edit-server.mjs`: require `Origin`/`Host` of 127.0.0.1:8788 on `/__save`; `fileFor` must compare against `ROOT + path.sep`. (CEO Review 8)
 - ~~HY-12~~ done 2026-09-02 (`scripts/edit-test.mjs`, `npm run edit-test`, writes PASS/FAIL to TEST-REPORT.md). Was: An editor test in the repo (`scripts/edit-test.mjs`, run by `npm test` only when the editor is up), and red-proofs that leave a trace in TEST-REPORT.md rather than the terminal. (CEO Review 8)
+- **HY-18** Editor: drag-select inside the home work cards (they are `<a>` elements; browsers drag links rather than select their text). Untested. (CEO Review 9)
 - **HY-13** Label check: sample the other orbit side, an upward tilt, and a phone drag. (CEO Review 8)
 - **HY-14** Consider vendoring Geist / Geist Mono like Three.js; today a blocked font falls back to Helvetica. (CEO Review 8)
 - **HY-15** Fix the "whatever the angle" comment in `js/scene.js` (placement is safe; the margin clamp was the fault). (CEO Review 8)
