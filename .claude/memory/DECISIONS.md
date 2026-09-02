@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-09-02 — Wyatt's copy edits are his
+
+**A session never commits Wyatt's in-progress copy edits, and never uses `git add -A`.** Found by
+CEO Review 9: `git add -A` had swept his editor edits into two session commits. Sessions stage by
+path. His edits reach `main` when he says so (`git push --no-verify` per EDITING.md, or "I edited
+copy" in a session, which then reviews and tests them).
+
 ## 2026-09-02 — No Calendly
 
 **No booking widget. Contact is the form (Formspree `maeyjowq`) and nothing else.** Wyatt: "i don't

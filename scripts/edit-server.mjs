@@ -26,7 +26,7 @@ const encode = (s) => ENTITIES.reduce((acc, [ch, ent]) => acc.split(ch).join(ent
 function fileFor(urlPath) {
   const clean = decodeURIComponent(urlPath.split('?')[0]);
   let p = path.join(ROOT, clean);
-  if (!p.startsWith(ROOT)) return null;
+  if (p !== ROOT && !p.startsWith(ROOT + path.sep)) return null;
   if (fs.existsSync(p) && fs.statSync(p).isDirectory()) p = path.join(p, 'index.html');
   return fs.existsSync(p) ? p : null;
 }
@@ -79,6 +79,7 @@ const EDITOR = String.raw`
     '.edit-bar .eb-msg{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.edit-bar button{font:inherit;color:#111112;background:#fff;border:0;border-radius:999px;padding:6px 12px;cursor:pointer}',
     'body{padding-top:36px}#nav{top:36px}',
+    '.hero-copy,.hero-text{pointer-events:auto !important}', /* the site lets clicks pass through the headline to the graph; editing needs the headline */
     '[data-editing]{outline:2px solid #0a5cff;outline-offset:4px;border-radius:2px;background:rgba(10,92,255,.04)}',
     '[data-saved]{outline:2px solid #1fa084;outline-offset:4px;border-radius:2px;transition:outline-color 1.2s}',
     '[data-failed]{outline:2px solid #d9622b;outline-offset:4px;border-radius:2px}',
@@ -100,6 +101,8 @@ const EDITOR = String.raw`
     const a = e.target.closest('a');
     if (a && !e.metaKey && !e.ctrlKey && !a.closest('.edit-bar')) e.preventDefault();
   }, true);
+
+  document.addEventListener('submit', (e) => { e.preventDefault(); e.stopImmediatePropagation(); say('Form submission is off while editing.', false); }, true);
 
   document.addEventListener('dblclick', (e) => {
     const t = target(e.target);
@@ -131,7 +134,7 @@ const EDITOR = String.raw`
   async function commit() {
     const t = active; active = null;
     const before = t.dataset.before; delete t.dataset.before; cleanup(t);
-    const after = t.innerHTML;
+    const after = t.innerHTML.replace(/(&nbsp;|\u00a0)+$/, '');
     if (after === before) { say('No change.'); return; }
     try {
       const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after }) });
@@ -156,6 +159,11 @@ const EDITOR = String.raw`
 
 http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/__save') {
+    const origin = req.headers.origin || '';
+    const local = new RegExp(`^https?://(127\\.0\\.0\\.1|localhost):${PORT}$`);
+    if (!local.test(origin) || !local.test('http://' + String(req.headers.host || ''))) {
+      res.writeHead(403, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, reason: 'refused: not from the editor page' })); return;
+    }
     let body = '';
     req.on('data', (c) => { body += c; });
     req.on('end', () => {

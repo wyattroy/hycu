@@ -35,3 +35,21 @@ output channel and must park its work until one exists.
 **`scripts/check.mjs` is this repo's proof.** It fails on any scrubbed client name, on first-person
 singular voice in site copy, and on a page that is missing. A site that says "I" or names the
 oral-care client has broken a ruling, not a style preference.
+
+**GitHub Pages HTTPS, learned 2026-09-02.** The certificate would not issue for two hours after DNS
+pointed at GitHub. Two causes, both needed: (1) Squarespace's default **AAAA** records still pointed
+IPv6 at Squarespace, so GitHub judged the domain misconfigured; Wyatt deleted them. (2) GitHub does
+not always re-verify on its own: clear the custom domain and re-enter it (`gh api -X PUT
+repos/wyattroy/hycu/pages -F cname=` then `-f cname=hycudesign.com`), the same fix Pastry Pirates
+needed (pastrypirates/docs/GIT-AND-DEPLOY.md). Name the full repo in any such command; the same
+call on the wrong repo unsets a live domain.
+
+**The shell's working directory is not a fact you may assume, learned 2026-09-02.** A read-only
+`cd` into another project for a grep left the shell there, and the next `git commit` landed in
+that repo (undone within the minute, nothing pushed). Every command that writes starts with
+`cd /Users/wyattroy/Documents/Projects/hycu &&`.
+
+**`git add -A` is banned in this repo, learned 2026-09-02.** Wyatt edits copy in his own working
+tree through the inline editor while a session works. `git add -A` swept thirteen lines of his
+unfinished home-page edits into a session commit, and the session's brief then said no site file
+had changed. Stage by path, always; his edits are his to commit (see EDITING.md).
