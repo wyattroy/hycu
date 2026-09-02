@@ -257,7 +257,7 @@ export function initScene(projects, { onSelect } = {}) {
   // shifting the projection rather than the model: the orbit centre stays at the origin.
   function applyViewOffset() {
     const w = canvas.offsetWidth, h = canvas.offsetHeight;
-    if (w >= 900) camera.setViewOffset(w, h, -Math.round(w * 0.17), 0, w, h);
+    if (w >= 900) camera.setViewOffset(w, h, -Math.round(w * 0.23), 0, w, h);
     else camera.clearViewOffset();
   }
   applyViewOffset();

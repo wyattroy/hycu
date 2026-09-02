@@ -30,6 +30,8 @@ verified build. Lines marked *(default)* were not asked of him — correct them 
 working session; nothing in the shell publishes anywhere but production. A CTO on this repo has no
 output channel and must park its work until one exists.
 
+**`scripts/hooks/pre-push` gates every push on a recorded CEO verdict** (`git config core.hooksPath scripts/hooks`, set on this machine; re-run after a fresh clone). The verdict entry must carry `reviewed-commit: <sha>`.
+
 **`scripts/check.mjs` is this repo's proof.** It fails on any scrubbed client name, on first-person
 singular voice in site copy, and on a page that is missing. A site that says "I" or names the
 oral-care client has broken a ruling, not a style preference.

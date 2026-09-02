@@ -1,0 +1,29 @@
+#!/bin/sh
+# pre-push — nothing ships without a CEO verdict on it.
+# Wyatt, 2026-09-02: "pass it by CEO every single time, per CEO's instructions, before shipping."
+#
+# The newest entry in .claude/CEO-REVIEWS.md must carry `reviewed-commit: <sha>` where <sha> is
+# HEAD, or an ancestor of HEAD such that every commit since touches only records (.claude/) or
+# this hook. Copy edits made by hand can skip this with `git push --no-verify` (see EDITING.md);
+# a working session never does.
+set -e
+ROOT=$(git rev-parse --show-toplevel)
+FILE="$ROOT/.claude/CEO-REVIEWS.md"
+HEAD_SHA=$(git rev-parse HEAD)
+REVIEWED=$(awk '/^## Review /{f=1} f && /reviewed-commit:/{print $NF; exit}' "$FILE" 2>/dev/null | tr -d '`')
+if [ -z "$REVIEWED" ]; then
+  echo "pre-push: no 'reviewed-commit:' in the newest CEO verdict. Run /ceo, record it, then push." >&2
+  exit 1
+fi
+if ! git merge-base --is-ancestor "$REVIEWED" "$HEAD_SHA" 2>/dev/null; then
+  echo "pre-push: newest CEO verdict is for $REVIEWED, which is not an ancestor of HEAD." >&2
+  exit 1
+fi
+UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" | grep -v '^\.claude/' | grep -v '^scripts/hooks/' || true)
+if [ -n "$UNREVIEWED" ]; then
+  echo "pre-push: files changed since the CEO reviewed $REVIEWED:" >&2
+  echo "$UNREVIEWED" | sed 's/^/  /' >&2
+  echo "Run /ceo on HEAD and record the verdict with reviewed-commit: $(git rev-parse --short HEAD)" >&2
+  exit 1
+fi
+exit 0

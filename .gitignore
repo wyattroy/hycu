@@ -1,2 +1,3 @@
 .DS_Store
-.claude/TEST-REPORT.md
+node_modules/
+.claude/shots/

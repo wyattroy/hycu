@@ -1,0 +1,96 @@
+#!/usr/bin/env node
+/* shoot.mjs — the site used by a browser, at desktop and phone widths, with checks written to the
+ * FAULTS that have reached the live site, not to the fixes:
+ *   - no console errors, no page errors, no horizontal overflow
+ *   - no visible text starts inside the left gutter (a padding shorthand zeroed it, twice)
+ *   - a real graph tile can be hovered and clicked (desktop) and tapped (phone); an invisible
+ *     div once covered the canvas
+ * Screenshots go to .claude/shots/ (gitignored); the report is appended to .claude/TEST-REPORT.md.
+ * Run `node scripts/check.mjs` first: it starts the report. Needs a local server on :8787
+ * (`python3 -m http.server 8787`). */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
+const OUT = path.join(ROOT, '.claude/shots');
+const BASE = process.env.BASE || 'http://127.0.0.1:8787';
+const PAGES = ['/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/'];
+
+let chromium;
+try { ({ chromium } = await import('playwright')); }
+catch { ({ chromium } = await import('/Users/wyattroy/Documents/Projects/wyattroy-portfolio/node_modules/playwright/index.mjs')); }
+
+fs.mkdirSync(OUT, { recursive: true });
+const browser = await chromium.launch();
+const errors = [];
+const ran = { pages: 0, gutter: 0, graph: 0 };
+
+for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['phone', { width: 390, height: 844 }, true]]) {
+  const ctx = await browser.newContext({ viewport: vp, hasTouch: touch, isMobile: touch, deviceScaleFactor: 1 });
+  const page = await ctx.newPage();
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(`${label} ${page.url()}: console: ${m.text()}`); });
+  page.on('pageerror', (e) => errors.push(`${label} ${page.url()}: ${e.message}`));
+
+  for (const p of PAGES) {
+    await page.goto(BASE + p, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(p === '/' ? 3500 : 600);
+    ran.pages++;
+    const name = p === '/' ? 'home' : p.replace(/\//g, '-').replace(/^-|-$/g, '');
+    await page.screenshot({ path: `${OUT}/${label}-${name}-fold.png` });
+    await page.screenshot({ path: `${OUT}/${label}-${name}-full.png`, fullPage: true });
+
+    if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) errors.push(`${label} ${p}: horizontal overflow`);
+
+    // Gutter: every visible text element must start at or right of the nav brand's left edge.
+    // Graph axis labels are pinned to the canvas edge on purpose and are excluded.
+    const intruders = await page.evaluate(() => {
+      const edge = document.querySelector('.brand').getBoundingClientRect().left;
+      const out = [];
+      for (const el of document.querySelectorAll('h1,h2,h3,p,a,li,span,button,label,input,textarea,svg.tesseract')) {
+        if (el.closest('#axis-labels, #graph-hover, .visually-hidden')) continue;
+        if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') continue;
+        if (!(el.textContent || '').trim() && el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && el.tagName !== 'svg') continue;
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) continue;
+        if (r.left < edge - 1) out.push(`${el.tagName.toLowerCase()}.${el.className || ''} "${(el.textContent || '').trim().slice(0, 30)}" left=${Math.round(r.left)} < ${Math.round(edge)}`);
+      }
+      return out.slice(0, 5);
+    });
+    ran.gutter++;
+    if (intruders.length) errors.push(`${label} ${p}: text inside the gutter: ${intruders.join(' | ')}`);
+
+    // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
+    // give a pointer cursor (desktop), and open its study when clicked or tapped.
+    if (p === '/') {
+      const tiles = await page.evaluate(() => (window.__graph?.screenPositions() || []).filter((t) => t.selected));
+      if (!tiles.length) { errors.push(`${label} home: no tile positions exposed`); continue; }
+      const h1 = await page.evaluate(() => { const r = document.querySelector('.hero-text h1').getBoundingClientRect(); return { x: r.left, y: r.top }; });
+      const tile = tiles.sort((a, b) => Math.hypot(a.x - h1.x, a.y - h1.y) - Math.hypot(b.x - h1.x, b.y - h1.y))[0];
+      const top = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [tile.x, tile.y]);
+      if (top !== 'graph-canvas') errors.push(`${label} home: element over tile ${tile.id} is #${top}, not the canvas`);
+      if (!touch) {
+        await page.mouse.move(tile.x, tile.y); await page.waitForTimeout(200);
+        const cursor = await page.evaluate(() => getComputedStyle(document.getElementById('graph-canvas')).cursor);
+        if (cursor !== 'pointer') errors.push(`${label} home: hovering tile ${tile.id} gives cursor "${cursor}"`);
+        await page.mouse.click(tile.x, tile.y);
+      } else {
+        await page.touchscreen.tap(tile.x, tile.y);
+      }
+      await page.waitForTimeout(800);
+      ran.graph++;
+      if (!page.url().endsWith(tile.url)) errors.push(`${label} home: ${touch ? 'tapping' : 'clicking'} tile ${tile.id} went to ${page.url()}, expected ${tile.url}`);
+    }
+  }
+  await ctx.close();
+}
+await browser.close();
+
+const report = [
+  `## Browser pass — ${new Date().toISOString()}`,
+  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} · graph click/tap checks: ${ran.graph}`,
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, no text inside the gutter, graph tile opens its study on click and on tap',
+  '',
+].join('\n');
+fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
+console.log(report);
+process.exit(errors.length ? 1 : 0);

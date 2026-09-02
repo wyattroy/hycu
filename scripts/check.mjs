@@ -40,7 +40,7 @@ for (const f of files) {
 }
 for (const r of REQUIRED) if (!fs.existsSync(path.join(ROOT, r))) fails.push(`missing required file: ${r}`);
 
-const report = [`# Test report — ${new Date().toISOString()}`, "", `Files scanned: ${files.length}`, `Failures: ${fails.length}`, "", ...fails.map(f => `- ${f}`)].join("\n") + "\n";
+const report = [`# Test report — ${new Date().toISOString()}`, "", "## Copy check", "", `Files scanned: ${files.length}`, `Failures: ${fails.length}`, "", ...fails.map(f => `- ${f}`)].join("\n") + "\n";
 fs.mkdirSync(path.join(ROOT, ".claude"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, ".claude/TEST-REPORT.md"), report);
 console.log(report);
