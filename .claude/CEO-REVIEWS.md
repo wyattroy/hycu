@@ -5,6 +5,16 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 14 — 2026-09-02 · commit 855117e: "Pronounced: Hi-Q", purple hover, Index section removed
+reviewed-commit: 855117e
+**One sentence:** *"PUSH — all four things Wyatt asked for are in the commit and visible in the screenshots, his own card edits are untouched, and the only things to flag are three leftover graph tiles that now lead nowhere in particular and some dead CSS the removal left behind."* **PUSH.**
+
+- **Asked for / delivered:** pronunciation line DONE on home; on Studio under the hero lede (interpretation, agreed); hover purple DONE via `--accent`; Index section removed DONE.
+- **Delivered but not asked for:** the three Index projects stay as graph tiles whose click lands on a list they are not in and whose tooltip says "Index"; disclosed; Wyatt's decision. (Superseded the same hour: Wyatt asked for Pour and How to Change Institutions to become full studies.)
+- **Unsupported claims:** none false; dead `.index` CSS, a stale DECISIONS line, and an untrue screen-reader sentence left behind.
+- **Recurrence:** Review 13's invented-comment fault did not recur; leaving dead things in place did (housekeeping).
+- **Working session's response:** pushed. Dead `.index` CSS, stale DECISIONS line and the screen-reader sentence handled in the next commit alongside the Pour/HTCI pages.
+
 ## Review 13 — 2026-09-02 · commits cc35591 + 5cee3a0 + 0ca2d12: purple words, document-spanning gradient
 reviewed-commit: 0ca2d12
 **One sentence:** *"PUSH — the seam Review 12 held on is genuinely gone (I measured the ground pixel-by-pixel down six full-page screenshots at both widths and found the five grey stops landing at the right fractions of every document, with no hard line anywhere), the purple is exact, Wyatt's own card edits are untouched, and the only faults left are a false code comment and a grey so faint he should look at it and decide for himself."* **PUSH.**

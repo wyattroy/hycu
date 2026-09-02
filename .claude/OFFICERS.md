@@ -53,3 +53,10 @@ that repo (undone within the minute, nothing pushed). Every command that writes 
 tree through the inline editor while a session works. `git add -A` swept thirteen lines of his
 unfinished home-page edits into a session commit, and the session's brief then said no site file
 had changed. Stage by path, always; his edits are his to commit (see EDITING.md).
+
+**Second working-directory incident, 2026-09-02, same day as the first.** A `cd` into the
+portfolio repo for a read-only look at source text persisted into the next command, whose Python
+rewrote the portfolio's `data/projects.json` (restored with `git checkout`, nothing committed or
+pushed). The rule is now mechanical: **never `cd` out of this repo.** Read other repos with
+`git -C <path>` or absolute paths; every Python heredoc opens with
+`os.chdir('/Users/wyattroy/Documents/Projects/hycu')`.
