@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-09-02 — Graph interaction and theme (session defaults, not asked of Wyatt)
+
+**The wheel is not captured over the graph; zoom is the +/− buttons and pinch.** Chosen over
+wyattroy.com's scroll-driven zoom because the graph sits above content people need to scroll to.
+**Single light theme, no dark mode.** Direction 1 commits to a white ground. Both are defaults the
+session took and named; either can be reversed by a ruling.
+
 ## 2026-09-02 — Thesis line
 
 **"We discover where you are, then design where you'll go."** Wyatt's own rewrite of the proposed
