@@ -43,6 +43,8 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
 
     // Gutter: every visible text element must start at or right of the nav brand's left edge.
     // Graph axis labels are pinned to the canvas edge on purpose and are excluded.
+    const brandLeft = await page.evaluate(() => document.querySelector('.brand').getBoundingClientRect().left);
+    if (brandLeft < 24) errors.push(`${label} ${p}: gutter is only ${Math.round(brandLeft)}px`);
     const intruders = await page.evaluate(() => {
       const edge = document.querySelector('.brand').getBoundingClientRect().left;
       const out = [];
@@ -58,6 +60,18 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     });
     ran.gutter++;
     if (intruders.length) errors.push(`${label} ${p}: text inside the gutter: ${intruders.join(' | ')}`);
+
+    // Headline: Wyatt's ruling, 2026-09-02: "are" ends the first line. Three lines on desktop.
+    if (p === '/' && !touch) {
+      const h = await page.evaluate(() => {
+        const h1 = document.querySelector('.hero-text h1');
+        const rg = document.createRange(); const t = h1.firstChild; rg.setStart(t, 0); rg.setEnd(t, t.length);
+        const tops = new Set(); const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT); let n;
+        while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) tops.add(Math.round(rect.top)); }
+        return { firstLineText: t.textContent, firstLineRects: rg.getClientRects().length, lines: tops.size };
+      });
+      if (h.firstLineText !== 'We see where you are,' || h.firstLineRects !== 1 || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+    }
 
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
     // give a pointer cursor (desktop), and open its study when clicked or tapped.
@@ -87,7 +101,7 @@ await browser.close();
 
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
-  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} · graph click/tap checks: ${ran.graph}`,
+  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline break check: 1 · graph click/tap checks: ${ran.graph}`,
   errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, no text inside the gutter, graph tile opens its study on click and on tap',
   '',
 ].join('\n');

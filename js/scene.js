@@ -435,10 +435,10 @@ export function initScene(projects, { onSelect } = {}) {
     el.style.transform = `translate(-50%, -50%) translate(${cx}px, ${cy}px) ${rotate}`;
   }
   const endpoints = [
-    { id: 'label-understand', pos: new THREE.Vector3(-R * 1.22, 0, 0) },
-    { id: 'label-make',       pos: new THREE.Vector3( R * 1.22, 0, 0) },
-    { id: 'label-product',    pos: new THREE.Vector3(0, -R * 1.22, 0) },
-    { id: 'label-idea',       pos: new THREE.Vector3(0,  R * 1.22, 0) },
+    { id: 'label-understand', pos: new THREE.Vector3(-R * 1.14, 0, 0) },
+    { id: 'label-make',       pos: new THREE.Vector3( R * 1.14, 0, 0) },
+    { id: 'label-product',    pos: new THREE.Vector3(0, -R * 1.14, 0) },
+    { id: 'label-idea',       pos: new THREE.Vector3(0,  R * 1.14, 0) },
   ].map((e) => ({ ...e, el: document.getElementById(e.id) }));
   const systemEl = document.getElementById('label-system');
   const reachEl = document.getElementById('label-reach');
@@ -496,8 +496,11 @@ export function initScene(projects, { onSelect } = {}) {
       const pr = project(p);
       if (pr.behind) { el.style.opacity = 0; return; }
       el.style.opacity = 1;
-      const edge = pinToEdge(origin.x, origin.y, pr.x, pr.y, m);
-      placeLabel(el, edge.x, edge.y);
+      // Sit at the axis tip, just outside the volume. Only when the tip has left the viewport
+      // (zoomed in, or a narrow screen) does the label slide to the screen edge instead.
+      const inside = pr.x >= m.side && pr.x <= canvas.offsetWidth - m.side && pr.y >= m.top && pr.y <= canvas.offsetHeight - m.bottom;
+      const at = inside ? pr : pinToEdge(origin.x, origin.y, pr.x, pr.y, m);
+      placeLabel(el, at.x, at.y);
     });
 
     // "system" rides the y axis, just off the Idea end, rotated to match it.
