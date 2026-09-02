@@ -35,6 +35,12 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     await page.goto(BASE + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(p === '/' ? 3500 : 600);
     ran.pages++;
+    // The ground gradient must span the whole document, not one window (CEO Review 12).
+    const ground = await page.evaluate(() => {
+      const html = document.documentElement; const cs = getComputedStyle(html);
+      return { gradient: cs.backgroundImage.includes('linear-gradient'), spans: Math.abs(html.getBoundingClientRect().height - html.scrollHeight) <= 1, bodyClear: getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)' };
+    });
+    if (!ground.gradient || !ground.spans || !ground.bodyClear) errors.push(`${label} ${p}: ground gradient does not span the document: ${JSON.stringify(ground)}`);
     const name = p === '/' ? 'home' : p.replace(/\//g, '-').replace(/^-|-$/g, '');
     await page.screenshot({ path: `${OUT}/${label}-${name}-fold.png` });
     await page.screenshot({ path: `${OUT}/${label}-${name}-full.png`, fullPage: true });
@@ -77,6 +83,7 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         return { firstLine: lines[0], lines: lines.length, renderedLines: tops.size, purple };
       });
       if (h.firstLine !== 'We see where you are,' || h.lines !== 3 || h.renderedLines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+      ran.headline++;
       if (h.purple.join(' ') !== 'see design') errors.push(`${label} home: purple words are ${JSON.stringify(h.purple)}, expected see + design`);
     }
 
@@ -147,7 +154,7 @@ await browser.close();
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
   `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile, graph tile opens its study on click and on tap',
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile, graph tile opens its study on click and on tap',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);

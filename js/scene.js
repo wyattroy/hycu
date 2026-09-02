@@ -31,7 +31,7 @@ const TILE_SMALL = { w: 1.25, h: 0.72, d: 0.08 };  // index
 
 // ─── Palette — the site's own tokens, repeated here because WebGL cannot read CSS ──
 const C = {
-  bg: '#FFFFFF',
+  bg: '#FFFFFF', // unused since the canvas went transparent; kept for the 2D fallback's white ground
   ink: '#111112',
   ink2: '#59595E',
   ink3: '#9C9CA2',
