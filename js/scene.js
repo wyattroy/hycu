@@ -263,7 +263,7 @@ export function initScene(projects, { onSelect } = {}) {
   applyViewOffset();
 
   function fitDistance() {
-    const half = R * (window.innerWidth < 900 ? 1.2 : 1.36);
+    const half = R * (window.innerWidth < 900 ? 1.55 : 1.36);
     const tanHalfV = Math.tan((camera.fov * Math.PI) / 360);
     return Math.max(half / tanHalfV, half / (tanHalfV * camera.aspect));
   }
@@ -434,11 +434,16 @@ export function initScene(projects, { onSelect } = {}) {
     const cy = clamp(y, hh, Math.max(hh, canvas.offsetHeight - hh));
     el.style.transform = `translate(-50%, -50%) translate(${cx}px, ${cy}px) ${rotate}`;
   }
+  // Phones see the volume small and nearly face-on, so the labels need more clearance there.
+  const TIP = window.innerWidth < 900 ? 1.38 : 1.16;
   const endpoints = [
-    { id: 'label-understand', pos: new THREE.Vector3(-R * 1.16, 0, 0) },
-    { id: 'label-make',       pos: new THREE.Vector3( R * 1.42, 0, 0) },
-    { id: 'label-product',    pos: new THREE.Vector3(0, -R * 1.14, 0) },
-    { id: 'label-idea',       pos: new THREE.Vector3(0,  R * 1.14, 0) },
+    // On the front face of the volume: tiles are inside the box, so a point outside its front edge
+    // cannot sit behind one, whatever the angle. (A label on the mid-depth axis could: a near tile
+    // projects larger and further out than the axis tip behind it.)
+    { id: 'label-understand', pos: new THREE.Vector3(-R * TIP, 0, Z_NEAR) },
+    { id: 'label-make',       pos: new THREE.Vector3( R * TIP, 0, Z_NEAR) },
+    { id: 'label-product',    pos: new THREE.Vector3(0, -R * TIP, Z_NEAR) },
+    { id: 'label-idea',       pos: new THREE.Vector3(0,  R * TIP, Z_NEAR) },
   ].map((e) => ({ ...e, el: document.getElementById(e.id) }));
   const systemEl = document.getElementById('label-system');
   const reachEl = document.getElementById('label-reach');
@@ -557,6 +562,17 @@ export function initScene(projects, { onSelect } = {}) {
       const r = canvas.getBoundingClientRect();
       return tiles.map((m) => { const s = project(m.position); return { id: m.userData.project.id, url: m.userData.project.url, selected: m.userData.project.selected, x: r.left + s.x, y: r.top + s.y }; });
     },
+    /* For tests: each tile's front face as a screen-space bounding box, in CSS pixels. */
+    screenRects() {
+      const r = canvas.getBoundingClientRect();
+      return tiles.map((m) => {
+        const size = m.userData.project.selected ? TILE : TILE_SMALL;
+        const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y;
+        const pts = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]].map(([dx, dy]) => project(new THREE.Vector3(m.position.x + dx, m.position.y + dy, m.position.z + size.d / 2)));
+        const xs = pts.map((p) => r.left + p.x), ys = pts.map((p) => r.top + p.y);
+        return { id: m.userData.project.id, left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
+      });
+    },
     zoomIn() { hasInteracted = true; zoom.target = clamp(zoom.target - ZOOM_STEP, 0, 1); },
     zoomOut() { hasInteracted = true; zoom.target = clamp(zoom.target + ZOOM_STEP, 0, 1); },
     reset() { resetView(); hasInteracted = false; },
@@ -599,7 +615,7 @@ export function initScatter2D(projects, { onSelect } = {}) {
     const p = projects.find((x) => x.id === n.dataset.id);
     if (p && onSelect) onSelect(p);
   }));
-  return { screenPositions() { return []; }, zoomIn() {}, zoomOut() {}, reset() {}, dispose() {} };
+  return { screenPositions() { return []; }, screenRects() { return []; }, zoomIn() {}, zoomOut() {}, reset() {}, dispose() {} };
 }
 
 export function hasWebGL() {

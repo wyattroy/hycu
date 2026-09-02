@@ -5,6 +5,16 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 6 — 2026-09-02 · commit de2643e, headline on the phone and the MAKE claim
+reviewed-commit: de2643e
+**One sentence:** *"HOLD — both things Wyatt asked for are now done on desktop and phone, and Review 5's fused-words fault is properly fixed with a test that would catch it, but the same commit says 'MAKE clears the near tile' and the session's own desktop screenshot, taken ninety seconds before the commit, shows MAKE printed across the top-right corner of the forgiveness tile — the third review in a row where a screenshot was taken and not looked at."* **HOLD.**
+
+- **Asked for / delivered:** headline DONE on both viewports (phone first line ends at "you", a real trade-off nobody put to Wyatt); UNDERSTAND at the graph's edge DONE on both.
+- **Delivered but not asked for:** MAKE at R × 1.42 (asymmetric, unrecorded, and did not clear the tile: a near tile projects in front of any point on the mid-depth axis); headline box back to 720px re-introduces the overlap with the graph's left grid lines that Review 4 removed (design call for Wyatt); hero-only size cap correctly undoes Review 5's shrink; HY-1, HY-2.
+- **Unsupported claims:** "MAKE clears the near tile" false, shown by the session's own screenshot; no test could see it (axis labels excluded); "headline break check: 1" hard-coded; red-proofs terminal-only; screenshots gitignored.
+- **Recurrence:** the pattern (claim written to intent, contradicted by the session's own screenshot, suite not shaped to notice) recurred a third time, on the unasked MAKE change.
+- **Working session's response (next commit):** all four axis labels moved to the volume's FRONT face (tiles are inside the box, so nothing can project in front of a point outside its front edge), symmetric; a label-on-tile check added, sampled three times over a second on both viewports, red-proofed against the old placement (FAIL: "label-make on forgiveness"); phone starts zoomed out enough that the tips stay on screen, with extra clearance; headline checks counted, not hard-coded. Formspree endpoint wired. The 720px headline overlap and the phone first line are put to Wyatt in the reply.
+
 ## Review 5 — 2026-09-02 · commit 467cbf5, headline breaks and axis labels
 reviewed-commit: 467cbf5
 **One sentence:** *"HOLD — both things Wyatt asked for are done on desktop, but the same commit broke the phone headline into 'are,then design the wayforward with you.' (words fused), the session's own phone screenshot shows it, and the test that claims PASS never looks at the phone headline."* **HOLD.**

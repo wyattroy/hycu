@@ -23,7 +23,7 @@ catch { ({ chromium } = await import('/Users/wyattroy/Documents/Projects/wyattro
 fs.mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 const errors = [];
-const ran = { pages: 0, gutter: 0, graph: 0 };
+const ran = { pages: 0, gutter: 0, graph: 0, headline: 0, labels: 0 };
 
 for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['phone', { width: 390, height: 844 }, true]]) {
   const ctx = await browser.newContext({ viewport: vp, hasTouch: touch, isMobile: touch, deviceScaleFactor: 1 });
@@ -64,6 +64,7 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     // Headline: Wyatt's ruling, 2026-09-02: "are" ends the first line. Three lines on desktop.
     if (p === '/') {
       const rendered = await page.evaluate(() => document.querySelector('.hero-text h1').innerText.replace(/\s+/g, ' ').trim());
+      ran.headline++;
       if (rendered !== 'We see where you are, then design the way forward with you.') errors.push(`${label} home: headline renders as "${rendered}"`);
     }
     if (p === '/' && !touch) {
@@ -74,7 +75,28 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) tops.add(Math.round(rect.top)); }
         return { firstLineText: t.textContent, firstLineRects: rg.getClientRects().length, lines: tops.size };
       });
+      ran.headline++;
       if (h.firstLineText.trim() !== 'We see where you are,' || h.firstLineRects !== 1 || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+    }
+
+    // Axis labels must not sit on a tile. Sampled three times over a second, because the graph
+    // drifts on its own; any overlap at any sample fails. (MAKE once sat on the forgiveness tile.)
+    if (p === '/') {
+      for (let i = 0; i < 3; i++) {
+        const hits = await page.evaluate(() => {
+          const rects = window.__graph?.screenRects() || [];
+          const out = [];
+          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea']) {
+            const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
+            const l = el.getBoundingClientRect();
+            for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);
+          }
+          return out;
+        });
+        ran.labels++;
+        if (hits.length) { errors.push(`${label} home: axis label on a tile: ${hits.join(', ')}`); break; }
+        await page.waitForTimeout(400);
+      }
     }
 
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
@@ -105,8 +127,8 @@ await browser.close();
 
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
-  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline break check: 1 · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, headline reads as words on both viewports and breaks after "are," on desktop, graph tile opens its study on click and on tap',
+  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile, graph tile opens its study on click and on tap',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);

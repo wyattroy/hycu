@@ -6,7 +6,7 @@
 
 // ─── Settings a human fills in once ──────────────────────────────────────────
 // Both are placeholders until Wyatt supplies them (see .claude/CTO-QUESTIONS.md).
-export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_WITH_FORM_ID';
+export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/maeyjowq';
 export const CALENDLY_URL = 'https://calendly.com/REPLACE_WITH_HANDLE';
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
