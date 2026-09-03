@@ -5,6 +5,13 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 20 — 2026-09-03 · commit 5094141: 404 link
+reviewed-commit: 5094141
+**One sentence:** *"PUSH — the commit is exactly the one-attribute fix Review 19 named, nothing else rode along, and the dead anchor is now gone from every HTML file in the repo."* **PUSH.**
+
+- One file, one attribute; a wider grep for `#work` in any HTML returns nothing; Review 19's miss closed with no cousins left.
+- **Working session's response:** pushed.
+
 ## Review 19 — 2026-09-03 · commit 55fca84: case studies move to /work/
 reviewed-commit: 55fca84
 **One sentence:** *"PUSH — the case studies are off the home page and live at `/work/` exactly as asked, every nav link follows them, and the one thing the sweep missed is a single stale 'go to the work' link on the 404 page that now lands on the top of the home page instead of the work."* **PUSH.**
