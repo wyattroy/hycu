@@ -253,6 +253,44 @@ main.has-hero { padding-top: 0; }
 .cap p { color: var(--ink-2); font-size: 16px; }
 .cap .where { margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: .04em; }
 
+/* The fifth capability is not a fifth column, it is the floor the other four stand on. The bar
+   below the columns carries one segment per capability, in that capability's own colour and
+   exactly its width, so the four visibly gather into the one line the AI text hangs from. No
+   separating rule: a grey hairline above it read as "another item", which is the opposite. */
+.cap-bar {
+  margin-top: 26px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(32px, 4vw, 64px);
+}
+.cap-bar i { display: block; height: 3px; border-radius: 2px; }
+.cap-bar i:nth-child(1) { background: var(--c-research); }
+.cap-bar i:nth-child(2) { background: var(--c-strategy); }
+.cap-bar i:nth-child(3) { background: var(--c-product); }
+.cap-bar i:nth-child(4) { background: var(--c-systems); }
+@media (max-width: 900px) { .cap-bar { column-gap: 6px; } }
+
+.cap-ground {
+  margin-top: 22px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: 14px clamp(32px, 4vw, 64px); align-items: start;
+}
+@media (max-width: 720px) { .cap-ground { grid-template-columns: 1fr; } }
+.cap-ground h3 { display: flex; align-items: center; gap: 11px; }
+.cap-ground p { color: var(--ink-2); font-size: 16px; max-width: 46em; margin: 0; }
+/* The label carries all four dots as well as the bar: the bar says which columns, the dots say
+   which capabilities, in the same vocabulary the four headings already use. */
+.cap-dots { display: inline-flex; gap: 4px; flex: none; }
+.cap-dots i { display: block; width: 7px; height: 7px; border-radius: 50%; }
+.cap-dots i:nth-child(1) { background: var(--c-research); }
+.cap-dots i:nth-child(2) { background: var(--c-strategy); }
+.cap-dots i:nth-child(3) { background: var(--c-product); }
+.cap-dots i:nth-child(4) { background: var(--c-systems); }
+/* Studio lists its four in rows, not columns, so the bar spans the list as one line, and both it
+   and the text below it belong in the list's column, not beside it. */
+.not-list + .cap-bar { column-gap: 4px; }
+.two-col > .cap-bar, .two-col > .cap-ground { grid-column: 2; }
+@media (max-width: 860px) { .two-col > .cap-bar, .two-col > .cap-ground { grid-column: 1; } }
+
 /* ── Statement / thesis band ────────────────────────────────────────────── */
 .statement { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(48px, 8vw, 140px); align-items: start; }
 @media (max-width: 860px) { .statement { grid-template-columns: 1fr; } }

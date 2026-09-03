@@ -29,3 +29,4 @@ Item ids are `HY-<n>`. Each needs a reviewed commit to ship.
 - **HY-23** `js/scene.js`: remove the dead `C.bg` constant and its invented comment. (CEO Review 13)
 - **HY-24** Home graph: ClaudeKit's bottom edge still tucks under Polycam's near tile; either move it again or accept, and stop describing it as "clear". (CEO Review 18)
 - **HY-25** Rails: Pour says "not named", oral care says "unnamed by agreement" (a ruling exists for oral care). Wyatt to choose one form. (CEO Review 18)
+- **HY-26** ClaudeKit study: add the line saying the repo is public, once it is. Wyatt approved the line 2026-09-03; `gh repo view wyattroy/claude-kit` returned PRIVATE the same day ("too entangled with pastry pirates at the moment... the intention is to make it public SOON"). Until then the tile's `reach: 0.8` is carried by the work the system produced, not by distribution. Verify with `gh` before writing it. (session)
