@@ -7,7 +7,7 @@ import path from "node:path";
 
 const ROOT = path.resolve(new URL(".", import.meta.url).pathname, "..");
 const SCRUB = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/scrub.json"), "utf8"));
-const REQUIRED = ["index.html", "studio/index.html", "contact/index.html", "CNAME", "data/projects.json", "work/pour/index.html", "work/how-to-change-institutions/index.html"];
+const REQUIRED = ["index.html", "work/index.html", "studio/index.html", "contact/index.html", "CNAME", "data/projects.json", "work/pour/index.html", "work/how-to-change-institutions/index.html"];
 
 const files = [];
 (function walk(d) {

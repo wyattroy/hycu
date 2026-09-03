@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-09-02 — Case studies leave the home page
+
+**The home page no longer lists the studies; they live on `/work/`.** Wyatt: "remove the case
+studies from the homepage -- people can see them under Work." Home is now graph → capabilities →
+hypercube → contact. Nav "Work" points at the new page; a small graph tile (no page of its own)
+goes there too. His six card edits moved with the cards into `work/index.html`.
+
 ## 2026-09-02 — No Index section on the home page
 
 **The "Index / Further work" list (How to Change Institutions, Pour, Taxonomy) is removed from the

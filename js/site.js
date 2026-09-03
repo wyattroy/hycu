@@ -52,7 +52,7 @@ async function setupGraph() {
   const { initScene, initScatter2D, hasWebGL } = await import('/js/scene.js');
   const onSelect = (p) => {
     if (p.selected) { window.location.href = p.url; return; }
-    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // index tiles: the Index section was removed 2026-09-02
+    window.location.href = '/work/'; // small tiles have no page of their own: go to the Work list
   };
 
   let view;

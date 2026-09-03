@@ -7,7 +7,8 @@ Everything on the site is plain HTML you can open in VS Code. There is no build 
 
 | What you want to change | File |
 |---|---|
-| Home headline, the six work cards, capabilities, Index, hypercube paragraph, contact strip | `index.html` |
+| Home headline, capabilities, hypercube paragraph, contact strip | `index.html` |
+| The work cards (one per study) | `work/index.html` |
 | A case study | `work/<name>/index.html` (spatial-equity, oral-care-research, polycam, forgiveness, pastry-pirates, claude-kit) |
 | Studio page (hypercube story, how we work, what we do and don't, founder line) | `studio/index.html` |
 | Contact page copy and form labels | `contact/index.html` |

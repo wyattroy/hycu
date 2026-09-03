@@ -14,7 +14,7 @@ import path from 'node:path';
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const OUT = path.join(ROOT, '.claude/shots');
 const BASE = process.env.BASE || 'http://127.0.0.1:8787';
-const PAGES = ['/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/', '/work/pour/', '/work/how-to-change-institutions/'];
+const PAGES = ['/', '/work/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/', '/work/pour/', '/work/how-to-change-institutions/'];
 
 let chromium;
 try { ({ chromium } = await import('playwright')); }

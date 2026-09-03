@@ -145,7 +145,7 @@
   },
   {
     "id": "taxonomy",
-    "url": "/#work",
+    "url": "/work/",
     "selected": false,
     "client": "Further work",
     "name": "Taxonomy of Narrative Conventions",
