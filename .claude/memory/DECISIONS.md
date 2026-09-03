@@ -4,7 +4,7 @@
 
 ---
 
-## 2026-09-02 — Case studies leave the home page
+## 2026-09-03 — Case studies leave the home page
 
 **The home page no longer lists the studies; they live on `/work/`.** Wyatt: "remove the case
 studies from the homepage -- people can see them under Work." Home is now graph → capabilities →
