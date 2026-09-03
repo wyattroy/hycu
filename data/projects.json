@@ -142,22 +142,5 @@
       "idea": 0.46,
       "reach": 0.4
     }
-  },
-  {
-    "id": "taxonomy",
-    "url": "/work/",
-    "selected": false,
-    "client": "Further work",
-    "name": "Taxonomy of Narrative Conventions",
-    "headline": "A classification system for design research methods.",
-    "year": 2021,
-    "capabilities": [
-      "User research"
-    ],
-    "axes": {
-      "make": 0.3,
-      "idea": 0.9,
-      "reach": 0.16
-    }
   }
 ]

@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-09-03 — Graph shows only the eight studies
+
+**The Taxonomy tile is removed from the graph.** Wyatt: "remove the Taxonomy tile from the
+graph." Every tile now opens a study. The home page's first band sits close under the graph
+(same ruling: "remove the tall pause"). The three copy items the session flagged on the Work
+cards (full stop, "discrete", trailing spaces) were fixed on his instruction.
+
 ## 2026-09-03 — Case studies leave the home page
 
 **The home page no longer lists the studies; they live on `/work/`.** Wyatt: "remove the case
