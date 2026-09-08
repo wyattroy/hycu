@@ -12,7 +12,7 @@ verified build. Lines marked *(default)* were not asked of him — correct them 
 - **build-stamp-command:** git log -1 --format=%h
 - **test-command:** node scripts/check.mjs
 - **trial-report:** .claude/TEST-REPORT.md
-- **verdicts:** .claude/CEO-REVIEWS.md
+- **verdicts:** .claude/reviews/ (one file per review, `NNNN-slug.md`; newest = highest number. `.claude/CEO-REVIEWS.md` is now an index and must not be appended to)
 - **backlog:** .claude/BACKLOG.md
 - **backlog-id-pattern:** HY-\d+
 - **ledger:** .claude/CTO-LEDGER.md
@@ -31,6 +31,14 @@ working session; nothing in the shell publishes anywhere but production. A CTO o
 output channel and must park its work until one exists.
 
 **`scripts/hooks/pre-push` gates every push on a recorded CEO verdict** (`git config core.hooksPath scripts/hooks`, set on this machine; re-run after a fresh clone). The verdict entry must carry `reviewed-commit: <sha>`.
+
+**The trial report is no longer committed, since 2026-09-08.** `.claude/TEST-REPORT.md` is written
+by every `npm test` and is now gitignored: two branches that both run the tests conflict on it every
+time, which is what a generated file tracked in git always does. It is still written to the same path
+and an officer should still read it — but read it as *the local file, with a timestamp*, and say when
+it was produced. **Do not fault a commit for not carrying its own report, and do not treat a committed
+report as proof that a commit was tested.** Review 29 praised the report sitting inside the commit it
+described; that evidence is gone on purpose, and the timestamp is what replaces it.
 
 **`scripts/check.mjs` is this repo's proof.** It fails on any scrubbed client name, on first-person
 singular voice in site copy, and on a page that is missing. A site that says "I" or names the

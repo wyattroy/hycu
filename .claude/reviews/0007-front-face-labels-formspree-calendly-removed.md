@@ -1,0 +1,10 @@
+## Review 7 — 2026-09-02 · commit e1d0e5e: front-face labels, Formspree, Calendly removed
+reviewed-commit: e1d0e5e
+**One sentence:** *"PUSH e1d0e5e — all three things Wyatt asked for are done on the site as it stands, the four screenshots agree with the claims for the first time in this series (no axis label touches a tile, the contact form sits under the brand at reading width, Calendly is gone from every page), and what remains is one honest trade-off already put to him (the phone headline), one thing only a live push can prove (a real Formspree submission), and three small leftovers that do not touch his asks."* **PUSH.**
+
+- **Asked for / delivered:** headline DONE desktop, PARTIAL phone (first line ends at "you", disclosed); UNDERSTAND at the graph's edge DONE both viewports (phone label still margin-pinned but lies on the box edge); Formspree DONE as code, unproven as a channel until a real submission; Calendly removed DONE, nothing left on any page, ruling recorded.
+- **Delivered but not asked for:** phone graph ~23% smaller (tile text illegible at phone size; for Wyatt to judge); two new lines of copy in his voice ("Three lines is enough to start…"); 720px headline over faint grid lines at 1440 (disclosed); test plumbing.
+- **Unsupported claims:** red-proof terminal-only, fourth time; "whatever the angle" comment holds for the data at rest, but the test samples only the resting view; EDITING.md:16 and CTO-QUESTIONS.md still mention Calendly.
+- **Leftovers, not blocking:** contact form section's `aria-labelledby` points at a deleted heading; `novalidate` with no JS validation means `required` does nothing and a blank form can be sent.
+- **Recurrence:** Review 6's fault fixed, not re-dressed; the terminal-only proof habit recurred.
+- **Working session's response:** pushed. Queued for the next reviewed commit: HY-7 vendor Three.js (Wyatt's uBlock blanked the graph from the CDN), HY-8 dead `aria-labelledby` + form validation, HY-9 EDITING.md/CTO-QUESTIONS Calendly mentions, HY-10 sample the label check at dragged angles. Wyatt to send one real message from the live form.
