@@ -23,8 +23,9 @@ because they do not touch, and `scripts/hooks/pre-push` now reads the newest ver
 
 | # | Date | Reviewed commit | File |
 |---|---|---|---|
+| 35 | 2026-09-08 | `000c809` | [0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md](reviews/0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md) |
 | 34 | 2026-09-08 | `24b8c03` | [0034-phone-hero-rebased-review-33-s-two-hold-items-fi.md](reviews/0034-phone-hero-rebased-review-33-s-two-hold-items-fi.md) |
-| 33 | 2026-09-08 | `cfa73a0` | [0033-phone-hero-the-volume-hangs-from-the-nav-tiles-r.md](reviews/0033-phone-hero-the-volume-hangs-from-the-nav-tiles-r.md) |
+| 33 | 2026-09-08 | `cfa73a0` (orphaned by a rebase; live equivalent `db13345..420ef24`) | [0033-phone-hero-the-volume-hangs-from-the-nav-tiles-r.md](reviews/0033-phone-hero-the-volume-hangs-from-the-nav-tiles-r.md) |
 | 32 | 2026-09-08 | `58f6fed` | [0032-one-name-and-one-byline-per-project.md](reviews/0032-one-name-and-one-byline-per-project.md) |
 | 31 | 2026-09-08 | `d2a3a47` | [0031-review-30-s-finding-answered.md](reviews/0031-review-30-s-finding-answered.md) |
 | 30 | 2026-09-08 | `0f405b5` | [0030-the-wordmark-and-short-titles-on-work-and-the-st.md](reviews/0030-the-wordmark-and-short-titles-on-work-and-the-st.md) |

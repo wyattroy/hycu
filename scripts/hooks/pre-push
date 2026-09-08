@@ -29,11 +29,41 @@ set -e
 # serves it from root, so a merge is the deploy and this is the last gate before one.
 #
 # Git hands pre-push the ref updates on stdin as "<local ref> <local sha> <remote ref> <remote sha>".
+#
+# CHECK THE SHA BEING PUSHED, NOT `git rev-parse HEAD`. CEO Review 35 caught the first version of
+# this loop capturing the local sha and then discarding it, so `git push origin main` from a feature
+# worktree reviewed whatever branch you happened to be standing on and let main through unexamined.
+# Three worktrees run against this repo; that is not a theoretical push.
+#
+# `|| [ -n "$_lref" ]` catches a final line with no trailing newline: plain `while read` drops it,
+# which would silently leave GATED=no and let a push to main through ungated. Everywhere else this
+# hook fails closed, and so does this.
 GATED=no
-while read -r _lref _lsha remote_ref _rsha; do
-  case "$remote_ref" in refs/heads/main) GATED=yes ;; esac
+PUSH_SHA=
+while read -r _lref lsha remote_ref _rsha || [ -n "$_lref" ]; do
+  case "$remote_ref" in
+    refs/heads/main)
+      GATED=yes
+      PUSH_SHA="$lsha"
+      ;;
+  esac
+  _lref=
 done
 [ "$GATED" = yes ] || exit 0
+
+# A deletion sends an all-zero local sha. Deleting production is not something a CEO verdict can
+# cover, and the old shape decided it by looking at an unrelated HEAD. Refuse outright.
+case "$PUSH_SHA" in
+  ''|*[!0]*) : ;;
+  *)
+    echo "pre-push: refusing to delete refs/heads/main. That is production." >&2
+    exit 1
+    ;;
+esac
+if [ -z "$PUSH_SHA" ]; then
+  echo "pre-push: could not read the sha being pushed to main from git's ref update." >&2
+  exit 1
+fi
 
 # A REBASE REQUIRES A FRESH VERDICT, and that is deliberate. A verdict names a sha; rebasing
 # replaces it, so `--is-ancestor` fails and everything since is unreviewed again. The phone-hero
@@ -42,7 +72,8 @@ done
 # base had genuinely not seen the new tree. Matching by patch-id or tree would paper over exactly
 # the case where a re-review is most warranted. Gating `main` only is what makes this cheap —
 # rebase a branch as often as you like; nothing asks for a verdict until you ship.
-HEAD_SHA=$(git rev-parse HEAD)
+# The commit actually being pushed to main, not the one this worktree is sitting on.
+HEAD_SHA="$PUSH_SHA"
 
 # The ledger as the remote actually has it. A fetch failure is fatal rather than a silent
 # fallback to the local copy: pushing on stale state is the fault this hook exists to prevent.
@@ -98,7 +129,7 @@ UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" \
 if [ -n "$UNREVIEWED" ]; then
   echo "pre-push: files changed since the CEO reviewed $REVIEWED:" >&2
   echo "$UNREVIEWED" | sed 's/^/  /' >&2
-  echo "Run /ceo on HEAD and record the verdict with reviewed-commit: $(git rev-parse --short HEAD)" >&2
+  echo "Run /ceo on that commit and record the verdict with reviewed-commit: $(git rev-parse --short "$HEAD_SHA")" >&2
   exit 1
 fi
 exit 0
