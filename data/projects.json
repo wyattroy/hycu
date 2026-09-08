@@ -40,17 +40,17 @@
     "url": "/work/polycam/",
     "selected": true,
     "client": "Polycam",
-    "name": "Nine markets, one launch",
-    "headline": "Nine markets, four channels, one launch: a brand-awareness plan tailored to every locality, built as a tool the team could use the same day.",
+    "name": "Written to be cited",
+    "headline": "Video scripts written to be cited: an AEO framework for Polycam, and the six videos made with it.",
     "year": 2026,
     "capabilities": [
       "Strategy",
-      "Product design"
+      "User research"
     ],
     "axes": {
-      "make": 0.6,
-      "idea": 0.5,
-      "reach": 0.92
+      "make": 0.4,
+      "idea": 0.3,
+      "reach": 0.7
     }
   },
   {
@@ -76,7 +76,7 @@
     "id": "pastry-pirates",
     "url": "/work/pastry-pirates/",
     "selected": true,
-    "client": "Studio · Hycu",
+    "client": "Studio \u00b7 Hycu",
     "name": "Pastry Pirates",
     "headline": "Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.",
     "year": 2026,
@@ -94,7 +94,7 @@
     "id": "claude-kit",
     "url": "/work/claude-kit/",
     "selected": true,
-    "client": "Studio · Hycu",
+    "client": "Studio \u00b7 Hycu",
     "name": "ClaudeKit",
     "headline": "An operating system for AI teams that run like a company, and teach the person running them.",
     "year": 2026,
@@ -112,7 +112,7 @@
     "id": "how-to-change-institutions",
     "url": "/work/how-to-change-institutions/",
     "selected": true,
-    "client": "Studio · Hycu",
+    "client": "Studio \u00b7 Hycu",
     "name": "How to Change Institutions",
     "headline": "A palm-sized field guide to changing an institution from the inside, by working with it rather than against it.",
     "year": 2026,

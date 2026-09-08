@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Polycam · Hycu</title>
-  <meta name="description" content="A brand-awareness plan for Polycam's device parity launch: nine markets, four channels, 507 contacts, built as a tool the team could use the same day.">
+  <meta name="description" content="An AEO framework for Polycam's YouTube scripts, written so AI search engines cite them, with source-checking built into production.">
   <link rel="canonical" href="https://hycudesign.com/work/polycam/">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,54 +30,56 @@
 
 <main>
   <header class="wrap study-head">
-    <p class="eyebrow">Polycam &middot; Marketing strategy &middot; 2026</p>
-    <h1 class="h-lg">Nine markets, four channels, one launch: a brand-awareness plan for every locality, built as a tool the team could use the same day.</h1>
-    <p class="lede">Polycam's 3D capture app was about to work on Android phones and on iPhones without a LiDAR sensor. Their marketing lead asked for a spreadsheet of outlets to contact. We asked whether we could do better than a spreadsheet.</p>
+    <p class="eyebrow">Polycam &middot; Content strategy &middot; 2026</p>
+    <h1 class="h-lg">Video scripts written to be cited: an AEO framework for Polycam, and the six videos made with it.</h1>
+    <p class="lede">Polycam's videos were working on people and were close to invisible to the AI systems those same people were asking. The brief was to rewrite the next batch. We built the framework first, then rewrote against it, and made source-checking a step in production rather than a check at the end.</p>
   </header>
 
   <div class="wrap study-body">
     <article>
       <section class="beat">
         <p class="eyebrow">Starting point</p>
-        <h2 class="h-md">Reach the people that architects, contractors, and insurers actually listen to.</h2>
-        <p>We've worked with Polycam on marketing strategy since before Hycu had a name, so the brief arrived in shorthand. The launch, called device parity, opens the app to a much larger set of phones. The job was to build brand awareness in nine markets, from Germany to Japan, through four channels: micro-influencers, podcasts, press, and industry newsletters. The starting material was a workbook of a few hundred creators the team had already assessed.</p>
-        <p>The ask was a list. The need was for the team to send the right message to the right person, quickly, in nine countries, during launch week.</p>
+        <h2 class="h-md">Turn the blog posts into scripts, in our voice.</h2>
+        <p>Polycam makes a 3D scanning app, and the audience for this work is architects, engineers, and contractors using phone scans for renovation documents, material estimates, and scan-to-CAD workflows. The brief that arrived was a rewrite job. Take the existing articles, turn each into about four hundred words of script, roughly three minutes on screen. They had a draft pipeline and a shelf of articles to work from.</p>
+        <p>Two things about those drafts were going to keep costing them. They were written for a person watching, so they opened with context and buried the answer, which is the wrong shape for a machine trying to lift one out. And they carried claims nobody had checked. A recording session earlier that year had gone out with a factual error about a competitor's product and had to be recorded again. On that second point the client was explicit: verification had to be a structural step in the workflow rather than a last look before recording.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">A market's language isn't a person's language.</h2>
-        <p>Three things shaped the plan. First, the team's own workbook was the gold standard. Every decision they'd already made about a creator, including the ones they'd rejected, stayed visible rather than being filtered out by our reasoning. Second, no contact could be invented. Every row records where it came from and how confident we are, and an address we couldn't confirm is marked as such rather than guessed.</p>
-        <p>Third, the market column was choosing the language. An American creator with ten million subscribers was about to receive an email in Korean because his audience is in Seoul. Each contact now carries the language that person actually publishes in, which is not always the language of the market they reach.</p>
+        <h2 class="h-md">A video gets quoted from somewhere other than the video.</h2>
+        <p>Answer engine optimization, or AEO, is writing so that an AI system answering someone's question quotes you rather than paraphrasing somebody else. For a blog post the mechanism is simple, because the model reads the text. For a video it reads the description, the chapter markers, the transcript, and, as far as we can tell, most reliably a dense summary paragraph at the close. That turned out not to fight with what keeps a person watching. If the first sentence states the answer, the hook can follow it rather than replace it.</p>
+        <p>The second thing was sitting in the source material. The scan-to-CAD script claimed accuracy "to within &plusmn;Y inches across spaces up to Z square feet", and both letters had come through from a template unfilled. A model won't cite a number that isn't there, and a viewer stops trusting you the moment they see one. Filling them meant going to Polycam's own stated specification, which is about an inch under typical indoor conditions. A 2024 field study gave us corroborating figures at close scanning distances, and we noted it without leaning on it, because its test conditions weren't indoor rooms.</p>
+        <p>The third was that the scripts described a workflow the app doesn't have. The takeoff script said to copy numbers out of the Spatial Report into Excel. The real export is a CSV with labelled columns for room, description, and value. That matters for citation as much as for accuracy. "Copy the numbers" is not something a model can quote as an instruction, and "export the CSV, then map the room and wall area columns to your takeoff template" is.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
-        <h2 class="h-md">A page, not a report.</h2>
-        <p>The deliverable is a single encrypted web page. It holds 507 contacts across nine markets and four channels, each with a drafted note in the right language, a line on why this person matters for this launch, and the team's own status for that contact. An earlier draft was both a report and a strategy document, and it was cut for it. The page exists so someone on the team can open it, find the German construction podcasts, and send.</p>
-        <p>The page is the end of a pipeline. The briefing call was transcribed by a speech model running on our own machine, so the audio never left it. Channels were resolved by an automated browser asking in each market's own language, because asking in English returns titles the platform has already translated. Every drafted note is checked against the source it cites.</p>
-        <p>The hardest part was the hooks: the one handwritten sentence in each note that ties Polycam to something that creator actually made. We audited every hook against the source it refers to, and a hook that isn't tied to a specific piece of work fails the build.</p>
+        <h2 class="h-md">Eight rules, and a fact basis stapled to every script.</h2>
+        <p>The framework is eight structural rules. Open with one sentence that answers the question in the title. Build each section as a question and an answer that survives being quoted on its own. Attach a source to every number. Close on a dense summary paragraph written for extraction rather than for a listener. Keep the call to action out of that paragraph so neither one dilutes the other. Say where the tool stops working, because a stated limit reads as trustworthy rather than as a caveat. Match the on-screen text to the spoken claim. Put the pain narrative after the answer instead of in front of it.</p>
+        <p>Six videos have gone out under it. The first four scripts covered a material takeoff from a phone scan, a scan-to-CAD DWG workflow, a comparison of five floor plan apps, and an explainer separating generative AI from the detection-based kind. Each script was delivered with a fact-basis appendix beside it: every competitor claim traced to that company's own pricing page or documentation, with the URL and the date we checked it.</p>
+        <p>Claude did the drafting and the critique at every stage, finding the questions nobody had answered, proposing structure, flagging the placeholders, hunting for primary sources. What it couldn't do was the part that decided things. Confirming an internal specification that isn't published anywhere. Judging which accuracy figure applies to which conditions. Deciding what a competitor claim needed before anyone stood in front of a camera and said it. No claim reached a final script on the model's confidence alone.</p>
+        <p>The comparison video was the hard one. Five companies' live pricing, some of it loading dynamically and returning nothing, some of it available only by contacting a salesperson. We had written up one competitor as unable to generate floor plans from phone scans, and a FAQ the client sent us said it could. We fixed that before the recording rather than after it, which was the whole point of the change.</p>
         <div class="figures">
-          <div class="figure"><span class="n num">507</span><span class="l">contacts, each with a source and a confidence</span></div>
-          <div class="figure"><span class="n num">9</span><span class="l">markets, from the United States to South Korea</span></div>
-          <div class="figure"><span class="n num">4</span><span class="l">channels: influencers, podcasts, press, newsletters</span></div>
+          <div class="figure"><span class="n num">2&times;</span><span class="l">AI citation rate after launch, Polycam's measurement over one month</span></div>
+          <div class="figure"><span class="n num">6</span><span class="l">videos published under the framework so far</span></div>
+          <div class="figure"><span class="n num">1 hr</span><span class="l">to scan what a client estimated at 16 hours by hand</span></div>
         </div>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What's next</p>
-        <h2 class="h-md">The launch is this month.</h2>
-        <p>Device parity ships in September 2026 and the team sends from the page. We keep it current as replies come in, which is the part of a plan that usually gets lost the day after it's delivered.</p>
+        <h2 class="h-md">The framework is the starting input now.</h2>
+        <p>The eight rules are a system prompt, and it goes in alongside the source article to produce each next draft. Polycam reported the citation rate doubling in the month after the first videos went up. That's their measurement rather than ours, and one month is a short window, so we'd treat it as an early signal instead of a settled result. The engagement is ongoing and the next scripts are in it.</p>
       </section>
     </article>
 
     <aside class="study-rail" aria-label="Project details">
       <ul class="rail">
         <li><span class="k">Client</span><span>Polycam</span></li>
-        <li><span class="k">Capabilities</span><span>Strategy, product design</span></li>
-        <li><span class="k">Engagement</span><span>External arm, ongoing</span></li>
-        <li><span class="k">Duration</span><span>This phase: August to September 2026</span></li>
-        <li><span class="k">Delivered</span><span>Locality-tailored outreach plan, 507 contacts, drafted notes in six languages, an encrypted working page</span></li>
+        <li><span class="k">Capabilities</span><span>Strategy, research</span></li>
+        <li><span class="k">Engagement</span><span>External content arm, ongoing</span></li>
+        <li><span class="k">Duration</span><span>This phase: May to July 2026</span></li>
+        <li><span class="k">Delivered</span><span>An AEO framework, a system prompt for drafting scripts, six produced videos, and a fact-basis appendix for each one</span></li>
       </ul>
     </aside>
   </div>
