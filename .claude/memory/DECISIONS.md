@@ -51,6 +51,28 @@ pulls in the main checkout — not when it merges. Do not edit it on a branch wi
 sessions on this day were told to work on "separate things" and both landed in `.claude/` and
 `style.css`. Separate things is not separate files.
 
+## 2026-09-08 — One authorized push, and what it says about the gate
+
+**Wyatt authorized a single `--no-verify` push of `claude/study-head-semantics` at `f5bc2db`.** He
+was shown the entire delta since CEO Review 37's PUSH verdict on `f50891a` and chose to ship it:
+
+- two comment blocks — a stale `Needs a local server on :8787` line, and a caveat Review 37 asked for
+- `renderedLines: lines.length` deleted, having become a duplicate of `lines`
+- `JSON.stringify(h.lines ? h : h)` → `JSON.stringify(h)`, a ternary with identical branches
+
+**No behavioural change. `npm test` passes identically before and after.** Every one of those edits
+is a remedy Review 37 named itself.
+
+**The rule stands: a working session never bypasses.** This is Wyatt bypassing, on the record, having
+seen the diff — the carve-out `scripts/hooks/pre-push` has always documented.
+
+**The reason it was needed is a real limit worth fixing.** The gate compares file PATHS, so a comment
+in `style.css` costs exactly what a rewrite of it costs. Four commits today were post-verdict fixes
+that the reviewing officer had itself demanded, and each one re-blocked the push and asked for
+another review — Wyatt's "how do we disable these CEO reviews? they're getting annoying" is this
+loop. A gate that could tell a comment from a declaration would have let all four through. Logged as
+HY-41.
+
 ## 2026-09-08 — The headline is sized from its column, and the browser pass serves its own tree
 
 **`.hero-text .display` is `clamp(30px, 8.4cqw, 53px)` against `.hero-text` as a container**, not
