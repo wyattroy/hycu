@@ -197,6 +197,6 @@ are staying; the claim that they track the graph was false and is withdrawn. Whe
 layers should be reconciled is HY-36, unruled.
 
 **The same title sits above the headline on each study page too** (Wyatt, same day, second pass), so
-a project is named identically in all three places it appears: graph tile, Work card, study head.
-There it sets larger than the headline it introduces — the short title carries the page and the long
+the Work card and the study head name a project identically; the graph tile and the `<title>` do not
+always agree with them (HY-36). There it sets larger than the headline it introduces — the short title carries the page and the long
 line reads as the deck under it. Neither `<h1>` changed and `.study-head .h-lg` is still Geist.
