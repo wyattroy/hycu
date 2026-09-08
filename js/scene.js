@@ -433,8 +433,11 @@ export function initScene(projects, { onSelect } = {}) {
     hoverEl.style.left = `${cx - rect.left}px`;
     hoverEl.style.top = `${cy - rect.top}px`;
   }
+  // A phone has nothing to hover with: the mousemove a tap synthesises would leave the tooltip
+  // parked on the tile, with no pointer left to move off it.
+  const noHover = () => isTouch || window.innerWidth <= 720;
   canvas.addEventListener('mousemove', (e) => {
-    if (dragging) { if (hoverEl) hoverEl.hidden = true; return; }
+    if (noHover() || dragging) { hovered = null; if (hoverEl) hoverEl.hidden = true; return; }
     const hit = pickAt(e.clientX, e.clientY);
     if (hit !== hovered) { hovered = hit; canvas.style.cursor = hit ? 'pointer' : ''; }
     showHover(hit, e.clientX, e.clientY);
