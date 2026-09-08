@@ -63,11 +63,20 @@ installed. Copy edits don't need it.)
 
 ## Publish
 
-```bash
-git add -A && git commit -m "Copy edits" && git push --no-verify
-```
+Your edits go through the same gate as everything else. Wyatt, 2026-09-03: *"i want my edits to be
+verified first; i may have typos/errors in them."* Two reasons. `npm run check` catches the scrub
+list and first-person singular but it cannot catch a typo, and the site now says in its own words
+that every push clears an officer's review first — so it has to be true of your pushes too.
 
-`--no-verify` skips the studio's CEO-review gate, which exists for design and code changes made
-in a Claude session, not for copy edits by hand.
+Leave the edits uncommitted and hand them to a session:
+
+> Review my copy edits in the working tree and push them.
+
+The session reads the diff, runs `npm run check`, commits your edits on their own, and takes them
+through the review gate. Nothing of yours gets swept into a session's commit; nothing of theirs
+into yours.
+
+If you are alone and must ship a fix now, `git push --no-verify` still works. It is the exception,
+not the route — say so afterwards so the next review knows what went out unread.
 
 GitHub Pages rebuilds in about a minute. `www.hycudesign.com` and `hycudesign.com` both serve it.

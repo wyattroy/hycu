@@ -4,8 +4,12 @@
 #
 # The newest entry in .claude/CEO-REVIEWS.md must carry `reviewed-commit: <sha>` where <sha> is
 # HEAD, or an ancestor of HEAD such that every commit since touches only records (.claude/) or
-# this hook. Copy edits made by hand can skip this with `git push --no-verify` (see EDITING.md);
-# a working session never does.
+# this hook.
+#
+# `git push --no-verify` still bypasses this; git gives every hook that hole and a hook cannot
+# close it. Wyatt, 2026-09-03, asked that his own hand copy edits stop using it: "i want my edits
+# to be verified first; i may have typos/errors in them." EDITING.md now routes them through a
+# session instead. A working session never bypasses.
 set -e
 ROOT=$(git rev-parse --show-toplevel)
 FILE="$ROOT/.claude/CEO-REVIEWS.md"
