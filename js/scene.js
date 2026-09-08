@@ -26,6 +26,9 @@ const R = 5.5;             // half-extent of the x/y plane
 const Z_FAR = -6;          // one person
 const Z_NEAR = 6;          // a public
 
+const SPREAD = 0.88;       // how much of the box the work is spread across
+const PHONE_SPREAD = 1.15; // phone tiles are double size, so they are spread further to match
+
 const TILE = { w: 2.05, h: 1.2, d: 0.14 };        // selected work
 const TILE_SMALL = { w: 1.25, h: 0.72, d: 0.08 };  // index
 
@@ -258,18 +261,39 @@ export function initScene(projects, { onSelect } = {}) {
 
   // On desktop the headline sits bottom-left over the canvas, so the volume is pushed right by
   // shifting the projection rather than the model: the orbit centre stays at the origin.
+  let pinOffsetY = 0;
   function applyViewOffset() {
     const w = canvas.offsetWidth, h = canvas.offsetHeight;
     if (w >= 900) camera.setViewOffset(w, h, -Math.round(w * 0.23), 0, w, h);
     else camera.clearViewOffset();
+    pinOffsetY = 0; // the pin re-measures against the new stage on the next frame
   }
   applyViewOffset();
+
+  // On a phone the canvas keeps a tall 1:2 frame — its framing and its perspective are what the
+  // volume was drawn for — and style.css crops it to the height the volume actually needs.
+  const phonePortrait = () => window.innerWidth <= 720 && window.innerHeight > window.innerWidth;
+  // Phone tiles are drawn double size: at the width the layout gives them, the faces were too
+  // small to read. Scale rather than geometry, so a rotation or a resize picks it up live.
+  const tileScale = () => (window.innerWidth <= 720 ? 2 : 1);
+  // ...and pushed out towards the walls of the box to win back the room the extra size costs.
+  const spread = () => (window.innerWidth <= 720 ? PHONE_SPREAD : SPREAD);
 
   function fitDistance() {
     const half = R * (window.innerWidth < 900 ? 1.55 : 1.36);
     const tanHalfV = Math.tan((camera.fov * Math.PI) / 360);
     return Math.max(half / tanHalfV, half / (tanHalfV * camera.aspect));
   }
+
+  // How much of the canvas the page actually shows: style.css crops the tall phone canvas to the
+  // height the volume needs, so the copy can follow it.
+  const stageEl = canvas.parentElement;
+  const cropHeight = () => Math.min(stageEl ? stageEl.clientHeight : canvas.offsetHeight, canvas.offsetHeight);
+
+  // The corners of the scaffold box. At double size a tile can hang past them, so the pin below
+  // measures the tiles too rather than trusting the box to contain them.
+  const BOX_CORNERS = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const z of [Z_FAR, Z_NEAR]) BOX_CORNERS.push(new THREE.Vector3(sx * R, sy * R, z));
 
   scene.add(new THREE.AmbientLight('#FFFFFF', 2.8));
   const key = new THREE.DirectionalLight('#FFFFFF', 0.7);
@@ -285,8 +309,10 @@ export function initScene(projects, { onSelect } = {}) {
 
   ordered.forEach((p, i) => {
     const size = p.selected ? TILE : TILE_SMALL;
-    const x = (p.axes.make - 0.5) * 2 * R * 0.88;
-    const y = (p.axes.idea - 0.5) * 2 * R * 0.88;
+    const ax = (p.axes.make - 0.5) * 2 * R;
+    const ay = (p.axes.idea - 0.5) * 2 * R;
+    const x = ax * spread();
+    const y = ay * spread();
     const z = Z_FAR + p.axes.reach * (Z_NEAR - Z_FAR);
 
     const geo = new THREE.BoxGeometry(size.w, size.h, size.d);
@@ -306,7 +332,7 @@ export function initScene(projects, { onSelect } = {}) {
     mesh.add(outline);
 
     mesh.userData = {
-      project: p, face, edge, back, outline,
+      project: p, face, edge, back, outline, ax, ay,
       scale: makeSpring(1), opacity: 0,
       revealAt: ENTRY_DELAY_MS + i * ENTRY_STAGGER_MS,
     };
@@ -335,8 +361,10 @@ export function initScene(projects, { onSelect } = {}) {
   function resetView() { zoom.target = CAM_START_FRAC; theta.target = START_THETA; phi.target = START_PHI; }
 
   // ─── Pointer: drag to orbit ─────────────────────────────────────────────────
-  let dragging = false, moved = 0, lastX = 0, lastY = 0;
-  function pointerDown(x, y) { hasInteracted = true; dragging = true; moved = 0; lastX = x; lastY = y; }
+  // A tap opens a study only when it goes down and comes up on the same tile: a finger that
+  // starts on the grid and drifts onto a tile while orbiting was opening studies by accident.
+  let dragging = false, moved = 0, lastX = 0, lastY = 0, downHit = null;
+  function pointerDown(x, y) { hasInteracted = true; dragging = true; moved = 0; lastX = x; lastY = y; downHit = pickAt(x, y); }
   function pointerMove(x, y) {
     if (!dragging) return;
     const dx = x - lastX, dy = y - lastY;
@@ -356,6 +384,7 @@ export function initScene(projects, { onSelect } = {}) {
     if (e.touches.length === 1) pointerDown(e.touches[0].clientX, e.touches[0].clientY);
     else if (e.touches.length === 2) {
       dragging = false;
+      downHit = null; // a pinch is never a tap
       pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
   }, { passive: true });
@@ -414,14 +443,14 @@ export function initScene(projects, { onSelect } = {}) {
   canvas.addEventListener('click', (e) => {
     if (moved > 6) return;
     const hit = pickAt(e.clientX, e.clientY);
-    if (hit && onSelect) onSelect(hit.userData.project);
+    if (hit && hit === downHit && onSelect) onSelect(hit.userData.project);
   });
   if (isTouch) {
     canvas.addEventListener('touchend', (e) => {
       if (moved > 8 || e.changedTouches.length !== 1) return;
       const t = e.changedTouches[0];
       const hit = pickAt(t.clientX, t.clientY);
-      if (hit && onSelect) onSelect(hit.userData.project);
+      if (hit && hit === downHit && onSelect) onSelect(hit.userData.project);
     });
   }
 
@@ -442,6 +471,24 @@ export function initScene(projects, { onSelect } = {}) {
     if (!isFinite(t) || t < 0) return { x: clamp(tx, m.side, w - m.side), y: clamp(ty, m.top, h - m.bottom) };
     return { x: ox + dx * t, y: oy + dy * t };
   }
+  // Where each tile is on the canvas, as a rectangle. (The public screenRects() below is the same
+  // measurement in viewport coordinates, for the tests.)
+  const scratch = new THREE.Vector3();
+  function tileRects() {
+    return tiles.map((m) => {
+      const size = m.userData.project.selected ? TILE : TILE_SMALL;
+      const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y;
+      let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+      for (const [dx, dy] of [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]]) {
+        scratch.set(m.position.x + dx, m.position.y + dy, m.position.z + size.d / 2).project(camera);
+        const x = (scratch.x * 0.5 + 0.5) * canvas.offsetWidth, y = (-scratch.y * 0.5 + 0.5) * canvas.offsetHeight;
+        if (x < left) left = x; if (x > right) right = x;
+        if (y < top) top = y; if (y > bottom) bottom = y;
+      }
+      return { left, right, top, bottom };
+    });
+  }
+
   function placeLabel(el, x, y, rotate = '') {
     const hw = el.offsetWidth / 2 + 6, hh = el.offsetHeight / 2 + 6;
     const cx = clamp(x, hw, Math.max(hw, canvas.offsetWidth - hw));
@@ -467,6 +514,12 @@ export function initScene(projects, { onSelect } = {}) {
   function margins() {
     const narrow = window.innerWidth < 900;
     const h = canvas.offsetHeight;
+    // The phone stage hugs the volume, so IDEA and PRODUCT ride its very edges rather than being
+    // held off them: the box top is pinned to the top of the stage and the headline follows the
+    // bottom of PRODUCT.
+    // The canvas runs on below the crop, so the bottom bound is the bottom of the window, not of
+    // the canvas: an axis label parked past it would sit behind the headline.
+    if (phonePortrait()) return { side: 36, top: 14, bottom: h - cropHeight() + 12 };
     return narrow
       ? { side: 36, top: 52, bottom: 44 }
       : { side: LABEL_MARGIN, top: LABEL_MARGIN + 24, bottom: 120 };
@@ -496,6 +549,25 @@ export function initScene(projects, { onSelect } = {}) {
     camera.lookAt(CAM_TARGET);
     camera.updateMatrixWorld();
 
+    // On a phone the volume is pinned to the top of the stage: the headline follows straight under
+    // the PRODUCT label, so slack above the box would read as a hole beneath the nav. The offset is
+    // a screen-space shift, so correcting by the measured overshoot lands it exactly, every frame.
+    if (phonePortrait()) {
+      let top = Infinity, bottom = -Infinity;
+      for (const c of BOX_CORNERS) { const y = project(c).y; if (y < top) top = y; if (y > bottom) bottom = y; }
+      for (const t of tileRects()) { if (t.top < top) top = t.top; if (t.bottom > bottom) bottom = t.bottom; }
+      // Zoomed in, the volume is taller than the window it is cropped to; then it centres in the
+      // window instead, so it is trimmed evenly rather than losing its whole underside.
+      const crop = cropHeight();
+      const want = (bottom - top) <= crop ? top : top - (crop - (bottom - top)) / 2;
+      if (Math.abs(want) > 0.5) {
+        pinOffsetY += want;
+        const w = canvas.offsetWidth, h = canvas.offsetHeight;
+        camera.setViewOffset(w, h, 0, pinOffsetY, w, h);
+        camera.updateMatrixWorld();
+      }
+    }
+
     const elapsed = now - startedAt;
     tiles.forEach((mesh) => {
       const u = mesh.userData;
@@ -505,7 +577,9 @@ export function initScene(projects, { onSelect } = {}) {
       u.outline.material.opacity = u.opacity * (hovered === mesh ? 1 : 0.9);
       u.outline.material.color.set(hovered === mesh ? capColor(u.project) : (u.project.selected ? C.ruleStrong : C.ruleMid));
       u.scale.target = hovered === mesh ? HOVER_SCALE : 1;
-      mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING));
+      mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING) * tileScale());
+      mesh.position.x = u.ax * spread(); // re-read every frame so a rotation or a resize lands
+      mesh.position.y = u.ay * spread();
     });
 
     const origin = project(CAM_TARGET);
@@ -518,6 +592,8 @@ export function initScene(projects, { onSelect } = {}) {
       // Sit at the axis tip, just outside the volume. Only when the tip has left the viewport
       // (zoomed in, or a narrow screen) does the label slide to the screen edge instead.
       const inside = pr.x >= m.side && pr.x <= canvas.offsetWidth - m.side && pr.y >= m.top && pr.y <= canvas.offsetHeight - m.bottom;
+      // A label stays on its own axis even when a tile ends up under it (Wyatt, 2026-09-08): the
+      // reader can turn the volume, and a label that wandered off its axis stops meaning anything.
       const at = inside ? pr : pinToEdge(origin.x, origin.y, pr.x, pr.y, m);
       placeLabel(el, at.x, at.y);
     });

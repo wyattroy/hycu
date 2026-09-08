@@ -94,7 +94,10 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
 
     // Axis labels must not sit on a tile. Sampled three times over a second, because the graph
     // drifts on its own; any overlap at any sample fails. (MAKE once sat on the forgiveness tile.)
-    if (p === '/') {
+    // Desktop only: on a phone the tiles are drawn double size and spread to the walls, so they
+    // pass under the labels, and a label must stay on its axis rather than dodge (Wyatt,
+    // 2026-09-08: "the axis labels must sit on their axes ... the tiles are shiftable by the user").
+    if (p === '/' && !touch) {
       for (let i = 0; i < 3; i++) {
         const hits = await page.evaluate(() => {
           const rects = window.__graph?.screenRects() || [];

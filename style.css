@@ -245,11 +245,14 @@ main.has-hero { padding-top: 0; }
 .hero-controls button:hover { color: var(--ink); border-color: var(--ink); }
 .hero-hint { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 8px 0 0; }
 @media (max-width: 720px) {
-  /* Below 720px the graph and the headline stack instead of overlapping. */
+  /* Below 720px the volume hangs from the nav and the headline follows the PRODUCT label. */
   #hero { height: auto; min-height: 0; padding-top: var(--nav-h); }
-  .graph-stage { position: relative; height: 56svh; min-height: 360px; }
+  /* The canvas keeps its tall frame; the stage is the window we crop it to, so the copy can
+     follow the volume instead of the empty half of the canvas below it. */
+  .graph-stage { position: relative; height: calc(75vw + 5px); min-height: 0; overflow: hidden; }
+  .graph-stage #graph-canvas, .graph-stage #graph-2d, .graph-stage #axis-labels { height: 200vw; }
   .axis-label.helper { display: none; }
-  .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 20px var(--gutter) 40px; pointer-events: auto; }
+  .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 6px var(--gutter) 40px; pointer-events: auto; }
   .hero-text .display { font-size: clamp(30px, 8.6vw, 40px); }
   .hero-hint { display: none; }
 }
