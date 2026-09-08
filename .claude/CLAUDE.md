@@ -56,6 +56,37 @@ gate was broken. It was not — its copy was hours stale.
 **Ask before you push while another session is live.** One message, and it prevents the whole class.
 It is what actually worked on 2026-09-08.
 
+## Keeping the checkouts current — you do this, not Wyatt
+
+**Wyatt does not manage git.** He said so on 2026-09-08: "i don't want to manage git." Any pulling,
+fetching or rebasing that needs doing is a session's job, done without being asked and reported in a
+line.
+
+**Start every session with `git fetch origin`.** Nothing you read from your own tree tells you what
+the remote has.
+
+**After anything merges to `main`, update the MAIN CHECKOUT** at
+`/Users/wyattroy/Documents/Projects/hycu` — not just your worktree:
+
+```bash
+git -C /Users/wyattroy/Documents/Projects/hycu status --porcelain   # check FIRST
+git -C /Users/wyattroy/Documents/Projects/hycu pull --ff-only
+```
+
+Two reasons it has to be that checkout. `core.hooksPath` is an absolute path into it, so **the push
+gate every worktree runs is the copy of `scripts/hooks/pre-push` sitting there** — a hook change is
+not live when it merges, it is live when someone pulls there. And the officer records, the backlog
+and the CEO ledger a session reads out of that checkout are stale until it has.
+
+**Check `status --porcelain` first, every time.** Wyatt edits copy in that checkout's working tree
+while sessions run. **If it is dirty, do not pull** — tell him what is uncommitted and let him decide.
+Pulling over his unfinished edits is the Review 9 fault with a different command.
+
+**Never `git pull` inside a worktree on a feature branch.** That merges `main` into your work and
+leaves a merge commit nobody asked for. Use `git fetch origin && git rebase origin/main`, and expect
+the rebase to orphan the reviewed commit and re-block the push — that is deliberate, take a fresh
+verdict.
+
 ## The workflow
 
 **Push once, when the work is coherent — not per fix.** `git push` is not a save button; five pushes
