@@ -51,6 +51,22 @@ pulls in the main checkout — not when it merges. Do not edit it on a branch wi
 sessions on this day were told to work on "separate things" and both landed in `.claude/` and
 `style.css`. Separate things is not separate files.
 
+## 2026-09-08 — A study head is h1 → h2 → body
+
+**The project name is the page's `<h1>`, in the display face. The sentence under it is an `<h2>`.
+The paragraph under that is body text with no type role of its own.** Wyatt: "restructure the page
+css, so that the h1 IS the title... the h2 is the byline... and remove whatever styling this uses to
+just make that second-byline use body."
+
+Before this the name was a `<p>` set at 50px and the long sentence was the `<h1>`, so the biggest
+thing on the page was not its heading and a screen reader announced the sentence as the page's
+title. CEO Review 32 named it: "the one place where 'it looks right' and 'it is right' have come
+apart." The visual order does not change; the document now agrees with it.
+
+The third paragraph was a `.lede` — a third display size, greyed. It is now plain body at the
+`--measure` width, carrying only margin and a max-width (`.study-intro`). **`.lede` is untouched
+everywhere else**: the home hero, `/work/`, `/studio/`, `/contact/` and `404.html` still use it.
+
 ## 2026-09-08 — One name and one byline per project
 
 **Every project carries the same name in all four places it is named** — the graph tile
