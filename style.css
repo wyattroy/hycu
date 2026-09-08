@@ -158,7 +158,12 @@ section.band.flush { border-top: 0; }
   transition: border-color var(--t-fast);
 }
 #nav.is-scrolled { border-bottom-color: var(--rule); }
-.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+/* The wordmark is the display face too (Wyatt, 2026-09-08), which is why every page requests
+   Shrikhand again: the nav is on all thirteen, so all thirteen now draw with it. It sets small
+   better than it sets tight — a point larger than the grotesk was, at 400, at zero tracking, and
+   nudged up a hair because its baseline sits low next to the mark. */
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display-face); font-weight: 400; font-size: 18px; letter-spacing: 0; }
+.brand .mark { position: relative; top: -1px; }
 .brand .mark { display: block; width: 20px; height: 20px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
@@ -249,8 +254,21 @@ main.has-hero { padding-top: 0; }
 .work-item { display: block; padding: 36px 0 56px; border-top: 1px solid var(--rule); }
 .work-item .eyebrow { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .work-item .eyebrow .year { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-2); white-space: nowrap; }
+/* The short project title (Wyatt, 2026-09-08). Two or three words in the display face, above the
+   sentence-long headline the card already carried. It names the project the way the graph tile
+   does; the headline below it still does the explaining, so this sets larger and that one stays
+   put. Both take the hover. */
+.work-item .proj {
+  font-family: var(--display-face);
+  font-weight: 400;
+  font-size: clamp(25px, 2.5vw, 31px);
+  letter-spacing: 0;
+  line-height: 1.1;
+  margin: 0 0 10px;
+  transition: color var(--t-fast);
+}
 .work-item h3 { transition: color var(--t-fast); }
-.work-item:hover h3 { color: var(--accent); }
+.work-item:hover h3, .work-item:hover .proj { color: var(--accent); }
 .work-item .sub { margin: 12px 0 18px; color: var(--ink-2); max-width: 34em; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-3); }
 [data-cap]::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; background: var(--c, var(--ink-3)); }

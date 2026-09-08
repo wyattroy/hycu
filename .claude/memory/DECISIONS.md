@@ -175,3 +175,18 @@ The face is display-only and it does not scale down: **the case-study headlines 
 hero, the page titles, the section heads. It has one weight, so the header roles set at 400, not
 500, and at zero tracking rather than the grotesk's negative; the display sizes step down (66→58px,
 44→39px) and the leading opens up, because it sets wider and taller than Geist.
+
+## 2026-09-08 — The wordmark, and short titles on Work
+
+**The `hycu` wordmark is set in Shrikhand.** It sits in the nav, which is on all thirteen pages, so
+all thirteen request the display face again — the eight study pages had it removed hours earlier on
+CEO Review 28's finding that they downloaded a font they never drew. That finding is not reversed;
+its premise is. They draw with it now.
+
+**Each card on the Work page carries a two-or-three-word project title in the display face, above
+the sentence-long headline it already had.** Wyatt: "write a 2-3 word project title for each title,
+above the current title." The names track the graph tiles in `data/projects.json` so the two agree:
+Spatial Equity, ClaudeKit, What They're Buying, Cited by AI, Teaching Forgiveness, Pour, Pastry
+Pirates, Changing Institutions. Two are one word because they are the project's name. The long
+headline stays exactly as it was and still does the explaining. **Work page only** — the study
+pages' own `<h1>`s were not touched, and `.study-head .h-lg` is still Geist.
