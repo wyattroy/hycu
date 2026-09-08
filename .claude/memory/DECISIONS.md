@@ -8,9 +8,16 @@
 
 **Every project carries the same name in all four places it is named** — the graph tile
 (`data/projects.json` `name`), the page `<title>`, the Work card, and the study head — **and the same
-byline everywhere**, the client and the capability agreeing between the card, the study head and
-`projects.json`. Wyatt: "every project should have ONE name and ONE byline, consistent." The
-next-study links at the foot of each study use the name too.
+byline on the card and the study head**, client and capability. `projects.json`'s `client` agrees with
+both. Wyatt: "every project should have ONE name and ONE byline, consistent." The next-study links at
+the foot of each study use the name too.
+
+**Two places the byline still varies, and neither is settled** (CEO Review 32). The eyebrow's capability
+is one descriptor and `projects.json` `capabilities` is a list whose first entry colours the graph tile;
+they read differently for four projects — Spatial Equity says "Design research" on the page and is
+coloured "User research" on the graph. That is HY-37. And the study rail is a fifth place a byline
+appears, deliberately longer ("A consumer oral-care brand, unnamed by agreement"), and two pages label
+that field **For** where six say **Client**. That is HY-38. Both are copy calls, left for Wyatt.
 
 The eight names: Spatial Equity, What They're Buying, Cited by AI, Teaching Forgiveness, Pastry
 Pirates, ClaudeKit, How to Change Institutions, Pour.
