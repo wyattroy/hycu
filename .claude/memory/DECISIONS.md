@@ -188,5 +188,9 @@ the sentence-long headline it already had.** Wyatt: "write a 2-3 word project ti
 above the current title." The names track the graph tiles in `data/projects.json` so the two agree:
 Spatial Equity, ClaudeKit, What They're Buying, Cited by AI, Teaching Forgiveness, Pour, Pastry
 Pirates, Changing Institutions. Two are one word because they are the project's name. The long
-headline stays exactly as it was and still does the explaining. **Work page only** — the study
-pages' own `<h1>`s were not touched, and `.study-head .h-lg` is still Geist.
+headline stays exactly as it was and still does the explaining.
+
+**The same title sits above the headline on each study page too** (Wyatt, same day, second pass), so
+a project is named identically in all three places it appears: graph tile, Work card, study head.
+There it sets larger than the headline it introduces — the short title carries the page and the long
+line reads as the deck under it. Neither `<h1>` changed and `.study-head .h-lg` is still Geist.
