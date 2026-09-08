@@ -1,9 +1,8 @@
 /* hycudesign.com — one stylesheet, no build step.
-   Direction: "Restraint" (DECISIONS.md, 2026-09-02). Near-white ground with a faint grey gradient for depth, near-black ink, one grotesk at
-   a few sizes, generous margins, no cards, no borders except hairlines. The graph is the only
-   thing on the site that moves.
-   Amended 2026-09-08: Shrikhand carries the two big header roles. Everything below them — ledes,
-   body, eyebrows, tags, rails, graph labels — is still the grotesk. */
+   Direction: "Restraint" (DECISIONS.md, 2026-09-02, amended 2026-09-08). Near-white ground with a faint grey gradient for depth, near-black
+   ink, two faces — Shrikhand for the big headers, the grotesk at a few sizes for everything below
+   them — generous margins, no cards, no borders except hairlines. The graph is the only thing on
+   the site that moves. */
 
 :root {
   --bg: #ffffff;
@@ -23,8 +22,10 @@
 
   --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  /* Display only — the two largest header roles. Everything else is the grotesk. */
-  --display-face: "Shrikhand", Georgia, "Times New Roman", serif;
+  /* Display only — the two largest header roles. Everything else is the grotesk.
+     Falls back to the grotesk, not a serif: with display=swap the header paints in the fallback
+     first, and a face already on the page flashes less than a Georgia nobody else here uses. */
+  --display-face: "Shrikhand", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --nav-h: 64px;
   --gutter: clamp(24px, 8vw, 144px);

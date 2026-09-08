@@ -164,7 +164,7 @@ ports from wyattroy.com's `three-scene.js` (Three.js r160 via jsdelivr) with the
 
 ## 2026-09-08 — A display face for the big headers
 
-**Shrikhand (Google Fonts, OFL) carries `.display` and `.h-lg`. Geist keeps everything else.**
+**Shrikhand (Google Fonts, OFL — verified: `google/fonts` ships it under `ofl/shrikhand`, `METADATA.pb` says `license: "OFL"`, designer Jonny Pinhorn) carries `.display` and `.h-lg`. Geist keeps everything else.**
 Amends the 2026-09-02 "Restraint" direction, which said one grotesk at a few sizes. Wyatt brought a
 Ventura specimen (Damn Type Co.) and asked for headers "more in this direction — gen-z warm";
 Shrikhand was chosen over Bagel Fat One, Fraunces (SOFT 100 / WONK 1), Titan One, Zodiak, and Boska
