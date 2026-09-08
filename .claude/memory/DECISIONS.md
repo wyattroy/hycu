@@ -185,10 +185,16 @@ its premise is. They draw with it now.
 
 **Each card on the Work page carries a two-or-three-word project title in the display face, above
 the sentence-long headline it already had.** Wyatt: "write a 2-3 word project title for each title,
-above the current title." The names track the graph tiles in `data/projects.json` so the two agree:
-Spatial Equity, ClaudeKit, What They're Buying, Cited by AI, Teaching Forgiveness, Pour, Pastry
+above the current title." Spatial Equity, ClaudeKit, What They're Buying, Cited by AI, Teaching Forgiveness, Pour, Pastry
 Pirates, Changing Institutions. Two are one word because they are the project's name. The long
 headline stays exactly as it was and still does the explaining.
+
+**Correction, CEO Review 30:** these were written believing they matched the graph tile names in
+`data/projects.json`, and five of the eight do not — Spatial Equity / What They're Buying / Cited by
+AI / Teaching Forgiveness / Changing Institutions all differ from their tile, and Polycam differs
+from its `<title>` too, so that study carries three names in three places. The titles are good and
+are staying; the claim that they track the graph was false and is withdrawn. Whether the three
+layers should be reconciled is HY-36, unruled.
 
 **The same title sits above the headline on each study page too** (Wyatt, same day, second pass), so
 a project is named identically in all three places it appears: graph tile, Work card, study head.

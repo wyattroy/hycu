@@ -97,9 +97,11 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -.02em; line-height: 1.12; margin
 .h-md { font-size: clamp(22px, 2.2vw, 27px); letter-spacing: -.015em; line-height: 1.22; }
 .h-sm { font-size: 19px; letter-spacing: -.01em; }
 /* The short project title (Wyatt, 2026-09-08). Two or three words in the display face, above the
-   sentence-long headline — on the Work cards and on each study page, the same words in both places,
-   and the same words as the graph tile. It names the project; the headline below it still does the
-   explaining. The two sizes live with their own layouts, below. */
+   sentence-long headline — the same words on the Work card and on the study page, and untied to
+   anything else. They are NOT the graph tile names: five of the eight differ from `name` in
+   data/projects.json, and Polycam differs from its own <title> as well (CEO Review 30). Whether
+   the three should agree is Wyatt's call, logged as HY-36. It names the project; the headline
+   below it still does the explaining. The two sizes live with their own layouts, below. */
 .proj { font-family: var(--display-face); font-weight: 400; letter-spacing: 0; line-height: 1.1; margin: 0; }
 /* Shrikhand carries the two big header roles (Wyatt, 2026-09-08). It has one weight and is drawn
    tight, so the grotesk's 500 and negative tracking have to come back off or the browser fakes a
@@ -168,8 +170,7 @@ section.band.flush { border-top: 0; }
    better than it sets tight — a point larger than the grotesk was, at 400, at zero tracking, and
    nudged up a hair because its baseline sits low next to the mark. */
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display-face); font-weight: 400; font-size: 18px; letter-spacing: 0; }
-.brand .mark { position: relative; top: -1px; }
-.brand .mark { display: block; width: 20px; height: 20px; }
+.brand .mark { display: block; width: 20px; height: 20px; position: relative; top: -1px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
 .nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
