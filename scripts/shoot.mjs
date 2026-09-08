@@ -162,7 +162,7 @@ await browser.close();
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
   `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile, graph tile opens its study on click and on tap',
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);

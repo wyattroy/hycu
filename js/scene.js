@@ -437,7 +437,10 @@ export function initScene(projects, { onSelect } = {}) {
   // parked on the tile, with no pointer left to move off it.
   const noHover = () => isTouch || window.innerWidth <= 720;
   canvas.addEventListener('mousemove', (e) => {
-    if (noHover() || dragging) { hovered = null; if (hoverEl) hoverEl.hidden = true; return; }
+    if (noHover()) { hovered = null; if (hoverEl) hoverEl.hidden = true; return; }
+    // A drag hides the tooltip but keeps the tile you are dragging from lit: clearing the hover
+    // here dropped its growth and its colour mid-drag, on desktop, for no reason anyone asked for.
+    if (dragging) { if (hoverEl) hoverEl.hidden = true; return; }
     const hit = pickAt(e.clientX, e.clientY);
     if (hit !== hovered) { hovered = hit; canvas.style.cursor = hit ? 'pointer' : ''; }
     showHover(hit, e.clientX, e.clientY);
