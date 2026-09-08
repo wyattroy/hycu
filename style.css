@@ -241,6 +241,10 @@ main.has-hero { padding-top: 0; }
 .hero-text .display {
   margin-bottom: 18px;
   text-wrap: balance;
+  /* The vw line is the fallback: a browser without container queries drops the cqw declaration at
+     parse time and keeps this one, which is the sizing this hero had before. Without it the headline
+     would fall through to .display's generic clamp — larger than this hero has ever been. */
+  font-size: clamp(34px, 3.9vw, 54px);
   font-size: clamp(30px, 8.4cqw, 53px);
 }
 /* The forced break is Wyatt's ruling from 2026-09-02 — "are" ends the first line — and it only
@@ -249,7 +253,14 @@ main.has-hero { padding-top: 0; }
    switches on when the COLUMN is wide enough to hold the line. Below that there is no forced break
    and `text-wrap: balance` divides the words evenly instead of orphaning two of them. */
 .br-desk { display: none; }
-@container (min-width: 370px) { .br-desk { display: inline; } }
+/* 470px is "We see where you are," at the LARGEST size any rule here can give it — the 40px cap of
+   the phone clamp, where that line measures 464px. Below the phone breakpoint the type is sized by
+   viewport and can outgrow the column, so the threshold has to clear the worst case, not the typical
+   one: at 470 it was orphaning "way" onto its own line at 480px wide. Above the threshold the break
+   is Wyatt's 2026-09-02 ruling; below it, `text-wrap: balance` reaches the same three lines on its
+   own wherever they fit. Calibrated to THAT STRING at THAT SIZE — change the headline copy or either
+   clamp and re-measure. */
+@container (min-width: 470px) { .br-desk { display: inline; } }
 .hero-text .hl { color: var(--c-systems); }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -275,6 +286,10 @@ main.has-hero { padding-top: 0; }
      needs its width from the outside — without this the container measures 0 and the type falls to
      its floor. Stretch gives it the column's real width. */
   .hero-text { align-self: stretch; }
+  /* Restored after CEO Review 36 caught it being deleted as "redundant". It is not: below 720px the
+     column is the viewport minus the gutter, so 8.6vw and 8.4cqw are not the same number, and this
+     line is worth 33.5px at 390 and 37px at 430 where the container rule gives the 30px floor. */
+  .hero-text .display { font-size: clamp(30px, 8.6vw, 40px); }
   /* Pinch and drag do this on a touchscreen, and the buttons read as stray controls under the
      headline once the copy sits below the graph. */
   .hero-controls { display: none; }
@@ -388,7 +403,6 @@ footer a:hover { color: var(--ink); }
   letter-spacing: -.02em;
   line-height: 1.12;
 }
-.study-head .lede { margin-top: 28px; max-width: 36em; }
 .study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
 @media (max-width: 860px) { .study-body { grid-template-columns: 1fr; } .study-rail { order: -1; } }
 .study-rail { position: sticky; top: calc(var(--nav-h) + 24px); }
