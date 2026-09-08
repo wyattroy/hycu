@@ -5,6 +5,22 @@ APPEND ONLY. Newest at the top. Never edit an old verdict.
 
 ---
 
+## Review 29 — 2026-09-08 · commit e5aa58b: Review 28's four findings fixed
+reviewed-commit: e5aa58b
+**One sentence:** *"All four of Review 28's findings are genuinely fixed and I checked each one by hand — but 'push it' is still not done, and it can't be done until this verdict is written into `.claude/CEO-REVIEWS.md`, because your own gate counts nine non-record files changed since the last recorded review and will refuse the push exactly as it did before."* **PUSH.**
+
+- **The font link and the CSS now agree, checked both directions, file by file.** "I checked every one of the 13 HTML files: the 5 that request the font (`index.html:16`, `studio/`, `contact/`, `work/index.html`, `404.html`) each contain at least one `.display` element, and the 8 study pages contain zero `.display` and exactly one `.h-lg` — always the `<h1>` at line 34 inside `<header class="wrap study-head">`, which `style.css:338-344` pins back to Geist. **Request set and draw set now match exactly, both directions.**" It also grepped `js/` to confirm no script injects either class.
+- **All four findings verified fixed, by hand rather than by diff summary.** The eight study pages request only Geist and Geist Mono. `style.css:2-5` was **rewritten**, not annotated — "no stale 'one grotesk' survives anywhere in the file". The fallback is the grotesk stack with the reason at `:26-27`. The OFL claim is sourced inline — with the CEO's own caveat: **"I did not independently verify the licence — no network. The claim is now sourced; it is not now confirmed by me."**
+- **The test report is finally inside the commit it describes.** `.claude/TEST-REPORT.md` is in `e5aa58b`, stamped about ninety seconds before the commit. "That is the Review 28 complaint closed."
+- **"No claim in this brief is contradicted by the tree. That is the first time in three reviews I can write that sentence."**
+- **The recurring fault: broken.** Reviews 27 and 28 both found the repo asserting what the repo elsewhere denies. "I looked for the third instance and did not find one — `style.css` is internally consistent, the font links match the CSS, `DECISIONS.md` matches `style.css`. **The pattern broke.**"
+- **The gate was right a second time, and the CEO reconstructed it again.** `origin` still held `3d53fa3`, "not an ancestor of HEAD", so the push needed force regardless; and `scripts/hooks/pre-push:26-32` would refuse first because the newest verdict was Review 28 at `254591c`. **"The gate is right again — it is saying no CEO has seen `e5aa58b`."** On the earlier bypass it checked the blast radius itself: "`origin/main` contains zero instances of 'Shrikhand', so nothing unreviewed is on hycudesign.com."
+- **HY-33 has now survived three reviews and is the oldest unpaid item in the repo.** `studio/index.html:69` still says "two officers whose only work is to judge the rest". "I am not making it a blocker on a type-change branch — but it is now the oldest unpaid item on this repo, and **the next voice pass has no excuse left.**"
+- **What the CEO did not check:** did not run the tests ("taking it on the session's word, though the timestamps at least place the run after the fixes"), did not open a browser or server — **"I have not seen Shrikhand rendered on any page since the study-page link removal — the reasoning that removing an unused link cannot change rendering is sound, but it is reasoning."** Did not fetch the licence (no network), did not weigh the font: "nobody has measured transfer size, FOUT or layout shift, and that remains completely unmeasured." Ten tool calls, read-only.
+- **Working session's response:** verdict recorded, then the branch force-pushed **without `--no-verify`** — the hook consulted and satisfied, which is the point of the round trip. The unmeasured font weight is logged as a new backlog item rather than left in this prose.
+
+---
+
 ## Review 28 — 2026-09-08 · commit 254591c: Shrikhand takes the big headers
 reviewed-commit: 254591c
 **One sentence:** *"Shrikhand is wired correctly and nothing false reached your live site — but eight of your thirteen pages download a font they never draw a single letter in, and line 2 of `style.css` still tells the next reader this site uses 'one grotesk' ninety lines above the rule that made that untrue, which is the same 'the repo contradicts the claim' fault the last two CEOs flagged."* **PUSH.**
