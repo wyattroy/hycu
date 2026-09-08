@@ -161,3 +161,17 @@ culture." Goes on the Studio page as "What we don't do."
 = hycudesign.com (Squarespace DNS).** Same shape as wyattroy.com so Wyatt can edit it. The 3D graph
 ports from wyattroy.com's `three-scene.js` (Three.js r160 via jsdelivr) with the new axes. Rates
 (~$300–400/hr) are never published.
+
+## 2026-09-08 — A display face for the big headers
+
+**Shrikhand (Google Fonts, OFL) carries `.display` and `.h-lg`. Geist keeps everything else.**
+Amends the 2026-09-02 "Restraint" direction, which said one grotesk at a few sizes. Wyatt brought a
+Ventura specimen (Damn Type Co.) and asked for headers "more in this direction — gen-z warm";
+Shrikhand was chosen over Bagel Fat One, Fraunces (SOFT 100 / WONK 1), Titan One, Zodiak, and Boska
+as the closest free face to that reference.
+
+The face is display-only and it does not scale down: **the case-study headlines (`.study-head
+.h-lg`, twenty to thirty words each) stay in Geist.** Shrikhand carries the short things — the home
+hero, the page titles, the section heads. It has one weight, so the header roles set at 400, not
+500, and at zero tracking rather than the grotesk's negative; the display sizes step down (66→58px,
+44→39px) and the leading opens up, because it sets wider and taller than Geist.
