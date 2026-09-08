@@ -51,6 +51,36 @@ pulls in the main checkout — not when it merges. Do not edit it on a branch wi
 sessions on this day were told to work on "separate things" and both landed in `.claude/` and
 `style.css`. Separate things is not separate files.
 
+## 2026-09-08 — The headline is sized from its column, and the browser pass serves its own tree
+
+**`.hero-text .display` is `clamp(30px, 8.4cqw, 53px)` against `.hero-text` as a container**, not
+`clamp(34px, 3.9vw, 54px)` against the viewport. Wyatt: "audit all of the different screen sizes and
+re-logic the header so that these awkward line breaks never happen." The type used to grow with the
+window while the column stopped at 720px, so at 1050px the longest line and the box were both 475px
+and rounding decided whether you saw three lines or an orphaned "are,". `cqw` is a percentage of the
+column, so the line stays at ~97% of it at every width. **The forced break is now gated on the column
+being wide enough to hold the line, not on a 721px viewport** — at a 721px viewport the column is
+311px and that break produced six rendered lines. Below that width `text-wrap: balance` divides the
+words evenly instead of orphaning two.
+
+Measured across sixteen widths before and after. What was live: six lines at 721, five at 768, four
+at 820, all with orphans. Now: three lines everywhere from 480 up, four evenly balanced below, no
+orphan at any width. **Wyatt's 2026-09-02 ruling that "are" ends the first line is preserved.**
+
+**`scripts/shoot.mjs` starts its own server rooted at its own working tree, and refuses to run if
+whatever it is pointed at serves different bytes.** It used to default to `127.0.0.1:8787` and trust
+it. A `npm run serve` left running in the **main checkout** since 11:32 answered that port all day,
+so **every browser pass run from a worktree on 2026-09-08 tested main's files and reported them as
+the branch's.** Three "identical" failures across three trees were three reads of one tree. The
+browser pass also runs at **820px** now, the width HY-3 asked for on 2026-09-02 and never got.
+
+## 2026-09-08 — The wordmark goes back to the grotesk
+
+**`.brand` is Geist again**, byte-for-byte the rule from before Shrikhand. Wyatt: "change the logo
+font from shrikhand back to whatever it was before — i liked that better." Every page still requests
+the display face and still draws with it — `.display` on the five top-level pages, `.proj` on the
+eight studies — so nothing strands a font request.
+
 ## 2026-09-08 — A study head is h1 → h2 → body
 
 **The project name is the page's `<h1>`, in the display face. The sentence under it is an `<h2>`.

@@ -228,10 +228,27 @@ main.has-hero { padding-top: 0; }
   pointer-events: none; /* desktop: copy overlays the graph; clicks fall through to tiles */
 }
 .hero-copy a, .hero-controls { pointer-events: auto; }
-.hero-text { max-width: 720px; }
+/* The headline is sized from ITS OWN COLUMN, not the viewport (Wyatt, 2026-09-08: "audit all of the
+   different screen sizes and re-logic the header so that these awkward line breaks never happen").
+   It used to be clamp(34px, 3.9vw, 54px) against a column capped at 720px, so the type kept growing
+   with the window while the column stopped — and the longest line, "We see where you are,", came out
+   the same width as the box it had to fit in. At 1050px they were both 475px, and rounding decided
+   whether you got three lines or an orphaned "are,".
+   `cqw` is a percentage of this container's width, so 8.4cqw keeps that line at ~97% of the column
+   at every size, with the clamp holding a floor and a ceiling. Measured across sixteen widths. */
+.hero-text { flex: 1 1 0; min-width: 0; max-width: 720px; container-type: inline-size; }
+.hero-text .display {
+  margin-bottom: 18px;
+  text-wrap: balance;
+  font-size: clamp(30px, 8.4cqw, 53px);
+}
+/* The forced break is Wyatt's ruling from 2026-09-02 — "are" ends the first line — and it only
+   helps when the line actually fits. It used to switch on at a 721px VIEWPORT, where the graph has
+   already taken its share and the column is 311px against a 394px line: six rendered lines. It now
+   switches on when the COLUMN is wide enough to hold the line. Below that there is no forced break
+   and `text-wrap: balance` divides the words evenly instead of orphaning two of them. */
 .br-desk { display: none; }
-@media (min-width: 721px) { .br-desk { display: inline; } }
-.hero-text .display { margin-bottom: 18px; text-wrap: initial; font-size: clamp(34px, 3.9vw, 54px); }
+@container (min-width: 370px) { .br-desk { display: inline; } }
 .hero-text .hl { color: var(--c-systems); }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -253,7 +270,10 @@ main.has-hero { padding-top: 0; }
   .graph-stage #graph-canvas, .graph-stage #graph-2d, .graph-stage #axis-labels { height: 200vw; }
   .axis-label.helper { display: none; }
   .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 6px var(--gutter) 40px; pointer-events: auto; }
-  .hero-text .display { font-size: clamp(30px, 8.6vw, 40px); }
+  /* align-items: flex-start sizes a flex item by its content, and the headline's container query
+     needs its width from the outside — without this the container measures 0 and the type falls to
+     its floor. Stretch gives it the column's real width. */
+  .hero-text { align-self: stretch; }
   /* Pinch and drag do this on a touchscreen, and the buttons read as stray controls under the
      headline once the copy sits below the graph. */
   .hero-controls { display: none; }

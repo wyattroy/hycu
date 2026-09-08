@@ -7,13 +7,47 @@
  *     div once covered the canvas
  * Screenshots go to .claude/shots/ (gitignored); the report is appended to .claude/TEST-REPORT.md.
  * Run `node scripts/check.mjs` first: it starts the report. Needs a local server on :8787
- * (`python3 -m http.server 8787`). */
+ * (it starts its own, rooted at this working tree; set BASE to override). */
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const OUT = path.join(ROOT, '.claude/shots');
-const BASE = process.env.BASE || 'http://127.0.0.1:8787';
+// THE BROWSER PASS SERVES ITS OWN COPY OF THIS WORKING TREE. It used to default to
+// http://127.0.0.1:8787 and trust whatever was answering there. On 2026-09-08 a `npm run serve`
+// left running since 11:32 in the MAIN CHECKOUT answered that port for the whole day, so every
+// browser pass run from a worktree tested main's files and reported them as the branch's. Three
+// "identical" failures across three trees were three reads of the same tree. A test that silently
+// grades someone else's homework is worse than no test.
+//
+// Set BASE explicitly to point somewhere else on purpose; otherwise this starts a server on an
+// unused port, rooted at THIS working tree, and stops it at the end.
+let server = null;
+let BASE = process.env.BASE || null;
+if (!BASE) {
+  const { spawn } = await import('node:child_process');
+  const net = await import('node:net');
+  const port = await new Promise((res, rej) => {
+    const s = net.createServer();
+    s.on('error', rej);
+    s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => res(port)); });
+  });
+  server = spawn('python3', ['-m', 'http.server', String(port), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
+  BASE = `http://127.0.0.1:${port}`;
+  for (let i = 0; i < 100; i++) {
+    try { await fetch(BASE + '/style.css'); break; } catch { await new Promise((r) => setTimeout(r, 50)); }
+  }
+}
+// Whatever we ended up pointing at, prove it is this working tree before grading it.
+{
+  const served = await fetch(BASE + '/style.css').then((r) => r.text()).catch(() => '');
+  const onDisk = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+  if (served !== onDisk) {
+    server?.kill();
+    console.error(`shoot: ${BASE} is not serving this working tree (${ROOT}).\nIts style.css differs from the one on disk. Refusing to test someone else's files.`);
+    process.exit(1);
+  }
+}
 const PAGES = ['/', '/work/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/', '/work/pour/', '/work/how-to-change-institutions/'];
 
 let chromium;
@@ -25,7 +59,9 @@ const browser = await chromium.launch();
 const errors = [];
 const ran = { pages: 0, gutter: 0, graph: 0, headline: 0, labels: 0 };
 
-for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['phone', { width: 390, height: 844 }, true]]) {
+// 820 is the width HY-3 has asked for since CEO Review 4, 2026-09-02: between 720 and 900 the hero
+// column is at its narrowest while the desktop rules are already on, and nothing tested there.
+for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['tablet', { width: 820, height: 1024 }, false], ['phone', { width: 390, height: 844 }, true]]) {
   const ctx = await browser.newContext({ viewport: vp, hasTouch: touch, isMobile: touch, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error') errors.push(`${label} ${page.url()}: console: ${m.text()}`); });
@@ -166,5 +202,6 @@ const report = [
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
+server?.kill();
 console.log(report);
 process.exit(errors.length ? 1 : 0);
