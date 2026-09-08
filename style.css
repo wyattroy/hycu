@@ -243,7 +243,9 @@ main.has-hero { padding-top: 0; }
   text-wrap: balance;
   /* The vw line is the fallback: a browser without container queries drops the cqw declaration at
      parse time and keeps this one, which is the sizing this hero had before. Without it the headline
-     would fall through to .display's generic clamp — larger than this hero has ever been. */
+     would fall through to .display's generic clamp — larger than this hero has ever been. Such a
+     browser also drops the @container rule below, so it gets the old SIZE with the forced break
+     permanently off; the line still wraps rather than overflowing (CEO Review 37). */
   font-size: clamp(34px, 3.9vw, 54px);
   font-size: clamp(30px, 8.4cqw, 53px);
 }

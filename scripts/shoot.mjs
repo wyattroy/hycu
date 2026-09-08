@@ -6,8 +6,8 @@
  *   - a real graph tile can be hovered and clicked (desktop) and tapped (phone); an invisible
  *     div once covered the canvas
  * Screenshots go to .claude/shots/ (gitignored); the report is appended to .claude/TEST-REPORT.md.
- * Run `node scripts/check.mjs` first: it starts the report. Needs a local server on :8787
- * (it starts its own, rooted at this working tree; set BASE to override). */
+ * Run `node scripts/check.mjs` first: it starts the report. Serves its own copy of this working
+ * tree on a free port; set BASE to point it somewhere else on purpose. */
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -152,12 +152,12 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
         }
         const lines = [...rows.entries()].sort((a, b) => a[0] - b[0]).map(([, t]) => t.trim()).filter(Boolean);
         const purple = [...h1.querySelectorAll('.hl')].map((e) => e.textContent);
-        return { firstLine: lines[0], lines: lines.length, renderedLines: lines.length, orphans: lines.filter((l) => l.split(/\s+/).length < 2), purple };
+        return { firstLine: lines[0], lines: lines.length, orphans: lines.filter((l) => l.split(/\s+/).length < 2), purple };
       });
       // No line may be a single word at any width — that is the fault Wyatt reported on 2026-09-08
       // ("these awkward line breaks"), and it is the thing worth asserting everywhere. The exact
       // three-line shape is asserted where the column can hold it.
-      if (h.orphans.length) errors.push(`${label} home: headline orphans a line: ${JSON.stringify(h.lines ? h : h)}`);
+      if (h.orphans.length) errors.push(`${label} home: headline orphans a line: ${JSON.stringify(h)}`);
       if (h.firstLine !== 'We see where you are,' || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
       ran.headline++;
       if (h.purple.join(' ') !== 'see design') errors.push(`${label} home: purple words are ${JSON.stringify(h.purple)}, expected see + design`);
