@@ -165,12 +165,13 @@ section.band.flush { border-top: 0; }
   transition: border-color var(--t-fast);
 }
 #nav.is-scrolled { border-bottom-color: var(--rule); }
-/* The wordmark is the display face too (Wyatt, 2026-09-08), which is why every page requests
-   Shrikhand again: the nav is on all thirteen, so all thirteen now draw with it. It sets small
-   better than it sets tight — a point larger than the grotesk was, at 400, at zero tracking, and
-   nudged up a hair because its baseline sits low next to the mark. */
-.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display-face); font-weight: 400; font-size: 18px; letter-spacing: 0; }
-.brand .mark { display: block; width: 20px; height: 20px; position: relative; top: -1px; }
+/* The wordmark went back to the grotesk on 2026-09-08 — Wyatt saw it in Shrikhand and preferred
+   what it was. Byte-for-byte the rule from before, including no font-family of its own: it inherits
+   Geist from body. The mark's -1px nudge goes with it, having only existed to answer Shrikhand's
+   low baseline. Every page still requests the display face and still draws with it — .display on
+   the five top-level pages, .proj on the eight studies — so nothing here strands a font request. */
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+.brand .mark { display: block; width: 20px; height: 20px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
 .nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
