@@ -22,6 +22,26 @@
 # to be verified first; i may have typos/errors in them." EDITING.md now routes them through a
 # session instead. A working session never bypasses.
 set -e
+
+# GATE ONLY WHAT SHIPS. Wyatt, 2026-09-08: the ruling this hook implements says "every push to
+# `main`", and the hook was refusing every push to anything — so a branch pushed five times cost
+# five CEO reviews in one afternoon. A feature branch is not production. `main` is: GitHub Pages
+# serves it from root, so a merge is the deploy and this is the last gate before one.
+#
+# Git hands pre-push the ref updates on stdin as "<local ref> <local sha> <remote ref> <remote sha>".
+GATED=no
+while read -r _lref _lsha remote_ref _rsha; do
+  case "$remote_ref" in refs/heads/main) GATED=yes ;; esac
+done
+[ "$GATED" = yes ] || exit 0
+
+# A REBASE REQUIRES A FRESH VERDICT, and that is deliberate. A verdict names a sha; rebasing
+# replaces it, so `--is-ancestor` fails and everything since is unreviewed again. The phone-hero
+# session hit this on 2026-09-08 and took a fresh review rather than a bypass, which was correct:
+# its rebase pulled in a whole merged PR of somebody else's site changes, and a verdict on the old
+# base had genuinely not seen the new tree. Matching by patch-id or tree would paper over exactly
+# the case where a re-review is most warranted. Gating `main` only is what makes this cheap —
+# rebase a branch as often as you like; nothing asks for a verdict until you ship.
 HEAD_SHA=$(git rev-parse HEAD)
 
 # The ledger as the remote actually has it. A fetch failure is fatal rather than a silent
@@ -70,7 +90,11 @@ if ! git merge-base --is-ancestor "$REVIEWED" "$HEAD_SHA" 2>/dev/null; then
   fi
 fi
 
-UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" | grep -v '^\.claude/' | grep -v '^scripts/hooks/' || true)
+# Exempt: officer records, this hook, top-level docs, and repo config. NOT scripts/check.mjs or
+# scripts/shoot.mjs — OFFICERS.md calls check.mjs "this repo's proof", and a session that can weaken
+# the tests and ship without anyone reading the change defeats the one thing a gate is for.
+UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" \
+  | grep -vE '^\.claude/|^scripts/hooks/|^[^/]+\.md$|^\.gitignore$' || true)
 if [ -n "$UNREVIEWED" ]; then
   echo "pre-push: files changed since the CEO reviewed $REVIEWED:" >&2
   echo "$UNREVIEWED" | sed 's/^/  /' >&2
