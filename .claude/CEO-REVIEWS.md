@@ -21,6 +21,18 @@ because they do not touch, and `scripts/hooks/pre-push` now reads the newest ver
 
 *This table is generated from that directory. Do not hand-edit it; it is a listing, not a record.*
 
+## Review 35 — newest verdict, mirrored here for the pre-split hook
+reviewed-commit: 000c809
+
+*This block is a compatibility shim, generated, and not a verdict — the verdict is
+[`0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md`](reviews/0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md). The pre-2026-09-08 `pre-push` looked for the first `reviewed-commit:`
+under a `## Review` heading in this file, and the split left it with nothing to find, so every
+session's push broke until the new hook was installed. Since `core.hooksPath` is an absolute path
+into the main checkout, that installation does not happen when this merges — it happens when someone
+pulls there. This block keeps the old hook working in the meantime. **It is regenerated from
+`.claude/reviews/` and cannot drift from it.** Delete it once the main checkout is running the new
+hook.*
+
 | # | Date | Reviewed commit | File |
 |---|---|---|---|
 | 35 | 2026-09-08 | `000c809` | [0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md](reviews/0035-the-gate-reads-the-remote-verdicts-split-gate-mai.md) |
