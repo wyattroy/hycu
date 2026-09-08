@@ -4,6 +4,86 @@
 
 ---
 
+## 2026-09-08 — One name and one byline per project
+
+**Every project carries the same name in all four places it is named** — the graph tile
+(`data/projects.json` `name`), the page `<title>`, the Work card, and the study head — **and the same
+byline on the card and the study head**, client and capability. `projects.json`'s `client` agrees with
+both. Wyatt: "every project should have ONE name and ONE byline, consistent." The next-study links at
+the foot of each study use the name too.
+
+**Two places the byline still varies, and neither is settled** (CEO Review 32). The eyebrow's capability
+is one descriptor and `projects.json` `capabilities` is a list whose first entry colours the graph tile;
+they read differently for four projects — Spatial Equity says "Design research" on the page and is
+coloured "User research" on the graph. That is HY-37. And the study rail is a fifth place a byline
+appears, deliberately longer ("A consumer oral-care brand, unnamed by agreement"), and two pages label
+that field **For** where six say **Client**. That is HY-38. Both are copy calls, left for Wyatt.
+
+The eight names: Spatial Equity, What They're Buying, Cited by AI, Teaching Forgiveness, Pastry
+Pirates, ClaudeKit, How to Change Institutions, Pour.
+
+**Where a project has a real name, the real name wins over a short invention.** The field guide is
+published as *How to Change Institutions* and its own lede at `work/how-to-change-institutions/index.html:36`
+says so; "Changing Institutions" was a two-word title this session made up two hours earlier, and
+renaming his book to fit a slot would have been the wrong way round. Same principle as Pour,
+ClaudeKit and Pastry Pirates, which were never shortened.
+
+**Two bylines were wrong and are fixed:** the Work cards for ClaudeKit and Pastry Pirates read
+"CLAUDEKIT · Hycu" and "PASTRY PIRATES · Hycu" while their own study pages and `projects.json` both
+said "Studio · Hycu". The client field is the client, not the project.
+
+## 2026-09-08 — The font ships unmeasured
+
+**Shrikhand ships as it is.** Wyatt: "font looks good, ship it." Four CEO reviews asked for a transfer
+size, a FOUT and a layout-shift number and none exists, because an officer here is forbidden a
+browser. Accepted knowingly, not overlooked. HY-34 closed.
+
+## 2026-09-08 — No CTO on this repo
+
+**The CTO officer is not used here.** Wyatt: "don't use CTO, it's unnecessary." `.claude/CTO-LEDGER.md`
+already recorded that no CTO had ever driven this repo and `.claude/OFFICERS.md` that one here has no
+output channel; this makes that permanent rather than pending. The CEO stays: it gates every push.
+HY-33, the "two officers" line on the Studio page, is closed on his ruling with no change made.
+
+## 2026-09-08 — The wordmark, and short titles on Work
+
+**The `hycu` wordmark is set in Shrikhand.** It sits in the nav, which is on all thirteen pages, so
+all thirteen request the display face again — the eight study pages had it removed hours earlier on
+CEO Review 28's finding that they downloaded a font they never drew. That finding is not reversed;
+its premise is. They draw with it now.
+
+**Each card on the Work page carries a two-or-three-word project title in the display face, above
+the sentence-long headline it already had.** Wyatt: "write a 2-3 word project title for each title,
+above the current title." Spatial Equity, ClaudeKit, What They're Buying, Cited by AI, Teaching Forgiveness, Pour, Pastry
+Pirates, Changing Institutions. Two are one word because they are the project's name. The long
+headline stays exactly as it was and still does the explaining.
+
+**Correction, CEO Review 30:** these were written believing they matched the graph tile names in
+`data/projects.json`, and five of the eight do not — Spatial Equity / What They're Buying / Cited by
+AI / Teaching Forgiveness / Changing Institutions all differ from their tile, and Polycam differs
+from its `<title>` too, so that study carries three names in three places. The titles are good and
+are staying; the claim that they track the graph was false and is withdrawn. Whether the three
+layers should be reconciled is HY-36, unruled.
+
+**The same title sits above the headline on each study page too** (Wyatt, same day, second pass), so
+the Work card and the study head name a project identically; the graph tile and the `<title>` do not
+always agree with them (HY-36). There it sets larger than the headline it introduces — the short title carries the page and the long
+line reads as the deck under it. Neither `<h1>` changed and `.study-head .h-lg` is still Geist.
+
+## 2026-09-08 — A display face for the big headers
+
+**Shrikhand (Google Fonts, OFL — verified: `google/fonts` ships it under `ofl/shrikhand`, `METADATA.pb` says `license: "OFL"`, designer Jonny Pinhorn) carries `.display` and `.h-lg`. Geist keeps everything else.**
+Amends the 2026-09-02 "Restraint" direction, which said one grotesk at a few sizes. Wyatt brought a
+Ventura specimen (Damn Type Co.) and asked for headers "more in this direction — gen-z warm";
+Shrikhand was chosen over Bagel Fat One, Fraunces (SOFT 100 / WONK 1), Titan One, Zodiak, and Boska
+as the closest free face to that reference.
+
+The face is display-only and it does not scale down: **the case-study headlines (`.study-head
+.h-lg`, twenty to thirty words each) stay in Geist.** Shrikhand carries the short things — the home
+hero, the page titles, the section heads. It has one weight, so the header roles set at 400, not
+500, and at zero tracking rather than the grotesk's negative; the display sizes step down (66→58px,
+44→39px) and the leading opens up, because it sets wider and taller than Geist.
+
 ## 2026-09-03 — Graph shows only the eight studies
 
 **The Taxonomy tile is removed from the graph.** Wyatt: "remove the Taxonomy tile from the

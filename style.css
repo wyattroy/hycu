@@ -1,7 +1,8 @@
 /* hycudesign.com — one stylesheet, no build step.
-   Direction: "Restraint" (DECISIONS.md, 2026-09-02). Near-white ground with a faint grey gradient for depth, near-black ink, one grotesk at
-   a few sizes, generous margins, no cards, no borders except hairlines. The graph is the only
-   thing on the site that moves. */
+   Direction: "Restraint" (DECISIONS.md, 2026-09-02, amended 2026-09-08). Near-white ground with a faint grey gradient for depth, near-black
+   ink, two faces — Shrikhand for the big headers, the grotesk at a few sizes for everything below
+   them — generous margins, no cards, no borders except hairlines. The graph is the only thing on
+   the site that moves. */
 
 :root {
   --bg: #ffffff;
@@ -21,6 +22,10 @@
 
   --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Display only — the two largest header roles. Everything else is the grotesk.
+     Falls back to the grotesk, not a serif: with display=swap the header paints in the fallback
+     first, and a face already on the page flashes less than a Georgia nobody else here uses. */
+  --display-face: "Shrikhand", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --nav-h: 64px;
   --gutter: clamp(24px, 8vw, 144px);
@@ -91,6 +96,24 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -.02em; line-height: 1.12; margin
 .h-lg { font-size: clamp(30px, 3.6vw, 44px); }
 .h-md { font-size: clamp(22px, 2.2vw, 27px); letter-spacing: -.015em; line-height: 1.22; }
 .h-sm { font-size: 19px; letter-spacing: -.01em; }
+/* The short project title (Wyatt, 2026-09-08). Two or three words in the display face, above the
+   sentence-long headline — the same words on the Work card and on the study page, and untied to
+   anything else. They are NOT the graph tile names: five of the eight differ from `name` in
+   data/projects.json, and Polycam differs from its own <title> as well (CEO Review 30). Whether
+   the three should agree is Wyatt's call, logged as HY-36. It names the project; the headline
+   below it still does the explaining. The two sizes live with their own layouts, below. */
+.proj { font-family: var(--display-face); font-weight: 400; letter-spacing: 0; line-height: 1.1; margin: 0; }
+/* Shrikhand carries the two big header roles (Wyatt, 2026-09-08). It has one weight and is drawn
+   tight, so the grotesk's 500 and negative tracking have to come back off or the browser fakes a
+   bold and the letters collide. It sets wider and taller than Geist: the sizes step down and the
+   leading opens up. Long headlines are exempt — see .study-head .h-lg below. */
+.display, .h-lg {
+  font-family: var(--display-face);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.display { font-size: clamp(34px, 4.4vw, 58px); line-height: 1.14; }
+.h-lg { font-size: clamp(27px, 3.2vw, 39px); line-height: 1.18; }
 .lede { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.45; color: var(--ink-2); max-width: 32em; }
 .muted { color: var(--ink-2); }
 .dim { color: var(--ink-3); }
@@ -142,8 +165,12 @@ section.band.flush { border-top: 0; }
   transition: border-color var(--t-fast);
 }
 #nav.is-scrolled { border-bottom-color: var(--rule); }
-.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
-.brand .mark { display: block; width: 20px; height: 20px; }
+/* The wordmark is the display face too (Wyatt, 2026-09-08), which is why every page requests
+   Shrikhand again: the nav is on all thirteen, so all thirteen now draw with it. It sets small
+   better than it sets tight — a point larger than the grotesk was, at 400, at zero tracking, and
+   nudged up a hair because its baseline sits low next to the mark. */
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display-face); font-weight: 400; font-size: 18px; letter-spacing: 0; }
+.brand .mark { display: block; width: 20px; height: 20px; position: relative; top: -1px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
 .nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
@@ -204,7 +231,7 @@ main.has-hero { padding-top: 0; }
 .hero-text { max-width: 720px; }
 .br-desk { display: none; }
 @media (min-width: 721px) { .br-desk { display: inline; } }
-.hero-text .display { margin-bottom: 18px; text-wrap: initial; font-size: clamp(38px, 4.3vw, 62px); }
+.hero-text .display { margin-bottom: 18px; text-wrap: initial; font-size: clamp(34px, 3.9vw, 54px); }
 .hero-text .hl { color: var(--c-systems); }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -223,7 +250,7 @@ main.has-hero { padding-top: 0; }
   .graph-stage { position: relative; height: 56svh; min-height: 360px; }
   .axis-label.helper { display: none; }
   .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 20px var(--gutter) 40px; pointer-events: auto; }
-  .hero-text .display { font-size: clamp(34px, 10vw, 44px); }
+  .hero-text .display { font-size: clamp(30px, 8.6vw, 40px); }
   .hero-hint { display: none; }
 }
 
@@ -233,8 +260,9 @@ main.has-hero { padding-top: 0; }
 .work-item { display: block; padding: 36px 0 56px; border-top: 1px solid var(--rule); }
 .work-item .eyebrow { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .work-item .eyebrow .year { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-2); white-space: nowrap; }
+.work-item .proj { font-size: clamp(25px, 2.5vw, 31px); margin-bottom: 10px; transition: color var(--t-fast); }
 .work-item h3 { transition: color var(--t-fast); }
-.work-item:hover h3 { color: var(--accent); }
+.work-item:hover h3, .work-item:hover .proj { color: var(--accent); }
 .work-item .sub { margin: 12px 0 18px; color: var(--ink-2); max-width: 34em; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-3); }
 [data-cap]::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; background: var(--c, var(--ink-3)); }
@@ -315,6 +343,20 @@ footer a:hover { color: var(--ink); }
 /* ── Study pages ────────────────────────────────────────────────────────── */
 .study-head { padding-top: clamp(80px, 11vw, 176px); padding-bottom: clamp(56px, 7vw, 96px); }
 .study-head .eyebrow { margin-bottom: 28px; }
+/* On a study page the short title carries the weight and the long headline reads as the deck under
+   it, so this sets above the h1's size rather than below it. */
+.study-head .proj { font-size: clamp(34px, 4vw, 50px); margin-bottom: 14px; }
+/* The study headlines are full sentences of 20 to 30 words. Shrikhand is a display face with one
+   weight and no small sizes in it; at that length it stops being a headline and becomes a wall.
+   These stay in the grotesk, and the hero, the section heads, and the page titles carry the
+   display face instead. */
+.study-head .h-lg {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(30px, 3.6vw, 44px);
+  letter-spacing: -.02em;
+  line-height: 1.12;
+}
 .study-head .lede { margin-top: 28px; max-width: 36em; }
 .study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
 @media (max-width: 860px) { .study-body { grid-template-columns: 1fr; } .study-rail { order: -1; } }
