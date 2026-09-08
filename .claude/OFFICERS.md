@@ -12,7 +12,7 @@ verified build. Lines marked *(default)* were not asked of him — correct them 
 - **build-stamp-command:** git log -1 --format=%h
 - **test-command:** node scripts/check.mjs
 - **trial-report:** .claude/TEST-REPORT.md
-- **verdicts:** .claude/reviews/ (one file per review, `NNNN-slug.md`; newest = highest number. `.claude/CEO-REVIEWS.md` is now an index and must not be appended to)
+- **verdicts:** .claude/reviews/
 - **backlog:** .claude/BACKLOG.md
 - **backlog-id-pattern:** HY-\d+
 - **ledger:** .claude/CTO-LEDGER.md
@@ -22,6 +22,15 @@ verified build. Lines marked *(default)* were not asked of him — correct them 
 - **never-touch:** CNAME, robots.txt, sitemap.xml
 
 ## What an officer must know beyond the settings
+
+**`verdicts` is a DIRECTORY, since 2026-09-08, not a file.** One verdict per file,
+`.claude/reviews/NNNN-slug.md`, newest = highest number; `.claude/CEO-REVIEWS.md` is a generated
+index and must never be appended to. **`ceo_brief.mjs` cannot read a directory**: it reports "NO
+PREVIOUS VERDICT ON RECORD" and says plainly that it could not see the setting, which is correct
+behaviour and not a silent failure. Until the engine learns to read a directory (it lives in
+claude-kit, not this repo), **the session assembling a brief must paste the newest verdict in by
+hand** and say that it did. The recurrence check is the whole point of handing a CEO the last
+verdict; losing it silently would be the worst outcome of the split.
 
 **`main` IS production, with no build step.** GitHub Pages serves the repo root (Wyatt's ruling,
 2026-09-02: "pages from main root"). The build stamp is therefore the commit hash.
