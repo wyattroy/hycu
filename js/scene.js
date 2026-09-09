@@ -33,23 +33,17 @@ const PHONE_SPREAD = 1.15; // phone tiles are double size, so they are spread fu
 // the coloured thickness that used to be an edge becomes most of what you see of one.
 //
 // THE EDGE IS THE PLATE'S OLD HEIGHT, so a tile is exactly as tall as it always was and only its
-// width comes in. That is not a free choice: a cube fills screen space in every direction at once,
-// where a 0.14-thick plate was always nearly edge-on to something, and the tile at make 0.82 /
-// reach 0.98 (Teaching Forgiveness) sits right where the MAKE label is placed. Measured against
-// that label at 1440 and 820 wide, still and after a hard drag, on 2026-09-09. Desktop clearance
-// in pixels, still / dragged, at the label position this file used to have — a negative number is
-// the fault shoot.mjs fails on:
+// width comes in. What is drawn is this times tileScale() — 1.5 on desktop and tablet, 2 on a
+// phone — so a selected tile is 1.8 across where the plate was 2.05, and reads much heavier for
+// having the other two dimensions to match.
 //
-//        edge 1.57   2 / -27        edge 1.35   9 / -27
-//        edge 1.20  14 / -22        edge 1.05  19 / -11
-//
-// No size cleared the dragged case on its own, so the labels moved out too (TIP, below). With that
-// done the clearance still falls off steadily as the cube grows — 1.20 leaves 9 / 27 desktop and
-// 40 / 17 tablet, 1.28 leaves 7 / 22 and 38 / 13, 1.35 leaves 4 / 17 and 37 / 9, and by 1.42 the
-// tablet is back to touching. The plates had 13 / 33 and 27 / 54, so 1.20 is the size that keeps
-// roughly the room they had. Bigger cubes clear only with SPREAD down at 0.70, which costs more
-// than it buys: it walks the work in off the walls, away from the quadrant captions on the back
-// wall that it is meant to be read against.
+// The size was picked by shooting it: at 2.05 the cubes are deep enough to sit on one another
+// (Pastry Pirates went behind Teaching Forgiveness, Cited by AI behind What They're Buying) and at
+// the small end they stop carrying their own names. An earlier pass tuned this number, SPREAD and
+// TIP together against how close the MAKE label came to the Teaching Forgiveness tile, and pushed
+// the edge down to keep them apart. That was tuning against a rule Wyatt had already struck — a
+// label may have a tile under it, the reader turns the volume — and it is unwound. If you find
+// yourself shrinking the work to protect a label, read the placement rule further down first.
 const TILE = { w: 1.20, h: 1.20, d: 1.20 };        // selected work
 const TILE_SMALL = { w: 0.73, h: 0.73, d: 0.73 };  // index
 
@@ -146,10 +140,15 @@ const MONO = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 // being narrower, needs them scaled up or the names shrink with it.
 //
 // It cannot scale all the way. A name is wrapped, but a single long word cannot be, and
-// "Forgiveness" runs out of the padding first. Measured in a browser with Geist loaded,
-// 2026-09-09, across all eight names: 1.40 clears by 60px, 1.45 by 22px, 1.50 overflows by 10px.
+// "Forgiveness" runs out of the padding first. Across all eight names, with the real Geist served
+// to the browser: 1.38 clears by 48px, 1.40 by 33px, 1.42 by 10px, and 1.45 overflows by 12px.
 // 1.40 is the ceiling taken, for the margin — one number for every tile, because the names have to
-// be one size. It leaves the type at about four fifths of its old size rather than three fifths.
+// be one size.
+//
+// Those figures are the second set. The first were taken in a headless browser that could not
+// reach fonts.googleapis.com, so every string was measured in Helvetica and came out ~18% narrow;
+// they put the cliff at 1.50 rather than between 1.42 and 1.45. The cap survived the correction,
+// the evidence for it did not. If you re-measure this, check the font actually loaded first.
 const TYPE_REF_W = { big: 2.05, small: 1.25 };
 const TYPE_K_MAX = 1.40;
 
@@ -310,8 +309,10 @@ export function initScene(projects, { onSelect } = {}) {
   // volume was drawn for — and style.css crops it to the height the volume actually needs.
   const phonePortrait = () => window.innerWidth <= 720 && window.innerHeight > window.innerWidth;
   // Phone tiles are drawn double size: at the width the layout gives them, the faces were too
-  // small to read. Scale rather than geometry, so a rotation or a resize picks it up live.
-  const tileScale = () => (window.innerWidth <= 720 ? 2 : 1);
+  // small to read. Wide screens draw them half again as big (Wyatt, 2026-09-09, having seen the
+  // cubes at 1x: "make the cubes 50% larger on desktop and tablet sizes"). Scale rather than
+  // geometry, so a rotation or a resize picks it up live, and so the phone keeps the size it had.
+  const tileScale = () => (window.innerWidth <= 720 ? 2 : 1.5);
   // ...and pushed out towards the walls of the box to win back the room the extra size costs.
   const spread = () => (window.innerWidth <= 720 ? PHONE_SPREAD : SPREAD);
 
@@ -340,9 +341,8 @@ export function initScene(projects, { onSelect } = {}) {
 
   // ─── Tiles ──────────────────────────────────────────────────────────────────
   // Reach maps into the box inset by the tile's own half-depth, so a cube sits INSIDE the front
-  // and back walls rather than poking through them. The axis labels are placed on the front wall
-  // and rely on nothing being in front of it (see `endpoints` below) — a card's 0.07 of thickness
-  // never threatened that; half a cube's edge, doubled again on a phone, does.
+  // and back walls rather than poking out through them. A card's 0.07 of thickness never showed;
+  // half a cube's edge, 0.9 once tileScale() has had it, hangs a long way out of a drawn box.
   const tileZ = (p) => {
     const halfD = ((p.selected ? TILE : TILE_SMALL).d / 2) * tileScale();
     return (Z_FAR + halfD) + p.axes.reach * ((Z_NEAR - Z_FAR) - 2 * halfD);
@@ -550,18 +550,16 @@ export function initScene(projects, { onSelect } = {}) {
     const cy = clamp(y, hh, Math.max(hh, canvas.offsetHeight - hh));
     el.style.transform = `translate(-50%, -50%) translate(${cx}px, ${cy}px) ${rotate}`;
   }
-  // How far along its axis a label sits, as a fraction of the box's half-extent. This used to be
-  // 1.38 on a narrow screen and 1.16 on a wide one; it is 1.38 everywhere now, because with cubes
-  // the wide view needs the clearance the narrow one always did. A plate was nearly edge-on to
-  // something at every angle, a cube never is, and at 1.16 the MAKE label landed on Teaching
-  // Forgiveness after a hard drag. Clearance in pixels at 1.38, still / after that drag: desktop
-  // 9 / 27, tablet 40 / 17 — every sample clear, and 1.45 buys the dragged case another 17px at
-  // the cost of walking UNDERSTAND out into the headline's column, which is not worth it.
-  const TIP = 1.38;
+  // Phones see the volume small and nearly face-on, so the labels need more clearance there.
+  //
+  // This was briefly 1.38 at every width, to push the labels clear of the cubes. That was wrong
+  // and is reverted: a label is not required to clear a tile, and buying clearance here walked
+  // UNDERSTAND out into the headline's column for nothing. See the placement below for the rule.
+  const TIP = window.innerWidth < 900 ? 1.38 : 1.16;
   const endpoints = [
-    // On the front face of the volume: tiles are inside the box, so a point outside its front edge
-    // cannot sit behind one, whatever the angle. (A label on the mid-depth axis could: a near tile
-    // projects larger and further out than the axis tip behind it.)
+    // On the front face of the volume rather than the mid-depth axis, so a label sits in front of
+    // the work at most angles. It is not required to: a tile may end up under one, and the reader
+    // turns the volume to read it.
     { id: 'label-understand', pos: new THREE.Vector3(-R * TIP, 0, Z_NEAR) },
     { id: 'label-make',       pos: new THREE.Vector3( R * TIP, 0, Z_NEAR) },
     { id: 'label-product',    pos: new THREE.Vector3(0, -R * TIP, Z_NEAR) },

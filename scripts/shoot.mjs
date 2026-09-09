@@ -163,45 +163,49 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
       if (h.purple.join(' ') !== 'see design') errors.push(`${label} home: purple words are ${JSON.stringify(h.purple)}, expected see + design`);
     }
 
-    // Axis labels must not sit on a tile. Sampled three times over a second, because the graph
-    // drifts on its own; any overlap at any sample fails. (MAKE once sat on the forgiveness tile.)
-    // Desktop only: on a phone the tiles are drawn double size and spread to the walls, so they
-    // pass under the labels, and a label must stay on its axis rather than dodge (Wyatt,
-    // 2026-09-08: "the axis labels must sit on their axes ... the tiles are shiftable by the user").
+    // An axis label must stay ON its axis. It is NOT required to clear the tiles: a tile may end
+    // up under a label, and the reader turns the volume to see past it (Wyatt, 2026-09-08, "the
+    // axis labels must sit on their axes ... the tiles are shiftable by the user", and again on
+    // 2026-09-09: "the axis labels don't NEED to clear the cubes -- the user moves the cubes so
+    // the axis labels are within their control to see around").
+    //
+    // This used to assert the opposite — that no label ever overlaps a tile — with the ruling
+    // quoted directly above it, read as exempting phones only. It is the same rule at every width.
+    // The check cost real damage before it was caught: a session sizing the graph's tiles tuned
+    // them DOWN, and moved every axis label outward, to satisfy it. What is tested instead is the
+    // half of the ruling that is a requirement, and the failure the overlap check would have hidden
+    // behind a passing run: a label that has wandered off its own axis to dodge something.
     if (p === '/' && !touch) {
-      for (let i = 0; i < 3; i++) {
-        const hits = await page.evaluate(() => {
-          const rects = window.__graph?.screenRects() || [];
-          const out = [];
-          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea', 'label-system']) {
-            const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
-            const l = el.getBoundingClientRect();
-            for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);
-          }
+      const offAxis = async (when) => {
+        const bad = await page.evaluate(() => {
+          const box = (id) => { const el = document.getElementById(id); if (!el) return null;
+            if (getComputedStyle(el).opacity === '0') return null;
+            const r = el.getBoundingClientRect(); return r.width && r.height ? r : null; };
+          const need = ['label-understand', 'label-make', 'label-product', 'label-idea'];
+          const b = {}; const out = [];
+          for (const id of need) { const r = box(id); if (!r) { out.push(`${id} is not visible`); continue; } b[id] = r; }
+          const mid = (r) => ({ x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2 });
+          // UNDERSTAND is the -x end and MAKE the +x end; PRODUCT is -y and IDEA is +y. A label
+          // that has crossed its opposite has left its axis, whatever else is on screen.
+          if (b['label-understand'] && b['label-make'] && mid(b['label-understand']).x >= mid(b['label-make']).x)
+            out.push('UNDERSTAND is not left of MAKE');
+          if (b['label-product'] && b['label-idea'] && mid(b['label-product']).y <= mid(b['label-idea']).y)
+            out.push('PRODUCT is not below IDEA');
+          const vw = window.innerWidth, vh = window.innerHeight;
+          for (const [id, r] of Object.entries(b))
+            if (r.right < 0 || r.left > vw || r.bottom < 0 || r.top > vh) out.push(`${id} is off screen`);
           return out;
         });
         ran.labels++;
-        if (hits.length) { errors.push(`${label} home: axis label on a tile: ${hits.join(', ')}`); break; }
-        await page.waitForTimeout(400);
-      }
+        if (bad.length) errors.push(`${label} home${when}: axis label off its axis: ${bad.join(', ')}`);
+      };
+      for (let i = 0; i < 3; i++) { await offAxis(''); await page.waitForTimeout(400); }
       // ...and once more after dragging the view hard to one side, near the orbit limit.
-      if (!touch) {
-        const c = await page.evaluate(() => { const r = document.getElementById('graph-canvas').getBoundingClientRect(); return { x: r.left + r.width * 0.7, y: r.top + r.height * 0.5 }; });
-        await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x - 500, c.y + 120, { steps: 12 }); await page.mouse.up();
-        await page.waitForTimeout(700);
-        const hits = await page.evaluate(() => {
-          const rects = window.__graph?.screenRects() || []; const out = [];
-          for (const id of ['label-understand', 'label-make', 'label-product', 'label-idea', 'label-system']) {
-            const el = document.getElementById(id); if (!el || getComputedStyle(el).opacity === '0') continue;
-            const l = el.getBoundingClientRect();
-            for (const t of rects) if (l.left < t.right && l.right > t.left && l.top < t.bottom && l.bottom > t.top) out.push(`${id} on ${t.id}`);
-          }
-          return out;
-        });
-        ran.labels++;
-        if (hits.length) errors.push(`${label} home (dragged): axis label on a tile: ${hits.join(', ')}`);
-        await page.click('#zoom-reset'); await page.waitForTimeout(600);
-      }
+      const c = await page.evaluate(() => { const r = document.getElementById('graph-canvas').getBoundingClientRect(); return { x: r.left + r.width * 0.7, y: r.top + r.height * 0.5 }; });
+      await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x - 500, c.y + 120, { steps: 12 }); await page.mouse.up();
+      await page.waitForTimeout(700);
+      await offAxis(' (dragged)');
+      await page.click('#zoom-reset'); await page.waitForTimeout(600);
     }
 
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
@@ -232,7 +236,7 @@ await browser.close();
 
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
-  `Pages: ${ran.pages} (desktop + tablet + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
+  `Pages: ${ran.pages} (desktop + tablet + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · axis-label samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
   errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on every viewport and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap',
   '',
 ].join('\n');
