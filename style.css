@@ -45,7 +45,10 @@
 html {
   -webkit-text-size-adjust: 100%; scroll-behavior: smooth;
   min-height: 100%;
-  background: var(--bg) linear-gradient(180deg, #ffffff 0%, #f7f7f9 28%, #fcfcfd 52%, #f2f2f5 78%, #f8f8fa 100%) no-repeat;
+  /* Each stop sits 20% further from white than it did (Wyatt, 2026-09-09: "20% more
+     accentuated into silver"). The 0% white is the anchor and does not move — the page still
+     starts clean under the nav, and holding it still is what makes the dips read as silver. */
+  background: var(--bg) linear-gradient(180deg, #ffffff 0%, #f5f5f8 28%, #fbfbfd 52%, #efeff3 78%, #f7f7f9 100%) no-repeat;
   background-size: 100% 100%;
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

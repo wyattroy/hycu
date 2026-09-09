@@ -230,13 +230,21 @@ const QUADRANTS = [
   { x:  1, y:  1, label: 'Systems design' },
 ];
 
+// The scaffold is the site's rule greys taken 20% darker (Wyatt, 2026-09-09: the graph lines were
+// "getting lost on the background"). The tokens themselves are left alone — the same greys are
+// right for a border on a page, where they sit against copy rather than against a gradient with a
+// 3D volume drawn over it — so C.rule and friends still match style.css, and only the graph moves.
+const LINE_DARKEN = 0.8;
+const darker = (hex) => '#' + hex.slice(1).match(/../g)
+  .map((c) => Math.round(parseInt(c, 16) * LINE_DARKEN).toString(16).padStart(2, '0')).join('');
+
 function addScaffold(scene) {
   const g = new THREE.Group();
   QUADRANTS.forEach((q) => g.add(makeQuadrantPanel(q)));
 
-  const faint = new THREE.LineBasicMaterial({ color: C.rule, transparent: true, opacity: 0.9 });
-  const mid = new THREE.LineBasicMaterial({ color: C.ruleMid, transparent: true, opacity: 0.7 });
-  const strong = new THREE.LineBasicMaterial({ color: C.ruleStrong, transparent: true, opacity: 0.8 });
+  const faint = new THREE.LineBasicMaterial({ color: darker(C.rule), transparent: true, opacity: 0.9 });
+  const mid = new THREE.LineBasicMaterial({ color: darker(C.ruleMid), transparent: true, opacity: 0.7 });
+  const strong = new THREE.LineBasicMaterial({ color: darker(C.ruleStrong), transparent: true, opacity: 0.8 });
   const seg = (pts, mat) => g.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
 
   // Back wall grid
