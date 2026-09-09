@@ -165,12 +165,13 @@ section.band.flush { border-top: 0; }
   transition: border-color var(--t-fast);
 }
 #nav.is-scrolled { border-bottom-color: var(--rule); }
-/* The wordmark is the display face too (Wyatt, 2026-09-08), which is why every page requests
-   Shrikhand again: the nav is on all thirteen, so all thirteen now draw with it. It sets small
-   better than it sets tight — a point larger than the grotesk was, at 400, at zero tracking, and
-   nudged up a hair because its baseline sits low next to the mark. */
-.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display-face); font-weight: 400; font-size: 18px; letter-spacing: 0; }
-.brand .mark { display: block; width: 20px; height: 20px; position: relative; top: -1px; }
+/* The wordmark went back to the grotesk on 2026-09-08 — Wyatt saw it in Shrikhand and preferred
+   what it was. Byte-for-byte the rule from before, including no font-family of its own: it inherits
+   Geist from body. The mark's -1px nudge goes with it, having only existed to answer Shrikhand's
+   low baseline. Every page still requests the display face and still draws with it — .display on
+   the five top-level pages, .proj on the eight studies — so nothing here strands a font request. */
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+.brand .mark { display: block; width: 20px; height: 20px; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
 .nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
@@ -228,10 +229,40 @@ main.has-hero { padding-top: 0; }
   pointer-events: none; /* desktop: copy overlays the graph; clicks fall through to tiles */
 }
 .hero-copy a, .hero-controls { pointer-events: auto; }
-.hero-text { max-width: 720px; }
+/* The headline is sized from ITS OWN COLUMN, not the viewport (Wyatt, 2026-09-08: "audit all of the
+   different screen sizes and re-logic the header so that these awkward line breaks never happen").
+   It used to be clamp(34px, 3.9vw, 54px) against a column capped at 720px, so the type kept growing
+   with the window while the column stopped — and the longest line, "We see where you are,", came out
+   the same width as the box it had to fit in. At 1050px they were both 475px, and rounding decided
+   whether you got three lines or an orphaned "are,".
+   `cqw` is a percentage of this container's width, so 8.4cqw keeps that line at ~97% of the column
+   at every size, with the clamp holding a floor and a ceiling. Measured across sixteen widths. */
+.hero-text { flex: 1 1 0; min-width: 0; max-width: 720px; container-type: inline-size; }
+.hero-text .display {
+  margin-bottom: 18px;
+  text-wrap: balance;
+  /* The vw line is the fallback: a browser without container queries drops the cqw declaration at
+     parse time and keeps this one, which is the sizing this hero had before. Without it the headline
+     would fall through to .display's generic clamp — larger than this hero has ever been. Such a
+     browser also drops the @container rule below, so it gets the old SIZE with the forced break
+     permanently off; the line still wraps rather than overflowing (CEO Review 37). */
+  font-size: clamp(34px, 3.9vw, 54px);
+  font-size: clamp(30px, 8.4cqw, 53px);
+}
+/* The forced break is Wyatt's ruling from 2026-09-02 — "are" ends the first line — and it only
+   helps when the line actually fits. It used to switch on at a 721px VIEWPORT, where the graph has
+   already taken its share and the column is 311px against a 394px line: six rendered lines. It now
+   switches on when the COLUMN is wide enough to hold the line. Below that there is no forced break
+   and `text-wrap: balance` divides the words evenly instead of orphaning two of them. */
 .br-desk { display: none; }
-@media (min-width: 721px) { .br-desk { display: inline; } }
-.hero-text .display { margin-bottom: 18px; text-wrap: initial; font-size: clamp(34px, 3.9vw, 54px); }
+/* 470px is "We see where you are," at the LARGEST size any rule here can give it — the 40px cap of
+   the phone clamp, where that line measures 464px. Below the phone breakpoint the type is sized by
+   viewport and can outgrow the column, so the threshold has to clear the worst case, not the typical
+   one: at 470 it was orphaning "way" onto its own line at 480px wide. Above the threshold the break
+   is Wyatt's 2026-09-02 ruling; below it, `text-wrap: balance` reaches the same three lines on its
+   own wherever they fit. Calibrated to THAT STRING at THAT SIZE — change the headline copy or either
+   clamp and re-measure. */
+@container (min-width: 470px) { .br-desk { display: inline; } }
 .hero-text .hl { color: var(--c-systems); }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
@@ -253,6 +284,13 @@ main.has-hero { padding-top: 0; }
   .graph-stage #graph-canvas, .graph-stage #graph-2d, .graph-stage #axis-labels { height: 200vw; }
   .axis-label.helper { display: none; }
   .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 6px var(--gutter) 40px; pointer-events: auto; }
+  /* align-items: flex-start sizes a flex item by its content, and the headline's container query
+     needs its width from the outside — without this the container measures 0 and the type falls to
+     its floor. Stretch gives it the column's real width. */
+  .hero-text { align-self: stretch; }
+  /* Restored after CEO Review 36 caught it being deleted as "redundant". It is not: below 720px the
+     column is the viewport minus the gutter, so 8.6vw and 8.4cqw are not the same number, and this
+     line is worth 33.5px at 390 and 37px at 430 where the container rule gives the 30px floor. */
   .hero-text .display { font-size: clamp(30px, 8.6vw, 40px); }
   /* Pinch and drag do this on a touchscreen, and the buttons read as stray controls under the
      headline once the copy sits below the graph. */
@@ -349,9 +387,13 @@ footer a:hover { color: var(--ink); }
 /* ── Study pages ────────────────────────────────────────────────────────── */
 .study-head { padding-top: clamp(80px, 11vw, 176px); padding-bottom: clamp(56px, 7vw, 96px); }
 .study-head .eyebrow { margin-bottom: 28px; }
-/* On a study page the short title carries the weight and the long headline reads as the deck under
-   it, so this sets above the h1's size rather than below it. */
+/* A study head is h1 → h2 → body (Wyatt, 2026-09-08). The project name IS the page's heading and
+   sets largest; the sentence under it is the byline, an h2 in the grotesk; the paragraph under that
+   is body text with no type role of its own — it was a .lede, which made it a third display size
+   and greyed it. Before this the biggest thing on the page was a <p> and the h1 was the sentence,
+   so what a reader saw and what a screen reader announced were different pages (CEO Review 32). */
 .study-head .proj { font-size: clamp(34px, 4vw, 50px); margin-bottom: 14px; }
+.study-head .study-intro { margin-top: 24px; max-width: var(--measure); }
 /* The study headlines are full sentences of 20 to 30 words. Shrikhand is a display face with one
    weight and no small sizes in it; at that length it stops being a headline and becomes a wall.
    These stay in the grotesk, and the hero, the section heads, and the page titles carry the
@@ -363,7 +405,6 @@ footer a:hover { color: var(--ink); }
   letter-spacing: -.02em;
   line-height: 1.12;
 }
-.study-head .lede { margin-top: 28px; max-width: 36em; }
 .study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
 @media (max-width: 860px) { .study-body { grid-template-columns: 1fr; } .study-rail { order: -1; } }
 .study-rail { position: sticky; top: calc(var(--nav-h) + 24px); }

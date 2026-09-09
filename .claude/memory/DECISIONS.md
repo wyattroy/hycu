@@ -51,6 +51,74 @@ pulls in the main checkout — not when it merges. Do not edit it on a branch wi
 sessions on this day were told to work on "separate things" and both landed in `.claude/` and
 `style.css`. Separate things is not separate files.
 
+## 2026-09-08 — One authorized push, and what it says about the gate
+
+**Wyatt authorized a single `--no-verify` push of `claude/study-head-semantics` at `f5bc2db`.** He
+was shown the entire delta since CEO Review 37's PUSH verdict on `f50891a` and chose to ship it:
+
+- two comment blocks — a stale `Needs a local server on :8787` line, and a caveat Review 37 asked for
+- `renderedLines: lines.length` deleted, having become a duplicate of `lines`
+- `JSON.stringify(h.lines ? h : h)` → `JSON.stringify(h)`, a ternary with identical branches
+
+**No behavioural change. `npm test` passes identically before and after.** Every one of those edits
+is a remedy Review 37 named itself.
+
+**The rule stands: a working session never bypasses.** This is Wyatt bypassing, on the record, having
+seen the diff — the carve-out `scripts/hooks/pre-push` has always documented.
+
+**The reason it was needed is a real limit worth fixing.** The gate compares file PATHS, so a comment
+in `style.css` costs exactly what a rewrite of it costs. Four commits today were post-verdict fixes
+that the reviewing officer had itself demanded, and each one re-blocked the push and asked for
+another review — Wyatt's "how do we disable these CEO reviews? they're getting annoying" is this
+loop. A gate that could tell a comment from a declaration would have let all four through. Logged as
+HY-41.
+
+## 2026-09-08 — The headline is sized from its column, and the browser pass serves its own tree
+
+**`.hero-text .display` is `clamp(30px, 8.4cqw, 53px)` against `.hero-text` as a container**, not
+`clamp(34px, 3.9vw, 54px)` against the viewport. Wyatt: "audit all of the different screen sizes and
+re-logic the header so that these awkward line breaks never happen." The type used to grow with the
+window while the column stopped at 720px, so at 1050px the longest line and the box were both 475px
+and rounding decided whether you saw three lines or an orphaned "are,". `cqw` is a percentage of the
+column, so the line stays at ~97% of it at every width. **The forced break is now gated on the column
+being wide enough to hold the line, not on a 721px viewport** — at a 721px viewport the column is
+311px and that break produced six rendered lines. Below that width `text-wrap: balance` divides the
+words evenly instead of orphaning two.
+
+Measured across sixteen widths before and after. What was live: six lines at 721, five at 768, four
+at 820, all with orphans. Now: three lines everywhere from 480 up, four evenly balanced below, no
+orphan at any width. **Wyatt's 2026-09-02 ruling that "are" ends the first line is preserved.**
+
+**`scripts/shoot.mjs` starts its own server rooted at its own working tree, and refuses to run if
+whatever it is pointed at serves different bytes.** It used to default to `127.0.0.1:8787` and trust
+it. A `npm run serve` left running in the **main checkout** since 11:32 answered that port all day,
+so **every browser pass run from a worktree on 2026-09-08 tested main's files and reported them as
+the branch's.** Three "identical" failures across three trees were three reads of one tree. The
+browser pass also runs at **820px** now, the width HY-3 asked for on 2026-09-02 and never got.
+
+## 2026-09-08 — The wordmark goes back to the grotesk
+
+**`.brand` is Geist again**, byte-for-byte the rule from before Shrikhand. Wyatt: "change the logo
+font from shrikhand back to whatever it was before — i liked that better." Every page still requests
+the display face and still draws with it — `.display` on the five top-level pages, `.proj` on the
+eight studies — so nothing strands a font request.
+
+## 2026-09-08 — A study head is h1 → h2 → body
+
+**The project name is the page's `<h1>`, in the display face. The sentence under it is an `<h2>`.
+The paragraph under that is body text with no type role of its own.** Wyatt: "restructure the page
+css, so that the h1 IS the title... the h2 is the byline... and remove whatever styling this uses to
+just make that second-byline use body."
+
+Before this the name was a `<p>` set at 50px and the long sentence was the `<h1>`, so the biggest
+thing on the page was not its heading and a screen reader announced the sentence as the page's
+title. CEO Review 32 named it: "the one place where 'it looks right' and 'it is right' have come
+apart." The visual order does not change; the document now agrees with it.
+
+The third paragraph was a `.lede` — a third display size, greyed. It is now plain body at the
+`--measure` width, carrying only margin and a max-width (`.study-intro`). **`.lede` is untouched
+everywhere else**: the home hero, `/work/`, `/studio/`, `/contact/` and `404.html` still use it.
+
 ## 2026-09-08 — One name and one byline per project
 
 **Every project carries the same name in all four places it is named** — the graph tile

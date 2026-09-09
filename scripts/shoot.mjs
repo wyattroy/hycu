@@ -6,14 +6,65 @@
  *   - a real graph tile can be hovered and clicked (desktop) and tapped (phone); an invisible
  *     div once covered the canvas
  * Screenshots go to .claude/shots/ (gitignored); the report is appended to .claude/TEST-REPORT.md.
- * Run `node scripts/check.mjs` first: it starts the report. Needs a local server on :8787
- * (`python3 -m http.server 8787`). */
+ * Run `node scripts/check.mjs` first: it starts the report. Serves its own copy of this working
+ * tree on a free port; set BASE to point it somewhere else on purpose. */
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const OUT = path.join(ROOT, '.claude/shots');
-const BASE = process.env.BASE || 'http://127.0.0.1:8787';
+// THE BROWSER PASS SERVES ITS OWN COPY OF THIS WORKING TREE. It used to default to
+// http://127.0.0.1:8787 and trust whatever was answering there. On 2026-09-08 a `npm run serve`
+// left running since 11:32 in the MAIN CHECKOUT answered that port for the whole day, so every
+// browser pass run from a worktree tested main's files and reported them as the branch's. Three
+// "identical" failures across three trees were three reads of the same tree. A test that silently
+// grades someone else's homework is worse than no test.
+//
+// Set BASE explicitly to point somewhere else on purpose; otherwise this starts a server on an
+// unused port, rooted at THIS working tree, and stops it at the end.
+let server = null;
+let BASE = process.env.BASE || null;
+if (!BASE) {
+  const { spawn } = await import('node:child_process');
+  const net = await import('node:net');
+  const port = await new Promise((res, rej) => {
+    const s = net.createServer();
+    s.on('error', rej);
+    s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => res(port)); });
+  });
+  server = spawn('python3', ['-m', 'http.server', String(port), '--bind', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
+  server.on('error', (e) => { console.error(`shoot: could not start python3 to serve ${ROOT}: ${e.message}`); process.exit(1); });
+  // The child is not detached, and POSIX does not reap it for us. Without these, any throw between
+  // here and the end of the run leaves a server alive on a port nobody knows — which is the exact
+  // bug this block exists to fix, moved from a fixed port to a random one.
+  const stop = () => { if (server && !server.killed) server.kill(); };
+  process.on('exit', stop);
+  process.on('SIGINT', () => { stop(); process.exit(130); });
+  process.on('SIGTERM', () => { stop(); process.exit(143); });
+  process.on('uncaughtException', (e) => { stop(); console.error(e); process.exit(1); });
+  process.on('unhandledRejection', (e) => { stop(); console.error(e); process.exit(1); });
+  BASE = `http://127.0.0.1:${port}`;
+  for (let i = 0; i < 100; i++) {
+    try { await fetch(BASE + '/style.css'); break; } catch { await new Promise((r) => setTimeout(r, 50)); }
+  }
+}
+// Whatever we ended up pointing at, prove it is this working tree before grading it.
+{
+  const served = await fetch(BASE + '/style.css').then((r) => r.text()).catch(() => '');
+  const onDisk = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+  if (served !== onDisk) {
+    // An explicitly-set BASE is a deliberate act — testing the live site, or a sibling branch's
+    // server — so warn rather than refuse. The accident this guards against was a DEFAULT nobody
+    // chose. Note this compares one file: it proves the stylesheet matches, not the document root.
+    if (process.env.BASE) {
+      console.error(`shoot: WARNING — ${BASE} serves a different style.css than ${ROOT}. Testing it anyway because BASE was set explicitly.`);
+    } else {
+      server?.kill();
+      console.error(`shoot: ${BASE} is not serving this working tree (${ROOT}).\nIts style.css differs from the one on disk. Refusing to test someone else's files.`);
+      process.exit(1);
+    }
+  }
+}
 const PAGES = ['/', '/work/', '/studio/', '/contact/', '/work/spatial-equity/', '/work/oral-care-research/', '/work/polycam/', '/work/forgiveness/', '/work/pastry-pirates/', '/work/claude-kit/', '/work/pour/', '/work/how-to-change-institutions/'];
 
 let chromium;
@@ -25,7 +76,9 @@ const browser = await chromium.launch();
 const errors = [];
 const ran = { pages: 0, gutter: 0, graph: 0, headline: 0, labels: 0 };
 
-for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['phone', { width: 390, height: 844 }, true]]) {
+// 820 is the width HY-3 has asked for since CEO Review 4, 2026-09-02: between 720 and 900 the hero
+// column is at its narrowest while the desktop rules are already on, and nothing tested there.
+for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['tablet', { width: 820, height: 1024 }, false], ['phone', { width: 390, height: 844 }, true]]) {
   const ctx = await browser.newContext({ viewport: vp, hasTouch: touch, isMobile: touch, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error') errors.push(`${label} ${page.url()}: console: ${m.text()}`); });
@@ -81,13 +134,31 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     if (p === '/' && !touch) {
       const h = await page.evaluate(() => {
         const h1 = document.querySelector('.hero-text h1');
-        const lines = h1.innerText.split('\n').map((l) => l.trim()).filter(Boolean);
-        const tops = new Set(); const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT); let n;
-        while ((n = walker.nextNode())) { const r = document.createRange(); r.selectNodeContents(n); for (const rect of r.getClientRects()) if (rect.width) tops.add(Math.round(rect.top)); }
+        // Lines are read off the GLYPHS, not off innerText. innerText only reports an explicit
+        // <br>, and since 2026-09-08 the forced break is gated on the column being wide enough to
+        // hold the line — below that width `text-wrap: balance` reaches the same three lines by
+        // wrapping. Wyatt's ruling ("are" ends the first line) is about what renders, so that is
+        // what gets measured. Reading innerText scored a correctly-rendered three-line headline as
+        // one line at 820px.
+        const rows = new Map();
+        const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT); let n;
+        while ((n = walker.nextNode())) {
+          for (let i = 0; i < n.length; i++) {
+            const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 1);
+            const rect = r.getBoundingClientRect(); if (!rect.width) continue;
+            const key = Math.round(rect.top);
+            rows.set(key, (rows.get(key) || '') + n.data[i]);
+          }
+        }
+        const lines = [...rows.entries()].sort((a, b) => a[0] - b[0]).map(([, t]) => t.trim()).filter(Boolean);
         const purple = [...h1.querySelectorAll('.hl')].map((e) => e.textContent);
-        return { firstLine: lines[0], lines: lines.length, renderedLines: tops.size, purple };
+        return { firstLine: lines[0], lines: lines.length, orphans: lines.filter((l) => l.split(/\s+/).length < 2), purple };
       });
-      if (h.firstLine !== 'We see where you are,' || h.lines !== 3 || h.renderedLines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
+      // No line may be a single word at any width — that is the fault Wyatt reported on 2026-09-08
+      // ("these awkward line breaks"), and it is the thing worth asserting everywhere. The exact
+      // three-line shape is asserted where the column can hold it.
+      if (h.orphans.length) errors.push(`${label} home: headline orphans a line: ${JSON.stringify(h)}`);
+      if (h.firstLine !== 'We see where you are,' || h.lines !== 3) errors.push(`${label} home: headline breaks wrong: ${JSON.stringify(h)}`);
       ran.headline++;
       if (h.purple.join(' ') !== 'see design') errors.push(`${label} home: purple words are ${JSON.stringify(h.purple)}, expected see + design`);
     }
@@ -161,10 +232,11 @@ await browser.close();
 
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
-  `Pages: ${ran.pages} (desktop + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on both viewports and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap',
+  `Pages: ${ran.pages} (desktop + tablet + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · label-on-tile samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on every viewport and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
+server?.kill();
 console.log(report);
 process.exit(errors.length ? 1 : 0);
