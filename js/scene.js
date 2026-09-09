@@ -172,10 +172,38 @@ function makeFace(project) {
 
   if (big) {
     ctx.fillStyle = C.ink3;
-    ctx.font = `500 ${sz(36)}px ${MONO}`;
-    const eyebrow = project.client.toUpperCase().split('').join(' ');
-    ctx.fillText(eyebrow, padX, y);
-    y += sz(36) + sz(44);
+    // The eyebrow used to be drawn with no width limit, while the project name below it goes through
+    // wrapLines — and it was spaced out by inserting a real space between every character, which in a
+    // monospace face is a whole character per gap. Four of the eight client names ran off the cube:
+    // "A residential eating-disorder facility" measured 2250px against 868px of room.
+    //
+    // Three changes, in the order that matters. Real tracking via ctx.letterSpacing instead of
+    // injected spaces, at the same .1em the site's own .eyebrow rule uses — that alone takes the
+    // worst case from 2250 to 1064. Then wrap to at most two lines, which is what actually makes it
+    // fit at full size. Then shrink, but only if two lines still overflow, which no current client
+    // name does. Measured in a browser with the real Geist Mono, all eight.
+    //
+    // The advance below adds a line's height only when a second line was used, so the seven-eighths
+    // of the grid that never overflowed sit exactly where they did.
+    ctx.letterSpacing = `${(sz(36) * 0.1).toFixed(2)}px`;
+    const maxW = FACE_W - padX * 2;
+    const base = sz(36);
+    let epx = base;
+    let ebLines;
+    for (;;) {
+      ctx.font = `500 ${epx}px ${MONO}`;
+      ctx.letterSpacing = `${(epx * 0.1).toFixed(2)}px`;
+      ebLines = wrapLines(ctx, project.client.toUpperCase(), maxW).slice(0, 2);
+      const widest = Math.max(...ebLines.map((l) => ctx.measureText(l).width));
+      if (widest <= maxW || epx <= Math.round(base * 0.7)) break;
+      epx -= 1;
+    }
+    ebLines.forEach((l, i) => ctx.fillText(l, padX, y + i * epx * 1.15));
+    ctx.letterSpacing = '0px';
+    // One line advances exactly as it always did — base + gap — so nothing below moves on the
+    // seven faces that never overflowed. A second line adds its own height and nothing else.
+    y += base + sz(44) + (ebLines.length - 1) * epx * 1.15;
+
   }
 
   ctx.fillStyle = big ? C.ink : C.ink2;
