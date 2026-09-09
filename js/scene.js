@@ -29,8 +29,29 @@ const Z_NEAR = 6;          // a public
 const SPREAD = 0.88;       // how much of the box the work is spread across
 const PHONE_SPREAD = 1.15; // phone tiles are double size, so they are spread further to match
 
-const TILE = { w: 2.05, h: 1.2, d: 0.14 };        // selected work
-const TILE_SMALL = { w: 1.25, h: 0.72, d: 0.08 };  // index
+// Cubes — every side the same length, so a tile reads as a solid however the orbit turns it, and
+// the coloured thickness that used to be an edge becomes most of what you see of one.
+//
+// THE EDGE IS THE PLATE'S OLD HEIGHT, so a tile is exactly as tall as it always was and only its
+// width comes in. That is not a free choice: a cube fills screen space in every direction at once,
+// where a 0.14-thick plate was always nearly edge-on to something, and the tile at make 0.82 /
+// reach 0.98 (Teaching Forgiveness) sits right where the MAKE label is placed. Measured against
+// that label at 1440 and 820 wide, still and after a hard drag, on 2026-09-09. Desktop clearance
+// in pixels, still / dragged, at the label position this file used to have — a negative number is
+// the fault shoot.mjs fails on:
+//
+//        edge 1.57   2 / -27        edge 1.35   9 / -27
+//        edge 1.20  14 / -22        edge 1.05  19 / -11
+//
+// No size cleared the dragged case on its own, so the labels moved out too (TIP, below). With that
+// done the clearance still falls off steadily as the cube grows — 1.20 leaves 9 / 27 desktop and
+// 40 / 17 tablet, 1.28 leaves 7 / 22 and 38 / 13, 1.35 leaves 4 / 17 and 37 / 9, and by 1.42 the
+// tablet is back to touching. The plates had 13 / 33 and 27 / 54, so 1.20 is the size that keeps
+// roughly the room they had. Bigger cubes clear only with SPREAD down at 0.70, which costs more
+// than it buys: it walks the work in off the walls, away from the quadrant captions on the back
+// wall that it is meant to be read against.
+const TILE = { w: 1.20, h: 1.20, d: 1.20 };        // selected work
+const TILE_SMALL = { w: 0.73, h: 0.73, d: 0.73 };  // index
 
 // ─── Palette — the site's own tokens, repeated here because WebGL cannot read CSS ──
 const C = {
@@ -46,7 +67,7 @@ const C = {
   accent: '#7A4FD6',
 };
 
-// The one place the site uses colour: a tile's thickness carries the hue of its primary
+// The one place the site uses colour: a tile's four sides carry the hue of its primary
 // capability, and the quadrant captions on the back wall share it. Same values as style.css.
 export const CAP_COLORS = {
   'User research':  '#D9622B',
@@ -119,9 +140,24 @@ function wrapLines(ctx, text, maxWidth) {
 const SANS = '"Geist", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif';
 const MONO = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
+// The face is always drawn FACE_W across, so a size in here is a fraction of the tile's WIDTH in
+// world units — halve that width and the type halves on screen with it. These sizes were set
+// against the 2.05-wide plate a selected tile used to be (1.25 for an index one), so a cube face,
+// being narrower, needs them scaled up or the names shrink with it.
+//
+// It cannot scale all the way. A name is wrapped, but a single long word cannot be, and
+// "Forgiveness" runs out of the padding first. Measured in a browser with Geist loaded,
+// 2026-09-09, across all eight names: 1.40 clears by 60px, 1.45 by 22px, 1.50 overflows by 10px.
+// 1.40 is the ceiling taken, for the margin — one number for every tile, because the names have to
+// be one size. It leaves the type at about four fifths of its old size rather than three fifths.
+const TYPE_REF_W = { big: 2.05, small: 1.25 };
+const TYPE_K_MAX = 1.40;
+
 function makeFace(project) {
   const big = project.selected;
   const size = big ? TILE : TILE_SMALL;
+  const K = Math.min((big ? TYPE_REF_W.big : TYPE_REF_W.small) / size.w, TYPE_K_MAX);
+  const sz = (n) => Math.round(n * K); // `u` is userData elsewhere in this file
   const H = Math.round(FACE_W * (size.h / size.w));
   const cv = document.createElement('canvas');
   cv.width = FACE_W;
@@ -132,29 +168,29 @@ function makeFace(project) {
   ctx.fillRect(0, 0, FACE_W, H);
   ctx.textBaseline = 'top';
 
-  const padX = big ? 56 : 60;
-  let y = big ? 50 : 60;
+  const padX = sz(big ? 56 : 60);
+  let y = sz(big ? 50 : 60);
 
   if (big) {
     ctx.fillStyle = C.ink3;
-    ctx.font = `500 36px ${MONO}`;
+    ctx.font = `500 ${sz(36)}px ${MONO}`;
     const eyebrow = project.client.toUpperCase().split('').join(' ');
     ctx.fillText(eyebrow, padX, y);
-    y += 36 + 44;
+    y += sz(36) + sz(44);
   }
 
   ctx.fillStyle = big ? C.ink : C.ink2;
-  const px = big ? 110 : 96;
+  const px = sz(big ? 110 : 96);
   ctx.font = `500 ${px}px ${SANS}`;
-  ctx.letterSpacing = '-2px';
+  ctx.letterSpacing = `${(-2 * K).toFixed(2)}px`;
   const lines = wrapLines(ctx, project.name, FACE_W - padX * 2);
   for (const l of lines.slice(0, big ? 3 : 2)) { ctx.fillText(l, padX, y); y += px * 1.12; }
 
   if (big) {
     ctx.fillStyle = C.ink3;
-    ctx.font = `400 34px ${MONO}`;
+    ctx.font = `400 ${sz(34)}px ${MONO}`;
     ctx.letterSpacing = '0px';
-    ctx.fillText(String(project.year), padX, H - 50 - 34);
+    ctx.fillText(String(project.year), padX, H - sz(50) - sz(34));
   }
 
   const tex = new THREE.CanvasTexture(cv);
@@ -303,6 +339,15 @@ export function initScene(projects, { onSelect } = {}) {
   addScaffold(scene);
 
   // ─── Tiles ──────────────────────────────────────────────────────────────────
+  // Reach maps into the box inset by the tile's own half-depth, so a cube sits INSIDE the front
+  // and back walls rather than poking through them. The axis labels are placed on the front wall
+  // and rely on nothing being in front of it (see `endpoints` below) — a card's 0.07 of thickness
+  // never threatened that; half a cube's edge, doubled again on a phone, does.
+  const tileZ = (p) => {
+    const halfD = ((p.selected ? TILE : TILE_SMALL).d / 2) * tileScale();
+    return (Z_FAR + halfD) + p.axes.reach * ((Z_NEAR - Z_FAR) - 2 * halfD);
+  };
+
   const tiles = [];
   const startedAt = performance.now();
   const ordered = [...projects].sort((a, b) => b.axes.reach - a.axes.reach); // nearest first
@@ -313,7 +358,7 @@ export function initScene(projects, { onSelect } = {}) {
     const ay = (p.axes.idea - 0.5) * 2 * R;
     const x = ax * spread();
     const y = ay * spread();
-    const z = Z_FAR + p.axes.reach * (Z_NEAR - Z_FAR);
+    const z = tileZ(p);
 
     const geo = new THREE.BoxGeometry(size.w, size.h, size.d);
     const edge = new THREE.MeshBasicMaterial({ color: capColor(p), transparent: true, opacity: 0 });
@@ -323,7 +368,9 @@ export function initScene(projects, { onSelect } = {}) {
     mesh.position.set(x, y, z);
     mesh.frustumCulled = false;
 
-    // A hairline outline so a white tile reads against a white ground.
+    // A hairline around the printed face, so it reads against a white ground when the cube is
+    // near enough to face-on that its coloured sides are hidden. The other eight are left
+    // undrawn on purpose: a full wireframe over four coloured faces is fussier than Restraint wants.
     const outline = new THREE.LineSegments(
       new THREE.EdgesGeometry(new THREE.PlaneGeometry(size.w, size.h)),
       new THREE.LineBasicMaterial({ color: p.selected ? C.ruleStrong : C.ruleMid, transparent: true, opacity: 0 })
@@ -483,10 +530,12 @@ export function initScene(projects, { onSelect } = {}) {
   function tileRects() {
     return tiles.map((m) => {
       const size = m.userData.project.selected ? TILE : TILE_SMALL;
-      const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y;
+      const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y, hd = (size.d / 2) * m.scale.z;
       let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
-      for (const [dx, dy] of [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]]) {
-        scratch.set(m.position.x + dx, m.position.y + dy, m.position.z + size.d / 2).project(camera);
+      // All eight corners. A card was its front face; a cube's outline on screen depends on the
+      // angle, so measuring the front face alone would let a label sit on the side of one.
+      for (const dx of [-hw, hw]) for (const dy of [-hh, hh]) for (const dz of [-hd, hd]) {
+        scratch.set(m.position.x + dx, m.position.y + dy, m.position.z + dz).project(camera);
         const x = (scratch.x * 0.5 + 0.5) * canvas.offsetWidth, y = (-scratch.y * 0.5 + 0.5) * canvas.offsetHeight;
         if (x < left) left = x; if (x > right) right = x;
         if (y < top) top = y; if (y > bottom) bottom = y;
@@ -501,8 +550,14 @@ export function initScene(projects, { onSelect } = {}) {
     const cy = clamp(y, hh, Math.max(hh, canvas.offsetHeight - hh));
     el.style.transform = `translate(-50%, -50%) translate(${cx}px, ${cy}px) ${rotate}`;
   }
-  // Phones see the volume small and nearly face-on, so the labels need more clearance there.
-  const TIP = window.innerWidth < 900 ? 1.38 : 1.16;
+  // How far along its axis a label sits, as a fraction of the box's half-extent. This used to be
+  // 1.38 on a narrow screen and 1.16 on a wide one; it is 1.38 everywhere now, because with cubes
+  // the wide view needs the clearance the narrow one always did. A plate was nearly edge-on to
+  // something at every angle, a cube never is, and at 1.16 the MAKE label landed on Teaching
+  // Forgiveness after a hard drag. Clearance in pixels at 1.38, still / after that drag: desktop
+  // 9 / 27, tablet 40 / 17 — every sample clear, and 1.45 buys the dragged case another 17px at
+  // the cost of walking UNDERSTAND out into the headline's column, which is not worth it.
+  const TIP = 1.38;
   const endpoints = [
     // On the front face of the volume: tiles are inside the box, so a point outside its front edge
     // cannot sit behind one, whatever the angle. (A label on the mid-depth axis could: a near tile
@@ -586,6 +641,7 @@ export function initScene(projects, { onSelect } = {}) {
       mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING) * tileScale());
       mesh.position.x = u.ax * spread(); // re-read every frame so a rotation or a resize lands
       mesh.position.y = u.ay * spread();
+      mesh.position.z = tileZ(u.project); // the inset depends on tileScale(), which a resize changes
     });
 
     const origin = project(CAM_TARGET);
@@ -658,13 +714,14 @@ export function initScene(projects, { onSelect } = {}) {
       const r = canvas.getBoundingClientRect();
       return tiles.map((m) => { const s = project(m.position); return { id: m.userData.project.id, url: m.userData.project.url, selected: m.userData.project.selected, x: r.left + s.x, y: r.top + s.y }; });
     },
-    /* For tests: each tile's front face as a screen-space bounding box, in CSS pixels. */
+    /* For tests: each tile's whole cube as a screen-space bounding box, in CSS pixels. */
     screenRects() {
       const r = canvas.getBoundingClientRect();
       return tiles.map((m) => {
         const size = m.userData.project.selected ? TILE : TILE_SMALL;
-        const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y;
-        const pts = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]].map(([dx, dy]) => project(new THREE.Vector3(m.position.x + dx, m.position.y + dy, m.position.z + size.d / 2)));
+        const hw = (size.w / 2) * m.scale.x, hh = (size.h / 2) * m.scale.y, hd = (size.d / 2) * m.scale.z;
+        const pts = [];
+        for (const dx of [-hw, hw]) for (const dy of [-hh, hh]) for (const dz of [-hd, hd]) pts.push(project(new THREE.Vector3(m.position.x + dx, m.position.y + dy, m.position.z + dz)));
         const xs = pts.map((p) => r.left + p.x), ys = pts.map((p) => r.top + p.y);
         return { id: m.userData.project.id, left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
       });
