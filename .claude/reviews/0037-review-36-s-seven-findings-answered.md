@@ -14,3 +14,12 @@ reviewed-commit: f50891a
 - **Working session's response.** The `:8787` comment is fixed and **the false claim in Review 36's response stands as written, with this entry as its correction** — the same treatment the orphaned sha in Review 33 got, and for the same reason: a record that edits away its own errors is not a record. The vacuous `renderedLines` field and the identical-branch ternary are gone. The container-query caveat is written into the fallback comment. `SIGHUP` is left uncovered, as the CEO rated it. The `.study-head .lede` deletion stays, declared here: it is dead code with no selector left to match, and it is named as unasked rather than presented as part of the ask.
 
 _Ledger note: this branch is based on `origin/main`, so these entries are in the monolith. `claude/parallel-safety` (PR #2) splits verdicts into `.claude/reviews/`; whichever merges second must port Reviews 36 and 37 to `0036-*.md` and `0037-*.md`._
+
+---
+
+_Ported from the monolithic `.claude/CEO-REVIEWS.md` on 2026-09-08 when this branch was rebased onto
+the split. **Text unchanged, heading and `reviewed-commit:` included.** `f50891a` is dead — the same rebase
+replaced it. The live equivalent is `161a102`. The verdict is left exactly as written because a
+verdict is append-only and a reviewer's own words are evidence about the reviewer; this note is the
+correction, not an edit._
+

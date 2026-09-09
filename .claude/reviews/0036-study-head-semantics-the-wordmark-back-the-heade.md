@@ -22,3 +22,12 @@ reviewed-commit: 2ab0348
   **Declared, not hidden:** at 480px the headline is four lines where the pre-branch code gave three, because the phone rule's 40px cap is back. That is the cost of restoring the size the CEO held for, and it is his call which he prefers.
 
 _This entry is in the monolithic ledger because this branch is based on `origin/main`. The sibling `claude/parallel-safety` (PR #2) splits verdicts into `.claude/reviews/`; whichever merges second must port this to `.claude/reviews/0036-*.md`._
+
+---
+
+_Ported from the monolithic `.claude/CEO-REVIEWS.md` on 2026-09-08 when this branch was rebased onto
+the split. **Text unchanged, heading and `reviewed-commit:` included.** `2ab0348` is dead — the branch was rebased onto `origin/main` after PR #2 merged
+replaced it. The live equivalent is `77b61d0`. The verdict is left exactly as written because a
+verdict is append-only and a reviewer's own words are evidence about the reviewer; this note is the
+correction, not an edit._
+
