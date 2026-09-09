@@ -53,14 +53,19 @@ html {
         this element is as tall as the whole DOCUMENT, so a percentage would drop the bloom in a
         different place on a long study page than on a short one. 62vh is inside the first screen
         on every page, because #hero is exactly 100vh.
-     2. The silver base. Its top stop is now the DARKEST of the run rather than pure white — that
-        is the half of the change that stops the page reading white before you have scrolled.
+     2. The silver base. Its top stop is the DARKEST of the run rather than pure white — that
+          is the half of the change that stops the page reading white before you have scrolled.
+          Halved toward white on 2026-09-09. Wyatt: "the background is now TOO grey ... I want the
+          background silver 50% closer to white than it currently is." Every stop is exactly
+          halfway from where it was to #ffffff, so the SHAPE of the gradient is untouched and only
+          its depth moved — the darkest stop went from 39 points off white to 19, the lightest
+          from 9 to 5. The bloom above is unchanged and still reaches pure white at its centre.
 
      Sized to the document, not the window, so there is no seam at the fold (CEO Review 12). */
   background-color: var(--bg);
   background-image:
     radial-gradient(115vh 85vh at 30% 62vh, #ffffff 0%, rgba(255, 255, 255, .82) 34%, rgba(255, 255, 255, 0) 72%),
-    linear-gradient(180deg, #dfdfe7 0%, #e7e7ed 28%, #f6f6f9 52%, #d8d8e1 78%, #eaeaf0 100%);
+    linear-gradient(180deg, #efeff3 0%, #f3f3f6 28%, #fafafc 52%, #ececf0 78%, #f4f4f8 100%);
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
