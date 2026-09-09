@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-09-08 — Axis labels sit on their axes; they do not dodge the tiles
+
+**The four axis labels stay pinned to their axes. They are not moved, and the tiles are not shrunk,
+to stop a label overlapping a tile.** Wyatt, 2026-09-08: *"the axis labels must sit on their axes …
+the tiles are shiftable by the user"*, and again on 2026-09-09 when it was misread: *"the axis
+labels don't NEED to clear the cubes -- the user moves the cubes so the axis labels are within their
+control to see around"* … *"i already ruled this in the past"*.
+
+**What IS required:** all four labels visible and on screen, UNDERSTAND left of MAKE, PRODUCT below
+IDEA — at rest and after a hard drag. `scripts/shoot.mjs` asserts that and nothing more. The check is
+deliberately coarse: it catches a label crossing to the wrong side, not a small sidestep, because a
+flaky test here is worse than a blunt one.
+
+**Why this is written down rather than left in the test file.** It lived only as a quotation inside
+`shoot.mjs`, and a session read it as exempting phones only. Acting on that misreading, another
+session spent most of an afternoon shrinking his cubes and walking every label outward to satisfy a
+constraint he had already struck down. **A ruling that lives only in a comment gets re-litigated by
+whoever reads the comment differently.** If you find yourself sizing the work to protect a label,
+this is the entry that says stop.
+
 ## 2026-09-09 — The gate comes out, CI goes in, the CEO becomes opt-in
 
 **`scripts/hooks/pre-push` is deleted and `core.hooksPath` is unset.** Nothing blocks a push any
