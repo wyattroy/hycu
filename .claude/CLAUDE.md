@@ -21,6 +21,16 @@ whether a claim can stand — put it to him in a line and carry on with everythi
 **Tell him what you did not check.** Every CEO verdict in this repo ends with that section, and it is
 the most useful part of them.
 
+**Never hand him a tracking number and expect it to mean something.** Wyatt, 2026-09-09: *"never tell
+me bug names ('HY-37') -- what am i supposed to do with that? describe what needs my decision with
+enough context for me to make that decision."* `HY-<n>` is an index for sessions, not a way to talk
+to him.
+
+When something needs his ruling, give him, in this order: **what is wrong, where you saw it, what the
+options are and what each costs, and which one you would pick.** Numbers he can check beat adjectives.
+If the answer is obvious, do not ask at all — do it and say what you did. If it is genuinely his
+call, one short paragraph is usually enough; a list of four unexplained ids is never enough.
+
 ## Where getting it wrong costs real damage
 
 **`main` is production.** A merge ships to hycudesign.com instantly, with no build step and no
