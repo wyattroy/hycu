@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-09-09 — The gate comes out, CI goes in, the CEO becomes opt-in
+
+**`scripts/hooks/pre-push` is deleted and `core.hooksPath` is unset.** Nothing blocks a push any
+more. This reverses the 2026-09-02 ruling "Nothing ships without a CEO verdict", which was made the
+day two layout bugs reached the live site and there was no test suite to catch them. There is one
+now, and it is the thing that actually catches them.
+
+Wyatt, 2026-09-09: *"I wish that we just could make simple changes to the site and update it without
+all this strange hooks/CI/gates/checks infrastructure, which feels like it has bloated bigger than it
+needs to be for this simple 6-page website."* He was right about the size. The process and its
+records had reached **1,524 lines against 1,766 lines of site** — near one-to-one for a 13-page
+static brochure with one author.
+
+**What replaced it: `.github/workflows/test.yml`.** GitHub runs `npm test` on every pull request and
+every push to `main`, from a fresh clone. This is strictly stronger than the hook was — it cannot be
+skipped with `--no-verify`, it cannot read a stale copy of anything out of somebody's working tree,
+and it never asks Wyatt for anything.
+
+**The CEO is now invoked, never required.** `/ceo` is a good second opinion and it earned its keep —
+across Reviews 28-37 it found eight pages downloading a font they never drew, three separate comments
+asserting things the repo contradicted, and a hook bug that let `main` through unexamined. **Ask for
+it when a change is risky or you want a blindspot check. It is not a gate and it does not block a
+push.** The 37 verdicts in `.claude/reviews/` stay as history; nothing is required to add to them.
+
+**Found while removing it, and worth recording because it means the gate never worked as believed:**
+`core.hooksPath` was set **per worktree**, in `.git/worktrees/<name>/config.worktree`, on exactly
+two of them. **The main checkout never had it**, so Wyatt's own pushes were never gated at all, and
+neither were the cubes worktree's. The `--no-verify` carve-out in `EDITING.md` was therefore
+protecting against a hook that was not running.
+
+**What stays, because it is cheap and it works:** `scripts/check.mjs` (the scrub list, the no-"I"
+rule) and `scripts/shoot.mjs` (every page in a real browser at three widths). Those found the
+six-line headline and the eight pages loading an unused font. `DECISIONS.md` and `BACKLOG.md` stay —
+they are memory, not approval.
+
 ## 2026-09-08 — One PR, not five, and the gate gates what ships
 
 **A session pushes a branch when the work is coherent, opens one PR, and takes one CEO review at
@@ -232,7 +267,7 @@ copy" in a session, which then reviews and tests them).
 trust calendly -- so please remove that option from the website." Every "Book a call" became "Get in
 touch" / "Write to us". Reverses the 2026-09-02 site-map ruling's "Calendly embed + Formspree form".
 
-## 2026-09-02 — Nothing ships without a CEO verdict
+## 2026-09-02 — Nothing ships without a CEO verdict *(SUPERSEDED 2026-09-09 — see "The gate comes out" at the top)*
 
 **Every push to `main` is preceded by a fresh CEO review of that commit, recorded with
 `reviewed-commit:` in CEO-REVIEWS.md; `scripts/hooks/pre-push` refuses the push otherwise.**

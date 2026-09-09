@@ -23,8 +23,9 @@ the most useful part of them.
 
 ## Where getting it wrong costs real damage
 
-**`main` is production.** There is no CI and no branch protection, so the only thing between a bad
-commit and the live site is the pre-push gate and your own care. A merge ships instantly.
+**`main` is production.** A merge ships to hycudesign.com instantly, with no build step and no
+staging. GitHub runs `npm test` on every pull request, so open one and let it go green rather than
+pushing straight to `main`.
 
 **The oral-care client is never named**, nor its product category. Sector descriptor only: "a
 consumer oral-care brand." `npm run check` fails on the scrub list in `scripts/scrub.json`.
@@ -73,10 +74,9 @@ git -C /Users/wyattroy/Documents/Projects/hycu status --porcelain   # check FIRS
 git -C /Users/wyattroy/Documents/Projects/hycu pull --ff-only
 ```
 
-Two reasons it has to be that checkout. `core.hooksPath` is an absolute path into it, so **the push
-gate every worktree runs is the copy of `scripts/hooks/pre-push` sitting there** — a hook change is
-not live when it merges, it is live when someone pulls there. And the officer records, the backlog
-and the CEO ledger a session reads out of that checkout are stale until it has.
+The reason it has to be that checkout: the officer records, the backlog and the decision log a
+session reads out of it are stale until it has pulled, and that is where Wyatt looks. (Until
+2026-09-09 there was a second reason — `core.hooksPath` pointed into it — but the gate is gone.)
 
 **Check `status --porcelain` first, every time.** Wyatt edits copy in that checkout's working tree
 while sessions run. **If it is dirty, do not pull** — tell him what is uncommitted and let him decide.
@@ -92,18 +92,18 @@ verdict.
 **Push once, when the work is coherent — not per fix.** `git push` is not a save button; five pushes
 meant five CEO reviews in one afternoon and Wyatt told us that was annoying. Commit and rebase freely.
 
-**A push to `main` needs a fresh CEO verdict.** A push to a feature branch needs nothing.
-`scripts/hooks/pre-push` reads the newest verdict from `origin/main` — not your working tree — and
-fails closed if it cannot fetch.
+**Nothing gates a push.** The pre-push hook was deleted on 2026-09-09 and `core.hooksPath` unset.
+Push whenever the work is coherent.
 
-- Verdicts: one file per review, `.claude/reviews/NNNN-slug.md`, newest = highest number.
-  **Create the next file. Never edit an old verdict, or the generated `CEO-REVIEWS.md` index.**
-- Exempt from the gate: `.claude/`, `scripts/hooks/`, top-level `*.md`, `.gitignore`.
-  **Not exempt: `scripts/check.mjs`, `scripts/shoot.mjs`** — those are the proof.
-- **A rebase orphans the reviewed commit and re-blocks the push.** Deliberate. Take a fresh verdict.
-- `--no-verify` bypasses it. **A working session never does.** Only Wyatt, and only when he says so.
-- `core.hooksPath` is an **absolute path into the main checkout**, so every worktree runs that one
-  file. A hook change goes live when someone pulls there, not when it merges. Say so if you touch it.
+**GitHub runs `npm test` on every pull request** (`.github/workflows/test.yml`), from a fresh clone.
+That is the check that matters and it cannot be skipped. If it is red, fix it before merging — `main`
+is production, so a merge is the deploy.
+
+**A CEO review is invoked, never required.** `/ceo` gives a fresh agent the change and asks whether
+what Wyatt asked for actually happened. It is worth asking for when a change is risky, when it
+touches copy that makes a claim, or when you want a blindspot check before he sees it — **and it is
+not a gate.** Do not run one on every push; that cost him five reviews in one afternoon and he said
+so. The 37 verdicts in `.claude/reviews/` are history; adding to them is optional.
 
 **Testing:**
 

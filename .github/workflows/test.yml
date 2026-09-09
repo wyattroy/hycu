@@ -1,0 +1,44 @@
+# Runs the site's own checks on every pull request and every push to main.
+#
+# This replaces scripts/hooks/pre-push, deleted 2026-09-09. That hook asked a fresh agent to review
+# each push and refused without a recorded verdict. It cost five reviews on one branch in an
+# afternoon, it could be skipped with `git push --no-verify`, and it read the repo's state from
+# whichever working tree happened to be running it — so it was both heavier and weaker than this.
+#
+# What runs here is exactly `npm test`: scripts/check.mjs (the scrub list and the no-"I" rule) and
+# scripts/shoot.mjs (every page in a real browser at three widths). Nothing about approval, nothing
+# about agents. If it is green, the site loads and says what it is allowed to say.
+name: test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No package-lock.json in this repo, so `npm ci` cannot be used.
+      - run: npm install --no-audit --no-fund
+
+      # shoot.mjs drives a real browser; the runner has none until this installs one.
+      - run: npx playwright install --with-deps chromium
+
+      # shoot.mjs starts its own server rooted at the checkout, so nothing needs starting here.
+      - run: npm test
+
+      # The report is gitignored, so it is only visible if it is uploaded.
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: .claude/TEST-REPORT.md
+          if-no-files-found: ignore
