@@ -4,6 +4,53 @@
 
 ---
 
+## 2026-09-08 — One PR, not five, and the gate gates what ships
+
+**A session pushes a branch when the work is coherent, opens one PR, and takes one CEO review at
+it.** Wyatt: "how do we disable these CEO reviews? they're getting annoying." They were annoying
+because a session used `git push` as a save button — five pushes on one branch in one afternoon,
+five reviews — not because reviews are wrong. Rebase and commit as often as you like. Push when
+there is something to look at.
+
+**`scripts/hooks/pre-push` now gates only pushes to `main`.** The 2026-09-02 ruling says "every push
+to `main`"; the hook was refusing every push to anything, which is stricter than the decision it
+implements. `main` is production (Pages serves it from root), so a merge is the deploy and this is
+the last gate before one. A feature branch is not production.
+
+**Exempt from the gate: officer records (`.claude/`), the hook itself, top-level `*.md`, and
+`.gitignore`. Not exempt: `scripts/check.mjs` and `scripts/shoot.mjs`.** OFFICERS.md calls check.mjs
+"this repo's proof"; a session that can weaken the tests and ship without anyone reading the change
+defeats the one thing a gate is for.
+
+**A rebase requires a fresh verdict, and that is deliberate.** A verdict names a sha, a rebase
+replaces it, so everything since reads as unreviewed. Matching by patch-id or tree would paper over
+exactly the case where a re-review is most warranted — the phone-hero session's rebase on this day
+pulled in a whole merged PR of another session's site changes, and its old verdict had genuinely not
+seen that tree. Gating `main` only is what makes this cheap.
+
+## 2026-09-08 — Parallel sessions in this repo
+
+**Shared state is read from `origin`, never from the working tree.** A worktree carries a photograph
+of every file taken when the branch was cut. On this day a session read its own copy of the CEO
+ledger, saw a newest verdict from before its branch existed, and told Wyatt the push gate was
+enforcing a command that was not installed — while another session had recorded that verdict and
+pushed it hours earlier. Nothing was wrong with git. **A file in your branch cannot tell you what
+another branch did**, and this repo had a gate that asked one to.
+
+**Verdicts are one file per review** (`.claude/reviews/NNNN-slug.md`) because separate files merge
+cleanly and a single append-at-top file does not. **`.claude/TEST-REPORT.md` is gitignored** because
+`npm test` rewrites it every run and a generated file tracked in git is a merge conflict you re-solve
+forever.
+
+**`core.hooksPath` is an absolute path into the main checkout**, so every worktree runs that one hook
+file, never its own branch's copy. A hook change goes live for every session at once, when someone
+pulls in the main checkout — not when it merges. Do not edit it on a branch without saying so. Found
+2026-09-08 by checksumming the three worktrees.
+
+**When two sessions are live, scope them by file, not by topic**, and say the boundary out loud. Both
+sessions on this day were told to work on "separate things" and both landed in `.claude/` and
+`style.css`. Separate things is not separate files.
+
 ## 2026-09-08 — One name and one byline per project
 
 **Every project carries the same name in all four places it is named** — the graph tile

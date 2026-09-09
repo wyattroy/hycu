@@ -2,32 +2,134 @@
 # pre-push — nothing ships without a CEO verdict on it.
 # Wyatt, 2026-09-02: "pass it by CEO every single time, per CEO's instructions, before shipping."
 #
-# The newest entry in .claude/CEO-REVIEWS.md must carry `reviewed-commit: <sha>` where <sha> is
-# HEAD, or an ancestor of HEAD such that every commit since touches only records (.claude/) or
-# this hook.
+# The newest verdict must carry `reviewed-commit: <sha>` where <sha> is HEAD, or an ancestor of
+# HEAD such that every commit since touches only records (.claude/) or this hook.
+#
+# Verdicts are one file per review in .claude/reviews/NNNN-slug.md; newest is the highest number.
+# They were a single 398-line file until 2026-09-08, when it became clear that one file every
+# session appends to is a merge conflict with extra steps. The monolith is still read as a
+# fallback so this hook keeps working on any commit older than the split.
+#
+# THE VERDICT IS READ FROM origin/main, NEVER FROM THE WORKING TREE. Wyatt, 2026-09-08, after a
+# worktree session read its own months-old copy of this file and told him the gate was broken:
+# "a file in your branch cannot tell you what another branch did." A worktree branched at 09:00
+# carries a photograph of the ledger taken at 09:00; another session recording a verdict and
+# pushing it does not update that photograph. Reading the working tree made this hook report
+# stale state with total confidence, which is worse than not running.
 #
 # `git push --no-verify` still bypasses this; git gives every hook that hole and a hook cannot
 # close it. Wyatt, 2026-09-03, asked that his own hand copy edits stop using it: "i want my edits
 # to be verified first; i may have typos/errors in them." EDITING.md now routes them through a
 # session instead. A working session never bypasses.
 set -e
-ROOT=$(git rev-parse --show-toplevel)
-FILE="$ROOT/.claude/CEO-REVIEWS.md"
-HEAD_SHA=$(git rev-parse HEAD)
-REVIEWED=$(awk '/^## Review /{f=1} f && /reviewed-commit:/{print $NF; exit}' "$FILE" 2>/dev/null | tr -d '`')
+
+# GATE ONLY WHAT SHIPS. Wyatt, 2026-09-08: the ruling this hook implements says "every push to
+# `main`", and the hook was refusing every push to anything — so a branch pushed five times cost
+# five CEO reviews in one afternoon. A feature branch is not production. `main` is: GitHub Pages
+# serves it from root, so a merge is the deploy and this is the last gate before one.
+#
+# Git hands pre-push the ref updates on stdin as "<local ref> <local sha> <remote ref> <remote sha>".
+#
+# CHECK THE SHA BEING PUSHED, NOT `git rev-parse HEAD`. CEO Review 35 caught the first version of
+# this loop capturing the local sha and then discarding it, so `git push origin main` from a feature
+# worktree reviewed whatever branch you happened to be standing on and let main through unexamined.
+# Three worktrees run against this repo; that is not a theoretical push.
+#
+# `|| [ -n "$_lref" ]` catches a final line with no trailing newline: plain `while read` drops it,
+# which would silently leave GATED=no and let a push to main through ungated. Everywhere else this
+# hook fails closed, and so does this.
+GATED=no
+PUSH_SHA=
+while read -r _lref lsha remote_ref _rsha || [ -n "$_lref" ]; do
+  case "$remote_ref" in
+    refs/heads/main)
+      GATED=yes
+      PUSH_SHA="$lsha"
+      ;;
+  esac
+  _lref=
+done
+[ "$GATED" = yes ] || exit 0
+
+# A deletion sends an all-zero local sha. Deleting production is not something a CEO verdict can
+# cover, and the old shape decided it by looking at an unrelated HEAD. Refuse outright.
+case "$PUSH_SHA" in
+  ''|*[!0]*) : ;;
+  *)
+    echo "pre-push: refusing to delete refs/heads/main. That is production." >&2
+    exit 1
+    ;;
+esac
+if [ -z "$PUSH_SHA" ]; then
+  echo "pre-push: could not read the sha being pushed to main from git's ref update." >&2
+  exit 1
+fi
+
+# A REBASE REQUIRES A FRESH VERDICT, and that is deliberate. A verdict names a sha; rebasing
+# replaces it, so `--is-ancestor` fails and everything since is unreviewed again. The phone-hero
+# session hit this on 2026-09-08 and took a fresh review rather than a bypass, which was correct:
+# its rebase pulled in a whole merged PR of somebody else's site changes, and a verdict on the old
+# base had genuinely not seen the new tree. Matching by patch-id or tree would paper over exactly
+# the case where a re-review is most warranted. Gating `main` only is what makes this cheap —
+# rebase a branch as often as you like; nothing asks for a verdict until you ship.
+# The commit actually being pushed to main, not the one this worktree is sitting on.
+HEAD_SHA="$PUSH_SHA"
+
+# The ledger as the remote actually has it. A fetch failure is fatal rather than a silent
+# fallback to the local copy: pushing on stale state is the fault this hook exists to prevent.
+if ! git fetch -q origin main 2>/dev/null; then
+  echo "pre-push: could not fetch origin/main, so the CEO ledger cannot be read as it really is." >&2
+  echo "Fix the network or the remote and push again. Do not work around this by reading local." >&2
+  exit 1
+fi
+
+# newest_verdict <ref> — the newest verdict's text at that ref, from the split files if they are
+# there and the old monolith if they are not.
+newest_verdict() {
+  _newest=$(git ls-tree -r --name-only "$1" -- .claude/reviews/ 2>/dev/null | sort | tail -1)
+  if [ -n "$_newest" ]; then
+    git show "$1:$_newest" 2>/dev/null
+  else
+    git show "$1:.claude/CEO-REVIEWS.md" 2>/dev/null
+  fi
+}
+
+LEDGER=$(newest_verdict origin/main)
+if [ -z "$LEDGER" ]; then
+  echo "pre-push: no CEO verdicts found on origin/main (looked in .claude/reviews/ and .claude/CEO-REVIEWS.md)." >&2
+  exit 1
+fi
+
+REVIEWED=$(printf '%s\n' "$LEDGER" | awk '/^## Review /{f=1} f && /reviewed-commit:/{print $NF; exit}' | tr -d '`')
 if [ -z "$REVIEWED" ]; then
-  echo "pre-push: no 'reviewed-commit:' in the newest CEO verdict. Run /ceo, record it, then push." >&2
+  echo "pre-push: no 'reviewed-commit:' in the newest CEO verdict on origin/main. Run /ceo, record it, then push." >&2
   exit 1
 fi
+
+# A verdict recorded on this branch but not yet on origin/main is the normal case: you are pushing
+# it right now. Accept a sha that HEAD can reach, whether or not the remote has caught up.
 if ! git merge-base --is-ancestor "$REVIEWED" "$HEAD_SHA" 2>/dev/null; then
-  echo "pre-push: newest CEO verdict is for $REVIEWED, which is not an ancestor of HEAD." >&2
-  exit 1
+  # ...unless this branch also carries a newer verdict of its own; read the local ledger only as a
+  # second opinion, never as the first.
+  LOCAL=$(newest_verdict "$HEAD_SHA" | awk '/^## Review /{f=1} f && /reviewed-commit:/{print $NF; exit}' | tr -d '`')
+  if [ -n "$LOCAL" ] && git merge-base --is-ancestor "$LOCAL" "$HEAD_SHA" 2>/dev/null; then
+    REVIEWED="$LOCAL"
+  else
+    echo "pre-push: newest CEO verdict on origin/main is for $REVIEWED, which HEAD cannot reach," >&2
+    echo "and this branch carries no newer verdict of its own. Rebase onto origin/main first." >&2
+    exit 1
+  fi
 fi
-UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" | grep -v '^\.claude/' | grep -v '^scripts/hooks/' || true)
+
+# Exempt: officer records, this hook, top-level docs, and repo config. NOT scripts/check.mjs or
+# scripts/shoot.mjs — OFFICERS.md calls check.mjs "this repo's proof", and a session that can weaken
+# the tests and ship without anyone reading the change defeats the one thing a gate is for.
+UNREVIEWED=$(git diff --name-only "$REVIEWED" "$HEAD_SHA" \
+  | grep -vE '^\.claude/|^scripts/hooks/|^[^/]+\.md$|^\.gitignore$' || true)
 if [ -n "$UNREVIEWED" ]; then
   echo "pre-push: files changed since the CEO reviewed $REVIEWED:" >&2
   echo "$UNREVIEWED" | sed 's/^/  /' >&2
-  echo "Run /ceo on HEAD and record the verdict with reviewed-commit: $(git rev-parse --short HEAD)" >&2
+  echo "Run /ceo on that commit and record the verdict with reviewed-commit: $(git rev-parse --short "$HEAD_SHA")" >&2
   exit 1
 fi
 exit 0
