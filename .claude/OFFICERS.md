@@ -39,7 +39,15 @@ verdict; losing it silently would be the worst outcome of the split.
 working session; nothing in the shell publishes anywhere but production. A CTO on this repo has no
 output channel and must park its work until one exists.
 
-**`scripts/hooks/pre-push` gates every push on a recorded CEO verdict** (`git config core.hooksPath scripts/hooks`, set on this machine; re-run after a fresh clone). The verdict entry must carry `reviewed-commit: <sha>`.
+**There is no push gate, since 2026-09-09.** `scripts/hooks/pre-push` is deleted and `core.hooksPath`
+is unset in every checkout. `.github/workflows/test.yml` runs `npm test` on every pull request
+instead. **A CEO review is something Wyatt or a session asks for, not something a push owes** — write
+the verdict to `.claude/reviews/` when one is run, and do not block anything on its absence.
+
+*(Historical note, found when it was removed: `core.hooksPath` had been set per-worktree rather than
+globally, on two worktrees only. The main checkout never had it, so pushes from there were never
+gated. Any verdict before 2026-09-09 that reasons about "every push" was reasoning about two
+worktrees.)*
 
 **The trial report is no longer committed, since 2026-09-08.** `.claude/TEST-REPORT.md` is written
 by every `npm test` and is now gitignored: two branches that both run the tests conflict on it every

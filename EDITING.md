@@ -76,7 +76,9 @@ The session reads the diff, runs `npm run check`, commits your edits on their ow
 through the review gate. Nothing of yours gets swept into a session's commit; nothing of theirs
 into yours.
 
-If you are alone and must ship a fix now, `git push --no-verify` still works. It is the exception,
-not the route — say so afterwards so the next review knows what went out unread.
+There is no push gate any more — it was deleted on 2026-09-09 and replaced by GitHub running
+`npm test` on every pull request. `git push` from this checkout has never been blocked and still is
+not. What checks your edits is the same as what checks everyone's: run `npm run check` before you
+push, or open a pull request and let the robot run it for you.
 
 GitHub Pages rebuilds in about a minute. `www.hycudesign.com` and `hycudesign.com` both serve it.

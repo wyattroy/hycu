@@ -7,8 +7,8 @@ open questions at the bottom before editing a single sentence.**
 
 Process rules are not repeated here. Read `.claude/OFFICERS.md` (including the two
 working-directory incidents), `.claude/memory/DECISIONS.md`, and the top of
-`.claude/CEO-REVIEWS.md` first. The short version: every push is gated on a fresh CEO verdict
-recorded with `reviewed-commit:`, staging is by path and never `git add -A`, and no command ever
+`.claude/CEO-REVIEWS.md` first. The short version, as of 2026-09-09: nothing gates a push — GitHub runs `npm test` on every pull
+request instead, and a CEO review is something you ask for rather than something you owe; staging is by path and never `git add -A`, and no command ever
 `cd`s out of this repo.
 
 ---

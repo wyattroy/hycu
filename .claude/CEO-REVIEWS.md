@@ -4,7 +4,7 @@
 
 ---
 
-## The verdicts moved, 2026-09-08 — do not append to this file
+## Archive — the verdicts moved 2026-09-08, and stopped being required 2026-09-09
 
 **One review, one file, in `.claude/reviews/`.** Named `NNNN-slug.md`, zero-padded, newest = highest
 number. **To record a verdict, create the next file. Never edit this one, and never edit an old
@@ -14,10 +14,14 @@ This file was 398 lines that every session appended to, at the top, from its own
 working in parallel collided on it constantly, and worse: a worktree carries a *photograph* of it taken
 when the branch was cut, so a session could read this file, see a months-old newest verdict, and report
 stale state with total confidence. That is what happened on 2026-09-08. Separate files merge cleanly
-because they do not touch, and `scripts/hooks/pre-push` now reads the newest verdict from
-`origin/main`, never from the working tree.
+because they do not touch. The hook that read them was deleted on 2026-09-09; `npm test` runs in CI
+instead and nothing reads this ledger to decide whether a push may happen.
 
 **The previous verdict is the highest-numbered file in `.claude/reviews/`.**
+
+**Since 2026-09-09 a review is optional.** The push gate that made one mandatory is gone and
+`npm test` runs in CI instead. These 37 stay as history and as the recurrence record; add to them
+when a review is actually run, and never because something is waiting on one.
 
 *This table is generated from that directory. Do not hand-edit it; it is a listing, not a record.*
 
