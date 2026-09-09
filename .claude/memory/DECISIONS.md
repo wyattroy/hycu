@@ -4,6 +4,47 @@
 
 ---
 
+## 2026-09-09 — Cube size, the ground's depth, and one contact line
+
+**The graph tiles are cubes, drawn at 1.5× on desktop and tablet and 2× on a phone.** Wyatt saw them
+at 1× and asked for larger; shown at 1.5× he said **"approved"**. `TILE` is `1.20`, the old flat
+plate's height, and what is drawn is that times `tileScale()`. The comment above `TILE` in
+`js/scene.js` carries the measurements — do not change `tileScale()` without reading it.
+
+**The ground is a white bloom over a silver base, and the silver is half as deep as it was.** Wyatt,
+2026-09-09: *"the background is now TOO grey … I want the background silver 50% closer to white than
+it currently is."* Every stop moved exactly halfway to `#ffffff`, so the shape of the gradient is
+unchanged and only its depth moved — darkest stop 39 points off white to 19, lightest 9 to 5.
+
+**The bloom is untouched and still reaches pure white at its centre.** He asked whether it was really
+pure white behind the headline: yes, at one point. `#ffffff` at the centre stop, 82% opacity at 34%,
+transparent at 72%. The lightness comes from behind the words, which was the point of the earlier
+ruling: *"i don't want the top of the page to be the lightest area, because that reads as white."*
+
+**The Studio contact block now reads the same as the homepage's** — "We reply within two working
+days." His earlier removal of "One sentence is enough to start" was homepage-only by his own
+instruction; on 2026-09-09 he extended it: *"fix /studio this to copy the homepage."*
+
+## 2026-09-08 — Axis labels sit on their axes; they do not dodge the tiles
+
+**The four axis labels stay pinned to their axes. They are not moved, and the tiles are not shrunk,
+to stop a label overlapping a tile.** Wyatt, 2026-09-08: *"the axis labels must sit on their axes …
+the tiles are shiftable by the user"*, and again on 2026-09-09 when it was misread: *"the axis
+labels don't NEED to clear the cubes -- the user moves the cubes so the axis labels are within their
+control to see around"* … *"i already ruled this in the past"*.
+
+**What IS required:** all four labels visible and on screen, UNDERSTAND left of MAKE, PRODUCT below
+IDEA — at rest and after a hard drag. `scripts/shoot.mjs` asserts that and nothing more. The check is
+deliberately coarse: it catches a label crossing to the wrong side, not a small sidestep, because a
+flaky test here is worse than a blunt one.
+
+**Why this is written down rather than left in the test file.** It lived only as a quotation inside
+`shoot.mjs`, and a session read it as exempting phones only. Acting on that misreading, another
+session spent most of an afternoon shrinking his cubes and walking every label outward to satisfy a
+constraint he had already struck down. **A ruling that lives only in a comment gets re-litigated by
+whoever reads the comment differently.** If you find yourself sizing the work to protect a label,
+this is the entry that says stop.
+
 ## 2026-09-09 — The gate comes out, CI goes in, the CEO becomes opt-in
 
 **`scripts/hooks/pre-push` is deleted and `core.hooksPath` is unset.** Nothing blocks a push any
