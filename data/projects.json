@@ -9,8 +9,8 @@
     "year": 2026,
     "capabilities": ["User research", "Systems design"],
     "axes": {
-      "make": 0.22,
-      "idea": 0.7,
+      "make": 0.34,
+      "idea": 0.2,
       "reach": 0.62
     }
   },
@@ -46,7 +46,7 @@
     ],
     "axes": {
       "make": 0.4,
-      "idea": 0.3,
+      "idea": 0.62,
       "reach": 0.5
     }
   },
@@ -58,11 +58,7 @@
     "name": "Teaching Forgiveness",
     "headline": "From a one-day workshop to a platform built to teach the next billion people how to forgive.",
     "year": 2026,
-    "capabilities": [
-      "Strategy",
-      "Product design",
-      "Systems design"
-    ],
+    "capabilities": ["Product design", "Strategy", "Systems design"],
     "axes": {
       "make": 0.82,
       "idea": 0.36,
@@ -77,10 +73,7 @@
     "name": "Pastry Pirates",
     "headline": "Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.",
     "year": 2026,
-    "capabilities": [
-      "Systems design",
-      "Product design"
-    ],
+    "capabilities": ["Product design", "Systems design"],
     "axes": {
       "make": 0.9,
       "idea": 0.2,
@@ -113,9 +106,7 @@
     "name": "How to Change Institutions",
     "headline": "A palm-sized field guide to changing an institution from the inside, by working with it rather than against it.",
     "year": 2026,
-    "capabilities": [
-      "Systems design"
-    ],
+    "capabilities": ["Strategy", "Systems design"],
     "axes": {
       "make": 0.28,
       "idea": 0.92,
@@ -136,7 +127,7 @@
     ],
     "axes": {
       "make": 0.64,
-      "idea": 0.46,
+      "idea": 0.58,
       "reach": 0.4
     }
   }
