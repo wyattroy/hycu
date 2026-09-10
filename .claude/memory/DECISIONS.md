@@ -4,6 +4,42 @@
 
 ---
 
+## 2026-09-09 — One capability word, and it lives in the data
+
+**`data/projects.json` `capabilities` is the only place a capability is written. Every page prints
+it verbatim.** Wyatt, 2026-09-09: *"Make the page use the data's word verbatim … color each cube
+according to its primary quadrant. make the rule."*
+
+The rule, in one line: **`capabilities[0]` is the project's primary capability. It names the
+quadrant, it colours the cube, and it is the word the page prints — the same string in all four
+places, never a paraphrase.**
+
+- **The cube's colour** comes from `capabilities[0]` via `CAP_COLORS` in `js/scene.js`. The four
+  quadrant captions on the back wall carry the same four hues, so a colour always names a quadrant.
+- **The study page eyebrow** and **the Work card** print `capabilities[0]`, character for character.
+- **The study rail's Capabilities row** prints the whole `capabilities` list, verbatim.
+
+**What this replaced.** The pages carried hand-written phrases that drifted from the data: "Design
+research" where the data said User research, "Content strategy" where it said Strategy, "Strategy &
+platform", "Game & systems design". The rail had drifted separately into sentence case — "User
+research, strategy" — and Polycam's rail said "research" where the data said User research. Four of
+the eight disagreed with their own colour.
+
+**Two rulings inside the same instruction:** *"spatial equity should count as user research and
+system design"* — its `capabilities` are now `["User research", "Systems design"]`, replacing
+Strategy as the second. *"polycam should count as strategy and be called strategy"* — its data
+already led with Strategy; it was the page that said "Content strategy", and now says Strategy.
+**No cube changed colour**, because both projects' first capability was already right.
+
+**The known consequence, and it is deliberate.** Colour follows the primary capability, not the
+position on the graph. A cube can therefore sit in one quadrant and wear another quadrant's colour —
+Spatial Equity sits at make 0.22 / idea 0.7, geometrically in the Strategy quadrant, and is orange
+for user research. That is the correct way round: **where a project sits is what it was; what it is
+coloured is what it mainly did.** Six of the eight are in this position and always have been.
+
+**And the three self-initiated projects say "Studio · Hycu" in the rail**, matching their cards and
+`projects.json`, rather than "Studio project".
+
 ## 2026-09-09 — Cube size, the ground's depth, and one contact line
 
 **The graph tiles are cubes, drawn at 1.5× on desktop and tablet and 2× on a phone.** Wyatt saw them
