@@ -7,10 +7,7 @@
     "name": "Spatial Equity",
     "headline": "A third of the school had no desk. We showed the Dean why it mattered, and what to do about it, from free fixes to a new building.",
     "year": 2026,
-    "capabilities": [
-      "User research",
-      "Strategy"
-    ],
+    "capabilities": ["User research", "Systems design"],
     "axes": {
       "make": 0.22,
       "idea": 0.7,
