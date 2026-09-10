@@ -40,6 +40,36 @@ for (const f of files) {
 }
 for (const r of REQUIRED) if (!fs.existsSync(path.join(ROOT, r))) fails.push(`missing required file: ${r}`);
 
+// One capability word, and it lives in the data (Wyatt, 2026-09-09). `capabilities[0]` names the
+// quadrant a project sits in, colours its cube, and is the exact word the study page and the Work
+// card print. Those four drifted apart once already — the pages said "Design research" and "Content
+// strategy" where the data said User research and Strategy — so this asserts it rather than trusting
+// anyone to remember. The quadrant is read off the axes the way js/scene.js does it: x is
+// Understand↔Make, y is Product↔Idea, and the four corners are the four capabilities.
+{
+  const QUAD = { "-1,-1": "User research", "-1,1": "Strategy", "1,-1": "Product design", "1,1": "Systems design" };
+  const projects = JSON.parse(fs.readFileSync(path.join(ROOT, "data/projects.json"), "utf8"));
+  const list = Array.isArray(projects) ? projects : projects.projects;
+  const cards = fs.readFileSync(path.join(ROOT, "work/index.html"), "utf8");
+  for (const p of list) {
+    const first = (p.capabilities || [])[0];
+    const quad = QUAD[`${p.axes.make >= 0.5 ? 1 : -1},${p.axes.idea >= 0.5 ? 1 : -1}`];
+    if (first !== quad) fails.push(`data/projects.json: ${p.id} sits in the ${quad} quadrant but leads with ${first}`);
+
+    const page = fs.readFileSync(path.join(ROOT, `work/${p.id}/index.html`), "utf8");
+    const eyebrow = (page.match(/<p class="eyebrow">(.*?)<\/p>/) || [])[1] || "";
+    const said = eyebrow.replace(/&middot;/g, "\u00b7").split("\u00b7").map((x) => x.trim()).slice(-2)[0];
+    if (said !== first) fails.push(`work/${p.id}/index.html: eyebrow says "${said}", data says "${first}"`);
+
+    const rail = (page.match(/<span class="k">Capabilities<\/span><span>(.*?)<\/span>/) || [])[1];
+    const want = (p.capabilities || []).join(", ");
+    if (rail !== want) fails.push(`work/${p.id}/index.html: rail says "${rail}", data says "${want}"`);
+
+    const cardCap = (cards.match(new RegExp(`href="/work/${p.id}/">[\\s\\S]*?<span class="year">(.*?)</span>`)) || [])[1];
+    if (cardCap !== first) fails.push(`work/index.html: ${p.id} card says "${cardCap}", data says "${first}"`);
+  }
+}
+
 const report = [`# Test report — ${new Date().toISOString()}`, "", "## Copy check", "", `Files scanned: ${files.length}`, `Failures: ${fails.length}`, "", ...fails.map(f => `- ${f}`)].join("\n") + "\n";
 fs.mkdirSync(path.join(ROOT, ".claude"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, ".claude/TEST-REPORT.md"), report);

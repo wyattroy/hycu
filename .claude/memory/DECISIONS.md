@@ -31,11 +31,24 @@ Strategy as the second. *"polycam should count as strategy and be called strateg
 already led with Strategy; it was the page that said "Content strategy", and now says Strategy.
 **No cube changed colour**, because both projects' first capability was already right.
 
-**The known consequence, and it is deliberate.** Colour follows the primary capability, not the
-position on the graph. A cube can therefore sit in one quadrant and wear another quadrant's colour —
-Spatial Equity sits at make 0.22 / idea 0.7, geometrically in the Strategy quadrant, and is orange
-for user research. That is the correct way round: **where a project sits is what it was; what it is
-coloured is what it mainly did.** Six of the eight are in this position and always have been.
+**Position, colour and word all agree, two projects per quadrant** (Wyatt, 2026-09-09): *"I want
+cubes in each quadrant. strategy: how to change institutions, polycam / user research: spatial
+equity, [the oral-care study] / systems design: claude kit, pour / product design: pastry pirates,
+forgiveness."* Also: *"forgiveness is product design -- i'm designing a web platform for them.
+pastry pirates is systems design"* — its primary is Product design, with Systems design second.
+
+Three projects moved across the Product/Idea midline to sit where he put them: Polycam idea 0.3 →
+0.62, Pour 0.46 → 0.58, Spatial Equity 0.7 → 0.2. Spatial Equity also moved on `make`, 0.22 → 0.34:
+at 0.22 it landed 0.08 from the oral-care study and the browser pass caught the consequence — on a
+phone, tapping one tile opened the other. Two projects can share a quadrant; they cannot share a
+point. `reach` is untouched on all three.
+Three capability lists were re-ordered so the first entry is the quadrant.
+
+**`scripts/check.mjs` now asserts all of it** — that each project's quadrant, read off its axes the
+way `js/scene.js` reads it, equals `capabilities[0]`, and that the study eyebrow, the study rail and
+the Work card print the data's words. Red-proofed by putting "Content strategy" back on the Polycam
+page: it fails. This is written as a check rather than a paragraph on purpose: prose gets re-read and
+re-interpreted, a failing test does not.
 
 **And the three self-initiated projects say "Studio · Hycu" in the rail**, matching their cards and
 `projects.json`, rather than "Studio project".
