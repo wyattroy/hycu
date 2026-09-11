@@ -440,8 +440,20 @@ footer a:hover { color: var(--ink); }
    individual studio projects are broken" — and it is only the eight study pages because the rail is
    the only sticky element on the site, and home, Work, Studio, Contact and 404 do not have one.
    Declaring sticky above the breakpoint rather than unsetting it below keeps the rule where it
-   earns its keep and leaves nothing to leak downward. */
-@media (min-width: 861px) { .study-rail { position: sticky; top: calc(var(--nav-h) + 24px); } }
+   earns its keep and leaves nothing to leak downward.
+
+   The .02 pairs with the `max-width: 860px` above it and is not a typo. `min-width: 861px` would
+   leave every width BETWEEN them matching neither rule — at 860.5, which browser zoom really does
+   produce, you got the two-column layout with a rail that had quietly stopped sticking. Verified:
+   860.01, 860.02 and 860.5 all fell through the pair. .02 shrinks that hole to widths between
+   860 and 860.02, which no browser reports (CEO Review 38).
+
+   One honest footnote on "its containing block is still the whole study body": that is what the
+   browsers DO -- the rail's own grid row measures 510.5px while the rail travels 3516px -- but the
+   Grid spec says a grid item's containing block is its grid area, which would have meant almost no
+   travel at all. Reasoning from the spec is what hid this bug; the 3516px came from measuring, and
+   an early draft of this comment claimed 0px travel on exactly that bad reasoning (CEO Review 38). */
+@media (min-width: 860.02px) { .study-rail { position: sticky; top: calc(var(--nav-h) + 24px); } }
 .rail { list-style: none; margin: 0; padding: 0; font-size: 15px; }
 .rail li { padding: 14px 0; border-top: 1px solid var(--rule); display: grid; gap: 4px; }
 .rail li:last-child { border-bottom: 1px solid var(--rule); }
