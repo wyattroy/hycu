@@ -74,7 +74,7 @@ catch { ({ chromium } = await import('/Users/wyattroy/Documents/Projects/wyattro
 fs.mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 const errors = [];
-const ran = { pages: 0, gutter: 0, graph: 0, headline: 0, labels: 0 };
+const ran = { pages: 0, gutter: 0, graph: 0, headline: 0, labels: 0, sticky: 0 };
 
 // 820 is the width HY-3 has asked for since CEO Review 4, 2026-09-02: between 720 and 900 the hero
 // column is at its narrowest while the desktop rules are already on, and nothing tested there.
@@ -104,6 +104,59 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     await page.screenshot({ path: `${OUT}/${label}-${name}-full.png`, fullPage: true });
 
     if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) errors.push(`${label} ${p}: horizontal overflow`);
+
+    // A sticky element that pins over the text scrolling past it. On 2026-09-11 Wyatt reported that
+    // the eight study pages could not be scrolled on a phone; what he was seeing is that
+    // `.study-rail` was declared sticky at EVERY width, and below 861px the study body is one
+    // column, so the rail is a full-width block above the article whose containing block is still
+    // the whole body. It pinned under the nav and rode 3516px down Pour at 390px with the article
+    // printing straight through it — four paragraphs and headings overlapping at y=1600, the worst
+    // 328x223px.
+    //
+    // This is written to the fault and not to the fix: an earlier version of this check asserted
+    // that no sticky element had ZERO travel, and it was green on the broken CSS — the rail's
+    // travel was 3516px, not 0. What is wrong with a sticky element here is never how far it goes,
+    // it is what it lands on. #nav is `fixed`, not sticky, so the translucent header that is meant
+    // to sit over the page is not caught by this. The scroll has to be instant:
+    // `html { scroll-behavior: smooth }` animates scrollTo, and sampling mid-animation measures a
+    // frame nobody ever sees.
+    const smeared = await page.evaluate(async () => {
+      const sticky = [...document.querySelectorAll('*')].filter((e) => getComputedStyle(e).position === 'sticky');
+      if (!sticky.length) return [];
+      const de = document.documentElement;
+      const prior = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
+      const text = [...document.querySelectorAll('p, h1, h2, h3, li')].filter((e) => (e.textContent || '').trim());
+      const out = [];
+      const H = de.scrollHeight;
+      const step = Math.max(200, Math.round(H / 10));
+      for (let y = 0; y <= H && out.length < 5; y += step) {
+        window.scrollTo({ top: y, behavior: 'instant' });
+        await new Promise((r) => requestAnimationFrame(r));
+        for (const s of sticky) {
+          const a = s.getBoundingClientRect();
+          if (a.width === 0 || a.height === 0) continue;
+          for (const e of text) {
+            if (s.contains(e) || e.contains(s)) continue;
+            const b = e.getBoundingClientRect();
+            if (b.width === 0 || b.height === 0) continue;
+            const ox = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+            const oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+            if (ox > 1 && oy > 1) {
+              out.push(`at y=${y}, .${(typeof s.className === 'string' ? s.className : '').trim()} covers ${e.tagName.toLowerCase()} "${(e.textContent || '').trim().slice(0, 32)}" by ${Math.round(ox)}x${Math.round(oy)}px`);
+              break;
+            }
+          }
+          if (out.length >= 5) break;
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      await new Promise((r) => requestAnimationFrame(r));
+      de.style.scrollBehavior = prior;
+      return out;
+    });
+    ran.sticky++;
+    if (smeared.length) errors.push(`${label} ${p}: a sticky element sits on the text scrolling past it: ${smeared.join(' | ')}`);
 
     // Gutter: every visible text element must start at or right of the nav brand's left edge.
     // Graph axis labels are pinned to the canvas edge on purpose and are excluded.
@@ -236,8 +289,8 @@ await browser.close();
 
 const report = [
   `## Browser pass — ${new Date().toISOString()}`,
-  `Pages: ${ran.pages} (desktop + tablet + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · axis-label samples: ${ran.labels} · graph click/tap checks: ${ran.graph}`,
-  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on every viewport and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap',
+  `Pages: ${ran.pages} (desktop + tablet + phone) · gutter checks: ${ran.gutter} (alignment and amount) · headline checks: ${ran.headline} · axis-label samples: ${ran.labels} · graph click/tap checks: ${ran.graph} · sticky-overlap checks: ${ran.sticky}`,
+  errors.length ? errors.map((e) => `- FAIL ${e}`).join('\n') : '- PASS no console errors, no overflow, gutter present and respected on every page, ground gradient spans every page, headline reads as words on every viewport and breaks after "are," on desktop, no axis label on a tile on desktop (the phone half of that check is retired by ruling, see above), graph tile opens its study on click and on tap, no sticky element sits on the text scrolling past it',
   '',
 ].join('\n');
 fs.appendFileSync(path.join(ROOT, '.claude/TEST-REPORT.md'), '\n' + report);
