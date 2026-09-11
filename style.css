@@ -428,7 +428,20 @@ footer a:hover { color: var(--ink); }
 }
 .study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
 @media (max-width: 860px) { .study-body { grid-template-columns: 1fr; } .study-rail { order: -1; } }
-.study-rail { position: sticky; top: calc(var(--nav-h) + 24px); }
+/* The rail sticks only in the two-column layout, where it has a column of its own to stick in: its
+   grid area is as tall as the article beside it, so it slides 1703px on Pour at 1440px wide and
+   holds the project details in view while you read. That is the whole point of it.
+   At 860px and below the body drops to ONE column and the rail becomes a full-width block sitting
+   above the article (`order: -1`). Sticky there does not go quiet — its containing block is still
+   the whole study body, so it pins under the nav and rides 3516px down the page on Pour at 390px,
+   with the article scrolling straight through it. Measured at y=1600: four paragraphs and headings
+   overlapping the rail, the worst 328x223px, text printed over text. That is what Wyatt reported on
+   2026-09-11 — "scrolling is Totally broken on mobile ... the index page works fine, but all of the
+   individual studio projects are broken" — and it is only the eight study pages because the rail is
+   the only sticky element on the site, and home, Work, Studio, Contact and 404 do not have one.
+   Declaring sticky above the breakpoint rather than unsetting it below keeps the rule where it
+   earns its keep and leaves nothing to leak downward. */
+@media (min-width: 861px) { .study-rail { position: sticky; top: calc(var(--nav-h) + 24px); } }
 .rail { list-style: none; margin: 0; padding: 0; font-size: 15px; }
 .rail li { padding: 14px 0; border-top: 1px solid var(--rule); display: grid; gap: 4px; }
 .rail li:last-child { border-bottom: 1px solid var(--rule); }
