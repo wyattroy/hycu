@@ -25,45 +25,43 @@ The change is styling only. No block moves, no copy rewrites, no layout changes.
 | Big headings | Shrikhand | EB Garamond, italic, 18% larger than the current scale |
 | Body and small headings | Geist | Hanken Grotesk, small heads at weight 600 |
 | Eyebrows, tags, footer | Geist Mono | DM Mono |
-| Wordmark | Geist | Arsenica — **licence blocker, see below** |
+| Wordmark | Geist, live text | a drawn image of "hycu" — SVG outlines with a PNG fallback, no font loaded |
 | Background treatment | a white bloom over silver | "Aura": four soft fields of the capability colours |
 | Buttons | filled pill | square, with a keyline inset a few pixels inside the edge |
 | Dividers | hairlines | hairlines, unchanged |
 
-### Two decisions before this can finish
+### Settled by Wyatt on 2026-09-12
 
-**1. The Arsenica wordmark cannot ship as it stands.** The file Wyatt has is Arsenica *Trial* from
-Zetafonts. A trial licence does not cover a live public website, and the trial cut also ships
-placeholder shapes instead of numerals. Three ways out:
+**The colour rulings that stood in the way are retired.** "My rulings about color are outdated, i
+changed my mind." Restraint's white ground and its single blue accent are no longer live, so the
+Aura needs no special pleading. Logged in `DECISIONS.md`.
 
-- Buy the Zetafonts licence, then set the wordmark in Arsenica. Cost unchecked.
-- Ship the wordmark in EB Garamond italic, the same face as the headings.
-- Leave the wordmark in Geist, which is what Wyatt already chose once — DECISIONS.md, 2026-09-08:
-  "change the logo font from shrikhand back to whatever it was before — i liked that better."
+**The wordmark becomes an image.** "Wordmarks shouldn't have live text anyway, and we're not using
+arsenica as the font on the website, just for the logo." Both files are built and sitting in the
+session scratchpad: `wordmark-arsenica.svg` / `.png` and `wordmark-garamond.svg` / `.png`, rendered
+at nav size in the new ink `#1a1e18`, tight-cropped, at 1x / 2x / 3x.
 
-**Recommended: buy the licence.** Wyatt has now named the Arsenica wordmark twice — in the type
-proof he sent, and again in the choices he gave another session on 2026-09-12 ("keep the logo font
-in arsenica"). It is the one element he has asked for by name, so substituting it is the wrong
-default. If he would rather not wait on a purchase, ship the wordmark in EB Garamond italic and swap
-it the day the licence lands: it is a single CSS rule, and nothing else in this restyle waits on it.
+**Prefer the SVG, keep the PNG as the fallback.** The outlines are 2.7KB, stay crisp at any size,
+and take their colour from `currentColor`, so they follow the palette. A PNG bakes the ink colour
+in, which means every future palette change needs the file regenerated — and the ink colour is
+changing in this very restyle. The PNG at nav size is also visibly softer than the outlines.
 
-**2. The Aura background puts colour on the ground, which two of Wyatt's own rulings argue about.**
-The Restraint direction (DECISIONS.md, 2026-09-02) said the ground carries no colour; the capability
-colours are "the only colour on the site". Then on 2026-09-09 he ruled the light should come from
-behind the headline: "i don't want the top of the page to be the lightest area… i want the lightness
-to come from behind the words to draw your eye."
+**Typefaces stay on free or personal-use licences until he decides.** "I think i'll change my mind
+re: fonts frequently." The hard consequence: **nothing needing a paid licence may merge to `main`**,
+and drawing a trial face into a PNG does not sidestep its licence — it is the same question in a
+different file format. Logged in `DECISIONS.md`.
 
-**This also removes a freedom.** The Aura is painted from the four capability colours — systems at
-88%/4%, research 6%/22%, product 74%/46%, strategy 20%/82% — so with this ground those four *are*
-the background. They can no longer be picked as four dots that merely read apart from each other;
-they have to work as four washes that sit together. Both Mediterranean palettes in the mixer were
-built that way. Retuning any one capability colour after this ships changes the ground.
+### Still open on this item
 
-**Recommended: keep the Aura, but only across the first screen, and let it fade to flat limestone
-below the fold.** That is the version that satisfies the 2026-09-09 ruling — colour and light
-gathered behind the words — instead of tinting all thirteen pages top to bottom. If he wants the
-mixer's version exactly, it is a one-line change to span the document instead. If he wants neither,
-flat limestone is one line less.
+**Which wordmark ships first.** EB Garamond italic is SIL OFL, free for commercial use, and is
+already the heading face — so an EB Garamond wordmark can ship today, and the file can be swapped
+for Arsenica the day a licence is bought. That swap is one file, no markup change. Arsenica is the
+more distinctive mark; Garamond is the one that is legal right now under his own personal-use rule.
+
+**What the licences actually cost.** Being scoped now: Zetafonts' webfont tiers for Arsenica,
+whether their standard licence even permits logo use (many foundries restrict that specifically and
+charge a multiple), what "Timeless" from the type proof is and costs, and confirmation that the six
+open-source faces in play are all OFL. Until those numbers land, assume Arsenica cannot ship.
 
 ### The work, in order
 
@@ -81,7 +79,14 @@ Granola all sit within a few points of `#FAF9F5`. Limestone is about ten points 
 its accent is green rather than clay-orange. Restraint's ground and faces are being overturned; that
 clause is being kept.
 
-**2. Fonts, on all thirteen pages.** Every page carries the same `<link>`. Replace:
+**2. The wordmark, on all thirteen pages.** The nav's `hycu` stops being text. Drop
+`assets/wordmark.svg` in, reference it from `.brand`, keep the existing square mark beside it, and
+keep an `aria-label="Hycu home"` on the link so screen readers still hear the name — the image
+itself takes `alt=""` because the label already says it. Size it by height (about 19.5px at nav
+size, the ink height of the drawn word) and let the width follow, or it will distort. The file to
+use depends on the licence question above; the mechanism is identical either way.
+
+**3. Fonts, on all thirteen pages.** Every page carries the same `<link>`. Replace:
 
 ```
 family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Shrikhand
@@ -99,7 +104,7 @@ becomes EB Garamond with a real serif fallback. Two Geist-specific lines have to
 to Hanken), and `strong { font-weight: 500 }`, which should become 600 because Hanken has a real
 semibold where Geist was faking emphasis.
 
-**3. Palette tokens** in `style.css` `:root`:
+**4. Palette tokens** in `style.css` `:root`:
 
 ```
 --bg: #e9e5d8;   --ink: #1a1e18;   --ink-2: #55584e;   --ink-3: #837f71;
@@ -112,18 +117,18 @@ semibold where Geist was faking emphasis.
 Ochre, slate, cypress and wine replace orange, blue, teal and purple. The four keep their meanings
 and their order.
 
-**4. The ground, and the three surfaces that sit on it.** `style.css:66-68` carries the two-layer
+**5. The ground, and the three surfaces that sit on it.** `style.css:66-68` carries the two-layer
 gradient; that becomes limestone plus the Aura fields. Three more places hardcode translucent white
 and will read as visible seams against limestone if they are missed — the nav at `style.css:183`,
 the graph's axis labels at `:230`, and the zoom buttons at `:292`. This is the CEO Review 12 lesson
 in a new palette: size the ground to the document, not the window, or there is a seam at the fold.
 
-**5. Buttons.** Square corners, and a keyline of the ground set about 4px inside the rectangle,
+**6. Buttons.** Square corners, and a keyline of the ground set about 4px inside the rectangle,
 drawn with two stacked inset shadows. The working rule is in Wyatt's own type proof
 (`~/Downloads/hycu-type-proof.html`, the "Buttons" block) and in the mixer under `data-button="keyline"`.
 Hover swaps the face to cypress.
 
-**6. Type sizing, and one real collision.** EB Garamond italic sets larger than Shrikhand: the
+**7. Type sizing, and one real collision.** EB Garamond italic sets larger than Shrikhand: the
 display scale goes up about 18%, and the small heads (capability names, Work-card headlines) stay in
 Hanken at 600 rather than going italic. The collision: `.pronounce` — "Pronounced: Hi-Q" on the home
 and studio pages — is styled italic today, and it now sits directly under an italic heading. It
@@ -133,7 +138,7 @@ The existing exemption at `style.css:422` still does its job and should stay: th
 headlines are twenty to thirty words, too long for a display face, and they are set in `--sans`,
 which is now Hanken.
 
-**7. The graph.** `js/scene.js` keeps its own copy of the colours, near the top: a `C` block
+**8. The graph.** `js/scene.js` keeps its own copy of the colours, near the top: a `C` block
 (`ink`, `ink2`, `ink3`, `rule`, `ruleMid`, `face`, `faceSmall`, `accent`) and a `CAP` map of the four
 capability colours. These must be changed by hand to match the tokens above, because nothing reads
 them from the CSS. Also in that file: the 2D fallback's white ground, and two lights set to
@@ -144,17 +149,17 @@ ochre face — ochre is the lightest of the four.
 2026-09-12 another session is actively rewriting `js/scene.js` on `claude/drifting-cubes` (cube
 drift, reach, quadrants). Two sessions editing that file will collide.
 
-**8. Favicon.** `assets/favicon.svg` is a white square with `#111112` strokes. It becomes limestone
+**9. Favicon.** `assets/favicon.svg` is a white square with `#111112` strokes. It becomes limestone
 with ink strokes. Wyatt's type proof also carried a favicon that answered dark mode; worth copying
 that idea, but it is not required for this to ship.
 
-**9. Verify.** `npm run check` for the copy rules, then `npm test` for the browser pass at desktop
+**10. Verify.** `npm run check` for the copy rules, then `npm test` for the browser pass at desktop
 and phone widths — run it plain, never piped, or a red run reads as green. Read
 `.claude/TEST-REPORT.md` afterwards and cite its timestamp. Then look at the real thing: the fold on
 a long study page (the seam), the nav over limestone, hover on a Work card, and the focus ring,
 which is now cypress on limestone.
 
-**10. Ship as one pull request.** `main` is production: the merge is the deploy. Let GitHub's
+**11. Ship as one pull request.** `main` is production: the merge is the deploy. Let GitHub's
 `npm test` go green before merging.
 
 ### Contrast, already measured against limestone `#e9e5d8`

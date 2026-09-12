@@ -4,6 +4,37 @@
 
 ---
 
+## 2026-09-12 — The colour rulings are retired, and the wordmark becomes an image
+
+**Every earlier ruling about colour on this site is superseded.** Wyatt, 2026-09-12: *"My rulings
+about color are outdated, i changed my mind."* That retires the white ground and the single
+system-blue interaction accent from "Restraint" (2026-09-02, below), and the white-bloom-over-silver
+ground (2026-09-09). Do not cite either as live.
+
+**One clause of Restraint survives, and now argues the other way:** the site *"must not read as
+default-AI design"*. In September 2026 that look is warm off-white — Anthropic `#faf9f5`, Cursor
+`#f7f7f4`, Mistral `#fbfbf8`, Granola `#fcfcf8`, Perplexity `#fdfbfa`, all within a few points of
+each other. The chosen direction is **Limestone & Cypress**: ground `#e9e5d8`, ink `#1a1e18`,
+cypress accent `#3e5d3a`, with ochre, slate, olive and wine carrying the four capabilities.
+
+**The wordmark ships as an image, not live text.** Wyatt: *"wordmarks shouldn't have live text
+anyway, and we're not using arsenica as the font on the website, just for the logo."* So the nav
+carries a drawn mark, and no page needs the wordmark's typeface loaded.
+
+**Typefaces stay on free or personal-use licences until he settles.** Wyatt: *"I think i'll change
+my mind re: fonts frequently, so I'd prefer to treat these as 'personal use' until i solidify my
+decisions."* The standing consequence: **nothing requiring a paid licence may merge to `main`**,
+because a merge is the deploy and the site is commercial. Rendering a trial face to PNG or to
+outlines does not change that — it is the same licence question in a different file format.
+
+**The Aura ground gathers in the first screen.** Its four washes are sized as circles in `cqw`, a
+share of the page's width, at fixed pixel depths from the top, and fade to flat ground below. Wyatt
+caught the alternative on a phone: sized as percentages of a box that is as tall as the document,
+each wash became a vertical smear. Shape now holds at every width, and the light stays behind the
+words, which is what his 2026-09-09 ruling asked for.
+
+---
+
 ## 2026-09-12 — Gentle is a ceiling, not a setting
 
 **Nothing on the graph may move faster than the tour itself.** Wyatt, 2026-09-12: *"within the
