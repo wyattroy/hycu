@@ -88,17 +88,23 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     await page.goto(BASE + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(p === '/' ? 3500 : 600);
     ran.pages++;
-    // "Pronounced: Hi-Q" sits under the hypercube line on the home and Studio pages, italic (Wyatt, 2026-09-02).
+    // "Pronounced: Hi-Q" sits under the hypercube line on the home and Studio pages. It was italic
+    // from 2026-09-02 until the headline above it became an italic serif (Limestone & Cypress,
+    // 2026-09-12): italic under italic read as one voice, so the aside is now the mono face,
+    // upright. Asserting BOTH halves, because either one alone would let it drift back.
     if (p === '/' || p === '/studio/') {
-      const pr = await page.evaluate(() => { const el = document.querySelector('.pronounce'); return el ? { text: el.textContent.trim(), italic: getComputedStyle(el).fontStyle } : null; });
-      if (!pr || pr.text !== 'Pronounced: Hi-Q' || pr.italic !== 'italic') errors.push(`${label} ${p}: pronunciation line wrong: ${JSON.stringify(pr)}`);
+      const pr = await page.evaluate(() => { const el = document.querySelector('.pronounce'); return el ? { text: el.textContent.trim(), italic: getComputedStyle(el).fontStyle, face: getComputedStyle(el).fontFamily } : null; });
+      if (!pr || pr.text !== 'Pronounced: Hi-Q' || pr.italic !== 'normal' || !pr.face.includes('DM Mono')) errors.push(`${label} ${p}: pronunciation line wrong: ${JSON.stringify(pr)}`);
     }
-    // The ground gradient must span the whole document, not one window (CEO Review 12).
+    // The ground must span the whole document, not one window (CEO Review 12). The gradient is
+    // radial now, not linear: the Aura's four washes are circles sized off the WIDTH, which is what
+    // stops them smearing vertically on a phone (Limestone & Cypress, 2026-09-12). Also assert the
+    // stone ground colour, so a future edit cannot quietly return the site to white.
     const ground = await page.evaluate(() => {
       const html = document.documentElement; const cs = getComputedStyle(html);
-      return { gradient: cs.backgroundImage.includes('linear-gradient'), spans: Math.abs(html.getBoundingClientRect().height - html.scrollHeight) <= 1, bodyClear: getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)' };
+      return { gradient: cs.backgroundImage.includes('radial-gradient'), stone: cs.backgroundColor === 'rgb(233, 229, 216)', spans: Math.abs(html.getBoundingClientRect().height - html.scrollHeight) <= 1, bodyClear: getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)' };
     });
-    if (!ground.gradient || !ground.spans || !ground.bodyClear) errors.push(`${label} ${p}: ground gradient does not span the document: ${JSON.stringify(ground)}`);
+    if (!ground.gradient || !ground.stone || !ground.spans || !ground.bodyClear) errors.push(`${label} ${p}: ground wrong or not spanning the document: ${JSON.stringify(ground)}`);
     const name = p === '/' ? 'home' : p.replace(/\//g, '-').replace(/^-|-$/g, '');
     await page.screenshot({ path: `${OUT}/${label}-${name}-fold.png` });
     await page.screenshot({ path: `${OUT}/${label}-${name}-full.png`, fullPage: true });

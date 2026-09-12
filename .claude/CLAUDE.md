@@ -132,7 +132,8 @@ not commit it and do not hand-merge it.
 | `.claude/memory/DECISIONS.md` | **What Wyatt has already ruled.** Newest at top; append the moment he rules. Read it before proposing anything he has settled. |
 | `.claude/OFFICERS.md` | The officer adapter: settings, and the repo facts an officer needs. |
 | `.claude/reviews/` | Every CEO verdict, one per file. |
-| `.claude/BACKLOG.md` | Open items, `HY-<n>`. |
+| `BACKLOG.md` | **Changes the website needs**, in plain language, Wyatt-facing. Read it before starting site work, and add to it when you find something the site needs and are not doing now. |
+| `.claude/BACKLOG.md` | Engineering leftovers from CEO reviews, `HY-<n>`. Session-facing. Not the same list as `BACKLOG.md`. |
 | `EDITING.md` | How Wyatt edits copy himself. |
 
 ## The project

@@ -4,6 +4,94 @@
 
 ---
 
+## 2026-09-12 — Gentleness outranks separation
+
+**A corner may overlap. Nothing may lurch.** Wyatt, 2026-09-12: *"The thing I care about most is
+that the boxes never move quickly or jitter or bump themselves out of the way with anything that can
+resemble aggression ... It is okay if sometimes corners of them overlap, but the most important
+thing is that their movements always seem intentional and intelligent and smooth and gentle."*
+
+This reverses the target. The rule from 2026-09-09 — two cubes may not share a point — is now the
+second priority, and the first is that no motion on the graph reads as a flinch. Measured in cube
+widths a second: the tour itself runs at about 0.54, what shipped peaked at **2.12**, and the graph
+now peaks at **0.70**. Interpenetration is corner-only — at most 5% of a cube, in under 1% of
+frames, against 22% in 16% of frames before.
+
+**How it was possible to be gentler AND cleaner at once.** Giving way used to begin when two boxes
+already touched, because a pair was only considered once all three axes overlapped — and two solids
+do only overlap when all three do. But that is the moment it is too late: the correction then has to
+be fast, which is what looked aggressive. The negotiation now opens in the x/y plane about 1.2
+seconds early (`DRIFT.approach`) and the depth a pair owes each other ramps in over that approach,
+so the same correction is spread over four times as long. Early and slow beats late and quick.
+
+**Three things that were tried and measured and are wrong**, recorded so nobody spends the
+afternoon again: predicting each cube's future and separating against it made interpenetration four
+times worse (75%, from 11%) — the separation some later moment needs, applied to the position a cube
+holds now, drives them together. Holding a yield direction steady across an encounter was worse
+still, because the magnitude only separates a pair when it is pushed the way they already lean.
+And a wider approach gate is not better: past about 1.5 so many pairs negotiate at once that the
+depth axis gets crowded and cubes are pushed into space a third was using.
+
+---
+
+## 2026-09-12 — The wordmark is Gloock, and no font is bought
+
+**The wordmark is set in Gloock** (Duarte Pinto, SIL OFL 1.1 — free for commercial use and free in a
+logo). Wyatt chose it over Arsenica and over the three faces that beat it on measured outline
+overlap, and the measurement supports him: of the five closest shapes it is the only true
+high-contrast didone, and contrast is the quality that made Arsenica worth copying. The three above
+it carry about a third of Arsenica's thick-to-thin, so they read as wedge or text serifs whose
+skeletons happen to line up.
+
+**Nothing is licensed, and nothing needs to be.** The whole set is now free: Gloock for the
+wordmark, EB Garamond + Hanken Grotesk + DM Mono for the site. The €29 Zetafonts logo licence is
+not being bought. Arsenica's own thick-to-thin is 13.7 against Gloock's 5.9, and that gap is the
+only thing the money would have purchased.
+
+**How the earlier recommendation went wrong, because it is a pattern worth not repeating.** A
+research agent was asked which free faces resemble Arsenica. Zetafonts' specimen page returned 403
+to it, so it ranked candidates against the foundry's marketing copy, which calls the family
+"economical", and concluded that the narrowest face available was the closest match. Arsenica is not
+narrow: it sets "hycu" 4.54 x-heights wide. The recommendation was relayed to Wyatt as a judgement
+without anyone comparing the shapes. He rejected it on sight — *"i don't trust you at all on your
+taste - instrument serif looks nothing like arsenica!? did you compare them pixel for pixel?"* — and
+he was right; measured, that face ranks eleventh of twelve. **A subagent's taste is not a
+measurement, and relaying it as one is the fault.** Where a claim can be measured, measure it before
+passing it on.
+
+---
+
+## 2026-09-12 — The colour rulings are retired, and the wordmark becomes an image
+
+**Every earlier ruling about colour on this site is superseded.** Wyatt, 2026-09-12: *"My rulings
+about color are outdated, i changed my mind."* That retires the white ground and the single
+system-blue interaction accent from "Restraint" (2026-09-02, below), and the white-bloom-over-silver
+ground (2026-09-09). Do not cite either as live.
+
+**One clause of Restraint survives, and now argues the other way:** the site *"must not read as
+default-AI design"*. In September 2026 that look is warm off-white — Anthropic `#faf9f5`, Cursor
+`#f7f7f4`, Mistral `#fbfbf8`, Granola `#fcfcf8`, Perplexity `#fdfbfa`, all within a few points of
+each other. The chosen direction is **Limestone & Cypress**: ground `#e9e5d8`, ink `#1a1e18`,
+cypress accent `#3e5d3a`, with ochre, slate, olive and wine carrying the four capabilities.
+
+**The wordmark ships as an image, not live text.** Wyatt: *"wordmarks shouldn't have live text
+anyway, and we're not using arsenica as the font on the website, just for the logo."* So the nav
+carries a drawn mark, and no page needs the wordmark's typeface loaded.
+
+**Typefaces stay on free or personal-use licences until he settles.** Wyatt: *"I think i'll change
+my mind re: fonts frequently, so I'd prefer to treat these as 'personal use' until i solidify my
+decisions."* The standing consequence: **nothing requiring a paid licence may merge to `main`**,
+because a merge is the deploy and the site is commercial. Rendering a trial face to PNG or to
+outlines does not change that — it is the same licence question in a different file format.
+
+**The Aura ground gathers in the first screen.** Its four washes are sized as circles in `cqw`, a
+share of the page's width, at fixed pixel depths from the top, and fade to flat ground below. Wyatt
+caught the alternative on a phone: sized as percentages of a box that is as tall as the document,
+each wash became a vertical smear. Shape now holds at every width, and the light stays behind the
+words, which is what his 2026-09-09 ruling asked for.
+
+---
+
 ## 2026-09-12 — Gentle is a ceiling, not a setting
 
 **Nothing on the graph may move faster than the tour itself.** Wyatt, 2026-09-12: *"within the
