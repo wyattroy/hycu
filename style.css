@@ -1,31 +1,39 @@
 /* hycudesign.com — one stylesheet, no build step.
-   Direction: "Restraint" (DECISIONS.md, 2026-09-02, amended 2026-09-08). Near-white ground with a faint grey gradient for depth, near-black
-   ink, two faces — Shrikhand for the big headers, the grotesk at a few sizes for everything below
-   them — generous margins, no cards, no borders except hairlines. The graph is the only thing on
-   the site that moves. */
+   Direction: "Limestone & Cypress" (DECISIONS.md, 2026-09-12), which retires the near-white ground
+   of "Restraint" and keeps its one surviving clause — the site must not read as default-AI design,
+   and in 2026 that look is the warm off-white five AI companies share. Tufa-stone ground, green-
+   black ink, a cypress accent, and four washes of the capability colours gathered behind the first
+   screen. Two faces: EB Garamond italic for the big headers, Hanken Grotesk at a few sizes for
+   everything below them. Generous margins, no cards, no borders except hairlines. The graph is the
+   only thing on the site that moves. */
 
 :root {
-  --bg: #ffffff;
-  --ink: #111112;
-  --ink-2: #59595e;
-  --ink-3: #9c9ca2;
-  --rule: #e8e8eb;
-  --rule-mid: #c9c9ce;
-  --accent: #7a4fd6; /* hover and focus: the systems purple (Wyatt, 2026-09-02); strategy blue stays a data colour */
-  --accent-ink: #ffffff;
+  --bg: #e9e5d8;
+  --bg-hi: #f2efe5;   /* the lightest stone: the wash behind the headline, and the axis-label chips */
+  --ink: #1a1e18;
+  --ink-2: #55584e;
+  --ink-3: #837f71;
+  --rule: #d4cdb9;
+  --rule-mid: #bcb49f;
+  --accent: #3e5d3a; /* hover and focus: cypress (Wyatt, 2026-09-12). 5.88:1 on the ground, so it holds at body size */
+  --accent-ink: #f2efe5;
 
-  /* The four capabilities, the only colour on the site. Same values as js/scene.js. */
-  --c-research: #d9622b;
-  --c-strategy: #0a5cff;
-  --c-product: #1fa084;
-  --c-systems: #7a4fd6;
+  /* The four capabilities, the only colour on the site. Same values as js/scene.js.
+     Re-tuned for a stone ground: ochre, slate, olive, wine. Ochre is the lightest at 2.62:1 — it
+     is a dot, a bar and a cube face, never text. */
+  --c-research: #b3862f;
+  --c-strategy: #33607f;
+  --c-product: #4f7245;
+  --c-systems: #7a4258;
 
-  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  /* Display only — the two largest header roles. Everything else is the grotesk.
-     Falls back to the grotesk, not a serif: with display=swap the header paints in the fallback
-     first, and a face already on the page flashes less than a Georgia nobody else here uses. */
-  --display-face: "Shrikhand", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --sans: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Display only — the two largest header roles, and the project names. Everything else is the
+     grotesk. Only the ITALIC is served, so every rule that uses this face also sets
+     font-style: italic; asking for the roman would make the browser fake one. A real serif
+     fallback this time: the face it stands in for is a serif, so Georgia flashes less than the
+     grotesk would. */
+  --display-face: "EB Garamond", Georgia, "Times New Roman", serif;
 
   --nav-h: 64px;
   --gutter: clamp(24px, 8vw, 144px);
@@ -63,11 +71,20 @@ html {
 
      Sized to the document, not the window, so there is no seam at the fold (CEO Review 12). */
   background-color: var(--bg);
+  /* The Aura: four washes of the capability colours, plus the stone highlight behind the headline.
+     Each wash is a CIRCLE whose radius is a share of the WIDTH, placed at a fixed pixel depth from
+     the top of the document. That is the whole trick, and Wyatt found the alternative on a phone:
+     this element is as tall as the DOCUMENT, so a radius given as a percentage of height became a
+     900px vertical smear on a narrow screen. Width-relative radii hold their shape at every size.
+     They fade out by about 1100px, so everything below the first screen is flat stone — which is
+     also his 2026-09-09 ruling: the light comes from behind the words, not from everywhere. */
   background-image:
-    radial-gradient(115vh 85vh at 30% 62vh, #ffffff 0%, rgba(255, 255, 255, .82) 34%, rgba(255, 255, 255, 0) 72%),
-    linear-gradient(180deg, #efeff3 0%, #f3f3f6 28%, #fafafc 52%, #ececf0 78%, #f4f4f8 100%);
+    radial-gradient(circle min(62vw, 720px) at 88% 30px, color-mix(in srgb, var(--c-systems) 30%, transparent), transparent 70%),
+    radial-gradient(circle min(54vw, 640px) at 4% 240px, color-mix(in srgb, var(--c-research) 26%, transparent), transparent 70%),
+    radial-gradient(circle min(58vw, 680px) at 76% 470px, color-mix(in srgb, var(--c-product) 22%, transparent), transparent 70%),
+    radial-gradient(circle min(66vw, 760px) at 18% 760px, color-mix(in srgb, var(--c-strategy) 22%, transparent), transparent 70%),
+    radial-gradient(100vh 70vh at 30% 62vh, var(--bg-hi) 0%, color-mix(in srgb, var(--bg-hi) 55%, transparent) 38%, transparent 72%);
   background-repeat: no-repeat;
-  background-size: 100% 100%;
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -80,7 +97,6 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "ss01", "cv11";
 }
 
 a { color: inherit; text-decoration: none; }
@@ -91,7 +107,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 p { margin: 0 0 1.1em; }
 p:last-child { margin-bottom: 0; }
-strong { font-weight: 500; }
+strong { font-weight: 600; }
 
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; overflow: hidden;
@@ -108,7 +124,7 @@ strong { font-weight: 500; }
   color: var(--ink-3);
 }
 .eyebrow.dark { color: var(--ink-2); }
-h1, h2, h3 { font-weight: 500; letter-spacing: -.02em; line-height: 1.12; margin: 0; text-wrap: balance; }
+h1, h2, h3 { font-weight: 600; letter-spacing: -.02em; line-height: 1.12; margin: 0; text-wrap: balance; }
 .display {
   font-size: clamp(38px, 5vw, 66px);
   letter-spacing: -.03em;
@@ -123,18 +139,20 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -.02em; line-height: 1.12; margin
    data/projects.json, and Polycam differs from its own <title> as well (CEO Review 30). Whether
    the three should agree is Wyatt's call, logged as HY-36. It names the project; the headline
    below it still does the explaining. The two sizes live with their own layouts, below. */
-.proj { font-family: var(--display-face); font-weight: 400; letter-spacing: 0; line-height: 1.1; margin: 0; }
-/* Shrikhand carries the two big header roles (Wyatt, 2026-09-08). It has one weight and is drawn
-   tight, so the grotesk's 500 and negative tracking have to come back off or the browser fakes a
-   bold and the letters collide. It sets wider and taller than Geist: the sizes step down and the
-   leading opens up. Long headlines are exempt — see .study-head .h-lg below. */
+.proj { font-family: var(--display-face); font-style: italic; font-weight: 500; letter-spacing: -.02em; line-height: 1.08; margin: 0; }
+/* EB Garamond italic carries the two big header roles (Wyatt, 2026-09-12). Only the italic is
+   served, so font-style is set explicitly here — ask for the roman and the browser fakes a slant.
+   An old-style serif sets smaller on the same point size than the grotesk does, so these two roles
+   step UP about 18% rather than down, and the tracking comes in slightly. Long headlines are
+   exempt — see .study-head .h-lg below. */
 .display, .h-lg {
   font-family: var(--display-face);
-  font-weight: 400;
-  letter-spacing: 0;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.02em;
 }
-.display { font-size: clamp(34px, 4.4vw, 58px); line-height: 1.14; }
-.h-lg { font-size: clamp(27px, 3.2vw, 39px); line-height: 1.18; }
+.display { font-size: clamp(38px, 5.1vw, 66px); line-height: 1.06; }
+.h-lg { font-size: clamp(31px, 3.7vw, 46px); line-height: 1.12; }
 .lede { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.45; color: var(--ink-2); max-width: 32em; }
 .muted { color: var(--ink-2); }
 .dim { color: var(--ink-3); }
@@ -159,19 +177,25 @@ section.band.flush { border-top: 0; }
 .arrow::after { content: " \2192"; }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
+/* Square, with a keyline of the ground set a few pixels inside the rectangle — a printed label
+   rather than a pill (Wyatt's type proof, 2026-09-08; chosen 2026-09-12). Two stacked inset shadows
+   draw it: the first paints the whole face, the second sits on top and shows only in the gap
+   between the two spreads. --face carries the fill so the keyline follows the button into hover. */
 .btn {
+  --face: var(--ink);
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font: 500 15px/1 var(--sans);
-  padding: 13px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--ink);
-  background: var(--ink); color: var(--bg) !important;
+  font: 600 15px/1 var(--sans);
+  padding: 14px 22px;
+  border-radius: 0;
+  border: 0;
+  background: var(--face); color: var(--bg) !important;
+  box-shadow: inset 0 0 0 4px var(--face), inset 0 0 0 5.5px var(--bg);
   cursor: pointer; white-space: nowrap;
-  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), opacity var(--t-fast);
+  transition: background var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
 }
-.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) !important; }
-.btn.quiet { background: transparent; color: var(--ink) !important; }
-.btn.quiet:hover { background: transparent; color: var(--accent) !important; border-color: var(--accent); }
+.btn:hover { --face: var(--accent); color: var(--accent-ink) !important; }
+.btn.quiet { background: transparent; color: var(--ink) !important; box-shadow: inset 0 0 0 1px var(--rule-mid); }
+.btn.quiet:hover { background: transparent; color: var(--accent) !important; box-shadow: inset 0 0 0 1px var(--accent); }
 .btn.sm { font-size: 14px; padding: 10px 16px; }
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
@@ -180,7 +204,7 @@ section.band.flush { border-top: 0; }
   height: var(--nav-h);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 var(--edge);
-  background: rgba(255, 255, 255, .72);
+  background: rgba(233, 229, 216, .72); /* the ground, not white — a white here is a visible seam */
   -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid transparent;
   transition: border-color var(--t-fast);
@@ -191,8 +215,11 @@ section.band.flush { border-top: 0; }
    Geist from body. The mark's -1px nudge goes with it, having only existed to answer Shrikhand's
    low baseline. Every page still requests the display face and still draws with it — .display on
    the five top-level pages, .proj on the eight studies — so nothing here strands a font request. */
-.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+/* The wordmark is a drawing, not text, so .brand carries no type rules at all. Height is set and
+   width left to follow, or the outlines distort. */
+.brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand .mark { display: block; width: 20px; height: 20px; }
+.brand .wordmark { display: block; height: 19px; width: auto; }
 .nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); font-size: 15px; font-weight: 500; }
 .nav-links a:not(.btn) { color: var(--ink-2); transition: color var(--t-fast); }
 .nav-links a:not(.btn):hover, .nav-links a[aria-current="page"] { color: var(--ink); }
@@ -227,7 +254,7 @@ main.has-hero { padding-top: 0; }
   font-family: var(--mono); font-size: 12px; font-weight: 500;
   letter-spacing: .14em; text-transform: uppercase;
   color: var(--ink);
-  background: rgba(255, 255, 255, .85);
+  background: rgba(242, 239, 229, .85); /* --bg-hi, so the chip reads as stone and not as a hole */
   padding: 4px 9px; border-radius: 3px;
   white-space: nowrap; user-select: none;
   opacity: 0; will-change: transform;
@@ -284,12 +311,15 @@ main.has-hero { padding-top: 0; }
    own wherever they fit. Calibrated to THAT STRING at THAT SIZE — change the headline copy or either
    clamp and re-measure. */
 @container (min-width: 470px) { .br-desk { display: inline; } }
-.hero-text .hl { color: var(--c-systems); }
+/* The two emphasised words take the ACCENT, not a capability colour. The four capability colours
+   are data on this site — a dot, a bar, a cube — and borrowing one for emphasis makes the headline
+   look like it is naming a capability. Cypress reads at 5.88:1 on the stone. */
+.hero-text .hl { color: var(--accent); }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .hero-controls button {
   font: 500 12px/1 var(--mono); letter-spacing: .06em;
-  color: var(--ink-2); background: rgba(255, 255, 255, .85);
+  color: var(--ink-2); background: rgba(242, 239, 229, .85);
   border: 1px solid var(--rule); border-radius: 999px;
   height: 34px; min-width: 34px; padding: 0 12px; cursor: pointer;
   transition: color var(--t-fast), border-color var(--t-fast);
@@ -389,7 +419,9 @@ main.has-hero { padding-top: 0; }
 @media (max-width: 860px) { .statement { grid-template-columns: 1fr; } }
 .statement .h-lg { max-width: 14em; }
 .statement .prose p { font-size: 18px; }
-.pronounce { font-style: italic; font-size: 15px; color: var(--ink-2); margin: 10px 0 0; }
+/* Not italic any more: it sits directly under an italic headline, and italic-under-italic reads as
+   one run of the same voice instead of an aside. The mono face and the tracking do that job now. */
+.pronounce { font-family: var(--mono); font-size: 13px; letter-spacing: .04em; color: var(--ink-2); margin: 12px 0 0; }
 .studio-hero .pronounce { margin-top: 14px; }
 
 /* ── Contact strip ──────────────────────────────────────────────────────── */
@@ -415,13 +447,14 @@ footer a:hover { color: var(--ink); }
    so what a reader saw and what a screen reader announced were different pages (CEO Review 32). */
 .study-head .proj { font-size: clamp(34px, 4vw, 50px); margin-bottom: 14px; }
 .study-head .study-intro { margin-top: 24px; max-width: var(--measure); }
-/* The study headlines are full sentences of 20 to 30 words. Shrikhand is a display face with one
-   weight and no small sizes in it; at that length it stops being a headline and becomes a wall.
-   These stay in the grotesk, and the hero, the section heads, and the page titles carry the
-   display face instead. */
+/* The study headlines are full sentences of 20 to 30 words. At that length a display italic stops
+   being a headline and becomes a wall. These stay in the grotesk — and reset font-style with it,
+   or they inherit the italic from .h-lg above. The hero, the section heads and the page titles
+   carry the display face instead. */
 .study-head .h-lg {
   font-family: var(--sans);
-  font-weight: 500;
+  font-style: normal;
+  font-weight: 600;
   font-size: clamp(30px, 3.6vw, 44px);
   letter-spacing: -.02em;
   line-height: 1.12;

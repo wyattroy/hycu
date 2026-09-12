@@ -49,25 +49,27 @@ const TILE_SMALL = { w: 0.73, h: 0.73, d: 0.73 };  // index
 
 // ─── Palette — the site's own tokens, repeated here because WebGL cannot read CSS ──
 const C = {
-  bg: '#FFFFFF', // unused since the canvas went transparent; kept for the 2D fallback's white ground
-  ink: '#111112',
-  ink2: '#59595E',
-  ink3: '#9C9CA2',
-  rule: '#E8E8EB',
-  ruleMid: '#C9C9CE',
-  ruleStrong: '#9C9CA2',
-  face: '#FFFFFF',
-  faceSmall: '#F7F7F8',
-  accent: '#7A4FD6',
+  bg: '#E9E5D8', // the 2D fallback's ground; the WebGL canvas is transparent and takes the page's
+  ink: '#1A1E18',
+  ink2: '#55584E',
+  ink3: '#837F71',
+  rule: '#D4CDB9',
+  ruleMid: '#BCB49F',
+  ruleStrong: '#837F71',
+  // A tile's front face is the LIGHTEST stone, a shade above the ground, so it reads as a raised
+  // chip and the client name on it keeps 14.7:1. The capability hue is on the tile's sides.
+  face: '#F2EFE5',
+  faceSmall: '#EDE9DD',
+  accent: '#3E5D3A',
 };
 
 // The one place the site uses colour: a tile's four sides carry the hue of its primary
 // capability, and the quadrant captions on the back wall share it. Same values as style.css.
 export const CAP_COLORS = {
-  'User research':  '#D9622B',
-  'Strategy':       '#0A5CFF',
-  'Product design': '#1FA084',
-  'Systems design': '#7A4FD6',
+  'User research':  '#B3862F',
+  'Strategy':       '#33607F',
+  'Product design': '#4F7245',
+  'Systems design': '#7A4258',
 };
 const capColor = (p) => CAP_COLORS[(p.capabilities || [])[0]] || C.ruleMid;
 
@@ -1083,14 +1085,14 @@ export function initScatter2D(projects, { onSelect } = {}) {
   const svg = [`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Work arranged by understand versus make, and product versus idea">`];
   svg.push(`<line x1="${W / 2}" y1="${pad - 30}" x2="${W / 2}" y2="${H - pad + 30}" stroke="${C.ruleMid}"/>`);
   svg.push(`<line x1="${pad - 30}" y1="${H / 2}" x2="${W - pad + 30}" y2="${H / 2}" stroke="${C.ruleMid}"/>`);
-  const label = (x, y, t, anchor = 'middle') => `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Geist Mono, monospace" font-size="12" letter-spacing="2" fill="${C.ink3}">${t}</text>`;
+  const label = (x, y, t, anchor = 'middle') => `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="DM Mono, monospace" font-size="12" letter-spacing="2" fill="${C.ink3}">${t}</text>`;
   svg.push(label(pad - 40, H / 2 - 10, 'UNDERSTAND', 'start'), label(W - pad + 40, H / 2 - 10, 'MAKE', 'end'));
   svg.push(label(W / 2, pad - 40, 'IDEA'), label(W / 2, H - pad + 50, 'PRODUCT'));
   for (const p of projects) {
     const r = (p.selected ? 14 : 7) + p.axes.reach * 10;
     svg.push(`<g class="s2d-node" data-id="${esc(p.id)}" style="cursor:pointer">` +
       `<circle cx="${sx(p.axes.make).toFixed(1)}" cy="${sy(p.axes.idea).toFixed(1)}" r="${r.toFixed(1)}" fill="${capColor(p)}" fill-opacity="${p.selected ? 1 : 0.55}"/>` +
-      `<text x="${(sx(p.axes.make) + r + 8).toFixed(1)}" y="${(sy(p.axes.idea) + 4).toFixed(1)}" font-family="Geist, sans-serif" font-size="14" fill="${C.ink2}">${esc(p.name)}</text>` +
+      `<text x="${(sx(p.axes.make) + r + 8).toFixed(1)}" y="${(sy(p.axes.idea) + 4).toFixed(1)}" font-family="Hanken Grotesk, sans-serif" font-size="14" fill="${C.ink2}">${esc(p.name)}</text>` +
       `<title>${esc(p.client)} — ${esc(p.name)}</title></g>`);
   }
   svg.push('</svg>');
