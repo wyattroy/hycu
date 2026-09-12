@@ -167,10 +167,10 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -.02em; line-height: 1.12; margin
 .prose h3 { margin: 1.8em 0 .5em; }
 .prose ul { padding-left: 1.2em; margin: 0 0 1.15em; }
 .prose li { margin-bottom: .35em; }
-section.band { padding: clamp(96px, 12vw, 200px) 0; border-top: 1px solid var(--rule); }
+section.band { padding: clamp(48px, 6vw, 100px) 0; border-top: 1px solid var(--rule); }
 section.band.flush { border-top: 0; }
-#hero + .band { padding-top: clamp(40px, 5vw, 72px); } /* no tall pause between the graph and What we do */
-.band-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: clamp(40px, 5vw, 72px); }
+#hero + .band { padding-top: clamp(20px, 2.5vw, 36px); } /* no tall pause between the graph and What we do */
+.band-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: clamp(20px, 2.5vw, 36px); }
 .band-head .eyebrow { margin: 0; }
 .link { border-bottom: 1px solid var(--rule-mid); transition: border-color var(--t-fast), color var(--t-fast); }
 .link:hover { color: var(--accent); border-color: var(--accent); }
@@ -311,10 +311,11 @@ main.has-hero { padding-top: 0; }
    own wherever they fit. Calibrated to THAT STRING at THAT SIZE — change the headline copy or either
    clamp and re-measure. */
 @container (min-width: 470px) { .br-desk { display: inline; } }
-/* The two emphasised words take the ACCENT, not a capability colour. The four capability colours
-   are data on this site — a dot, a bar, a cube — and borrowing one for emphasis makes the headline
-   look like it is naming a capability. Cypress reads at 5.88:1 on the stone. */
-.hero-text .hl { color: var(--accent); }
+/* The two emphasised words are blue (Wyatt, 2026-09-12). Deliberately NOT the strategy slate
+   #33607f: the four capability colours are data on this site — a dot, a bar, a cube — and borrowing
+   one for emphasis makes the headline look like it is naming a capability. This blue is deeper and
+   more saturated than the slate, and reads at 6.60:1 on the stone. */
+.hero-text .hl { color: #1f4e8c; }
 .hero-text .lede { margin-bottom: 22px; }
 .hero-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .hero-controls button {
@@ -334,7 +335,7 @@ main.has-hero { padding-top: 0; }
   .graph-stage { position: relative; height: calc(75vw + 5px); min-height: 0; overflow: hidden; }
   .graph-stage #graph-canvas, .graph-stage #graph-2d, .graph-stage #axis-labels { height: 200vw; }
   .axis-label.helper { display: none; }
-  .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 6px var(--gutter) 40px; pointer-events: auto; }
+  .hero-copy { position: static; flex-direction: column; align-items: flex-start; padding: 6px var(--gutter) 20px; pointer-events: auto; }
   /* align-items: flex-start sizes a flex item by its content, and the headline's container query
      needs its width from the outside — without this the container measures 0 and the type falls to
      its floor. Stretch gives it the column's real width. */
@@ -352,7 +353,7 @@ main.has-hero { padding-top: 0; }
 /* ── Selected work ──────────────────────────────────────────────────────── */
 .work-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(40px, 7vw, 120px); row-gap: 0; }
 @media (max-width: 800px) { .work-list { grid-template-columns: 1fr; } }
-.work-item { display: block; padding: 36px 0 56px; border-top: 1px solid var(--rule); }
+.work-item { display: block; padding: 18px 0 28px; border-top: 1px solid var(--rule); }
 .work-item .eyebrow { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .work-item .eyebrow .year { font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-2); white-space: nowrap; }
 .work-item .proj { font-size: clamp(25px, 2.5vw, 31px); margin-bottom: 10px; transition: color var(--t-fast); }
@@ -431,14 +432,14 @@ main.has-hero { padding-top: 0; }
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 footer {
   border-top: 1px solid var(--rule);
-  padding: 48px 0 64px;
+  padding: 24px 0 32px;
   font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-3);
 }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; }
 footer a:hover { color: var(--ink); }
 
 /* ── Study pages ────────────────────────────────────────────────────────── */
-.study-head { padding-top: clamp(80px, 11vw, 176px); padding-bottom: clamp(56px, 7vw, 96px); }
+.study-head { padding-top: clamp(40px, 5.5vw, 88px); padding-bottom: clamp(28px, 3.5vw, 48px); }
 .study-head .eyebrow { margin-bottom: 28px; }
 /* A study head is h1 → h2 → body (Wyatt, 2026-09-08). The project name IS the page's heading and
    sets largest; the sentence under it is the byline, an h2 in the grotesk; the paragraph under that
@@ -459,7 +460,7 @@ footer a:hover { color: var(--ink); }
   letter-spacing: -.02em;
   line-height: 1.12;
 }
-.study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(96px, 12vw, 200px); }
+.study-body { display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); gap: 56px clamp(56px, 9vw, 160px); align-items: start; padding-bottom: clamp(48px, 6vw, 100px); }
 @media (max-width: 860px) { .study-body { grid-template-columns: 1fr; } .study-rail { order: -1; } }
 /* The rail sticks only in the two-column layout, where it has a column of its own to stick in: its
    grid area is as tall as the article beside it, so it slides 1703px on Pour at 1440px wide and
@@ -491,7 +492,7 @@ footer a:hover { color: var(--ink); }
 .rail li { padding: 14px 0; border-top: 1px solid var(--rule); display: grid; gap: 4px; }
 .rail li:last-child { border-bottom: 1px solid var(--rule); }
 .rail .k { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
-.beat { margin-top: clamp(56px, 7vw, 96px); }
+.beat { margin-top: clamp(28px, 3.5vw, 48px); }
 .beat:first-child { margin-top: 0; }
 .beat .eyebrow { margin-bottom: 14px; }
 .beat h2 { margin: 0 0 18px; }
@@ -501,11 +502,11 @@ footer a:hover { color: var(--ink); }
 .figure { padding-top: 14px; border-top: 1px solid var(--rule); }
 .figure .n { font-size: clamp(30px, 3vw, 40px); font-weight: 500; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
 .figure .l { display: block; margin-top: 8px; font-size: 14px; color: var(--ink-2); }
-.study-next { border-top: 1px solid var(--rule); padding-top: 56px; padding-bottom: clamp(96px, 12vw, 176px); }
+.study-next { border-top: 1px solid var(--rule); padding-top: 28px; padding-bottom: clamp(48px, 6vw, 88px); }
 .study-next a { display: inline-block; margin-top: 10px; }
 
 /* ── Studio page ────────────────────────────────────────────────────────── */
-.studio-hero { padding-top: clamp(80px, 11vw, 176px); padding-bottom: clamp(64px, 8vw, 120px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: center; }
+.studio-hero { padding-top: clamp(40px, 5.5vw, 88px); padding-bottom: clamp(32px, 4vw, 60px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: center; }
 @media (max-width: 860px) { .studio-hero { grid-template-columns: 1fr; } }
 .tesseract { width: min(100%, 360px); aspect-ratio: 1; display: block; margin: 0 auto; color: var(--ink); }
 .statement .tesseract { width: min(100%, 260px); margin: 8px 0 0; }
@@ -519,7 +520,7 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 560px) { .not-list li { grid-template-columns: 1fr; } }
 
 /* ── Contact page ───────────────────────────────────────────────────────── */
-.contact-single { padding-bottom: clamp(96px, 12vw, 200px); }
+.contact-single { padding-bottom: clamp(48px, 6vw, 100px); }
 .contact-single #write { max-width: var(--measure); }
 .field { display: grid; gap: 8px; margin-bottom: 22px; }
 .field label { font-size: 14px; font-weight: 500; color: var(--ink-2); }
