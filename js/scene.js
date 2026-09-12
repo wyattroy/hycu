@@ -161,10 +161,13 @@ export const DRIFT = {
   reachMs: 13000,
   tiltDeg: 2.6,         // how far a cube rolls as it goes
   tiltMs: 17000,
-  phaseSpread: 0.87,    // 0 = the eight move in lockstep, 1 = evenly spread around the tour
+  phaseSpread: 0.87,    // 0 = the eight set off together, 1 = their first crossings are spread
+                        // across a whole leg. It delays each cube's start; it never displaces one
   tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
   clearance: 1.1,       // how far apart in depth two cubes must be before they stop caring, as a
                         // multiple of a cube's own depth. 1.0 is faces just touching
+  yieldRate: 2,         // the FASTEST a cube may give way, in its own widths per second. This is
+                        // the ceiling that keeps the yield gentle; see the note where it is used
   settleInMs: 2600,     // cubes appear exactly on their data point, then set off on the tour
   holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
 };
@@ -462,6 +465,7 @@ export function initScene(projects, { onSelect } = {}) {
     return (Z_FAR + halfD) + p.axes.reach * ((Z_NEAR - Z_FAR) - 2 * halfD);
   };
 
+  const yieldStep = new THREE.Vector3();
   const tiles = [];
   const startedAt = performance.now();
   const ordered = [...projects].sort((a, b) => b.axes.reach - a.axes.reach); // nearest first
@@ -548,12 +552,28 @@ export function initScene(projects, { onSelect } = {}) {
   // periods, so two cubes resting at the same moment are still not doing the same thing.
   const tempoOf = (u) => 1 + u.tempoSeed * 2 * DRIFT.tempoVariance;
   function tourPoint(u) {
-    const phase = u.phaseSeed * DRIFT.phaseSpread;
+    const phase = u.phaseSeed;                           // seeds the sway and the roll, below
     const n = u.quads.length;
     let x = u.ax, y = u.ay, crossing = 0;
     if (n > 0) {
       const leg = Math.max(DRIFT.travelMs + DRIFT.dwellMs, 1);
-      const t = u.clock / (leg * n) + phase;
+      // THE EIGHT ARE SPREAD BY A LATE START, NOT BY A PHASE OFFSET, and the difference is the
+      // whole of what a visitor sees in the first three seconds. `phaseSpread` used to shift each
+      // cube's POSITION IN THE TOUR, so at clock zero most of them were already mid-journey — and
+      // the settle-in then dragged each one from its data point to wherever its tour had got to,
+      // inside settleInMs. A crossing that takes 18s, done in 2.6s: up to seven times cruising
+      // speed, every cube at once, on load. Wyatt caught it, 2026-09-12: *"within the first couple
+      // seconds, all of the cubes seem to move more quickly than usual ... i want them to always
+      // be moving gently."*
+      //
+      // Delaying the clock instead means clock zero is the start of a cube's dwell AT HOME, so
+      // every cube opens parked exactly where the data puts it and simply waits its turn. The
+      // long-run spread is identical — after the first leg the eight are distributed the same way
+      // — but nothing ever moves faster than a crossing, because everything IS a crossing.
+      //
+      // KEEP settleInMs BELOW dwellMs. The ramp then finishes while a cube is still parked, so it
+      // only ever eases in the sway, and can never attenuate a crossing and let it snap back.
+      const t = Math.max(0, u.clock - u.phaseSeed * DRIFT.phaseSpread * leg) / (leg * n);
       const w = (t - Math.floor(t)) * n;
       const i = Math.floor(w);
       const local = (w - i) * leg;                       // ms into this leg
@@ -604,6 +624,7 @@ export function initScene(projects, { onSelect } = {}) {
   //
   // Note the yield is a target, eased in through `push` below, and its weight falls back to nought
   // before the crossing ends — so a cube lands exactly where it was going, every time.
+  const REST_YIELD = 0.15;               // a resting cube's share, when nothing else can resolve it
   function yieldThroughReach() {
     for (const m of tiles) m.userData.pushTo.set(0, 0, 0);
     if (DRIFT.clearance <= 0) return;
@@ -618,8 +639,17 @@ export function initScene(projects, { onSelect } = {}) {
         // Solids only overlap when all three axes do. Clear of any one of them and there is
         // nothing to negotiate, however close they look on the glass.
         if (Math.abs(dx) >= hw || Math.abs(dy) >= hh || Math.abs(dz) >= hd) continue;
-        const wa = a.crossing, wb = b.crossing, total = wa + wb;
-        if (total <= 1e-4) continue;          // both have arrived: leave the data alone
+        // A TRAVELLING CUBE GIVES WAY FIRST, but a resting one is not immovable — it keeps a small
+        // floor of its own. Two resting cubes CAN collide, which an earlier note here denied: with
+        // Teaching Forgiveness and What They're Buying both visiting Strategy, their stops sit
+        // 0.44 apart in x and 1.43 in depth, and a cube is 1.80 either way. They overlap standing
+        // still. It went unseen because the old phase offsets never put those two at those stops
+        // at the same moment; staggering the START instead, which is what made the opening gentle,
+        // brought them together. With the floor, a traveller meeting a resting cube still takes
+        // roughly six-sevenths of the correction, and two resting cubes share it evenly rather
+        // than sitting inside one another for the whole of a dwell.
+        const wa = Math.max(a.crossing, REST_YIELD), wb = Math.max(b.crossing, REST_YIELD);
+        const total = wa + wb;
         const need = hd - Math.abs(dz);
         const dir = dz >= 0 ? 1 : -1;         // whichever is already nearer keeps coming forward
         a.pushTo.z -= need * (wa / total) * dir;
@@ -907,15 +937,28 @@ export function initScene(projects, { onSelect } = {}) {
     yieldThroughReach();
     tiles.forEach((mesh) => {
       const u = mesh.userData;
-      // Giving way is PROMPT; coming back is leisurely. One easing rate could not do both: at the
-      // gentle rate a cube on a phone, where cubes are drawn double size and close on each other
-      // fast, was still arriving at the yield after the overlap had already happened (a residual
-      // 25% intersection that more `clearance` did not fix, because it was lag, not margin). At
-      // the prompt rate in both directions, a cube snaps back the instant it is clear, which reads
-      // as a flinch. So: 0.45 while the yield is growing, 0.14 while it decays — step aside
-      // quickly, drift back slowly, which is also what the corridor it is imitating looks like.
+      // Giving way is PROMPT; coming back is leisurely — 0.45 while the yield grows, 0.14 while it
+      // decays. One rate could not do both: at the gentle rate a phone cube, drawn double size and
+      // closing fast, reached the yield after the overlap had already happened (lag, not margin —
+      // more `clearance` did not help). At the prompt rate in both directions it snaps back the
+      // instant it is clear, which reads as a flinch.
+      //
+      // AND THE WHOLE THING IS SPEED-CAPPED, because prompt easing alone produced a snap. Measured
+      // per frame over 90 seconds, the tour itself never exceeds 0.97 world units a second, and the
+      // yield was reaching 20 — eleven times faster than anything else on screen, which is exactly
+      // the fault Wyatt caught at load: *"i want them to always be moving gently."* Gentle is not a
+      // property of one mechanism, it is a ceiling that every mechanism has to sit under.
+      //
+      // The cap is in CUBE WIDTHS per second, so a phone, where cubes are larger and close on each
+      // other faster, is allowed to give way proportionally faster — which is the whole reason the
+      // yield needed to be prompt in the first place.
       const giving = u.pushTo.lengthSq() > u.push.lengthSq();
-      u.push.lerp(u.pushTo, giving ? frameRateAdjusted(0.45, dt) : fade);
+      const step = yieldStep.copy(u.pushTo).sub(u.push)
+        .multiplyScalar(giving ? frameRateAdjusted(0.45, dt) : fade);
+      const ceiling = DRIFT.yieldRate * TILE.w * tileScale() * (dt / 1000);
+      const len = step.length();
+      if (len > ceiling && len > 0) step.multiplyScalar(ceiling / len);
+      u.push.add(step);
       mesh.position.set(u.want.x, u.want.y, clampZ(u.project, u.want.z + u.push.z));
     });
 

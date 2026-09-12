@@ -4,6 +4,38 @@
 
 ---
 
+## 2026-09-12 — Gentle is a ceiling, not a setting
+
+**Nothing on the graph may move faster than the tour itself.** Wyatt, 2026-09-12: *"within the
+first couple seconds, all of the cubes seem to move more quickly than usual to a new position ...
+i want them to always be moving gently."* He was right, and there turned out to be two separate
+breaches, neither of them intentional.
+
+**The opening lurch: the eight are staggered by a LATE START, never by a phase offset.**
+`phaseSpread` used to shift each cube's POSITION IN THE TOUR, so at clock zero most of them were
+already mid-journey, and the settle-in then dragged each from its data point to wherever its tour
+had reached — inside `settleInMs`. A crossing worth 18 seconds, done in 2.6: **up to seven times
+cruising speed, every cube at once, on load.** Delaying the clock instead means clock zero is the
+start of a cube's dwell at home, so every cube opens parked exactly where the data puts it and
+waits its turn. The long-run spread is identical. **Keep `settleInMs` below `dwellMs`** — the ramp
+then finishes while a cube is still parked, and can never attenuate a crossing and let it snap.
+
+**The yield snap: giving way is speed-capped, at `yieldRate` cube-widths a second.** Measured per
+frame, the tour never exceeds 0.97 world units a second and the yield was reaching **20** — the
+prompt 0.45 ease-in that had been added to cure the yield's lag. Easing shapes the movement;
+`yieldRate` is the ceiling on it. It is in cube widths, so a phone, where cubes are larger and
+close faster, may yield proportionally faster. After: 3.7 u/s, and the opening peaks at **0.60× of
+cruising speed** — the first seconds are now gentler than the steady state.
+
+**And a correction to the entry below: TWO RESTING CUBES CAN COLLIDE.** It claimed none ever did,
+on a measurement that was true only of the old phase offsets. Teaching Forgiveness and What They're
+Buying both rest in Strategy, 0.44 apart in x and 1.43 in depth, with cubes 1.80 either way — they
+overlap standing still, and staggering the start brought them together for the first time. So a
+resting cube is not immovable: it keeps a floor of 0.15 against a traveller's 1.0, which leaves a
+traveller taking six-sevenths of any correction it is involved in, and lets two resting cubes share
+one evenly rather than sitting inside each other for a whole dwell. **The rule is "a traveller
+gives way FIRST", not "a resting cube never moves."**
+
 ## 2026-09-12 — A cube BEHIND another is fine; a cube INSIDE another is not
 
 **Occlusion is depth and the reader pivots past it. Interpenetration is true from every angle, and
@@ -13,9 +45,10 @@ substantially twenty to ninety percent inside of another cube, and that is somet
 wanna have happen."* Measured before the fix, over three minutes of the real tour: **12% of frames
 had a pair more than a fifth inside another, worst case 56% of a whole cube.**
 
-**The rule: A CUBE THAT IS TRAVELLING GIVES WAY. A CUBE THAT HAS ARRIVED NEVER MOVES.** The number
-that made this possible: of all those interpenetrations, **not one involved two resting cubes.**
-Homes and reflections are already clear of each other — only paths collide. So giving way never
+**The rule: A CUBE THAT IS TRAVELLING GIVES WAY FIRST.** At the time this was written, not one of
+those interpenetrations involved two resting cubes, which made it look as though homes and
+reflections were always clear of each other and only paths ever collided. **That turned out to be
+an artifact of the phasing, not a property of the geometry — see the entry above.** So giving way never
 compromises a claim about the work; it only negotiates transit. A cube's right to yield rises from
 nought as it leaves a stop, peaks mid-crossing, and returns to nought before it arrives, so it
 always lands exactly on the position its capabilities earned it.
