@@ -41,15 +41,23 @@ placeholder shapes instead of numerals. Three ways out:
 - Leave the wordmark in Geist, which is what Wyatt already chose once — DECISIONS.md, 2026-09-08:
   "change the logo font from shrikhand back to whatever it was before — i liked that better."
 
-**Recommended: ship with the EB Garamond wordmark and swap to Arsenica the day the licence is
-bought.** The wordmark is a single CSS rule, so the swap is a two-minute change later, and nothing
-else in this restyle waits on it.
+**Recommended: buy the licence.** Wyatt has now named the Arsenica wordmark twice — in the type
+proof he sent, and again in the choices he gave another session on 2026-09-12 ("keep the logo font
+in arsenica"). It is the one element he has asked for by name, so substituting it is the wrong
+default. If he would rather not wait on a purchase, ship the wordmark in EB Garamond italic and swap
+it the day the licence lands: it is a single CSS rule, and nothing else in this restyle waits on it.
 
 **2. The Aura background puts colour on the ground, which two of Wyatt's own rulings argue about.**
 The Restraint direction (DECISIONS.md, 2026-09-02) said the ground carries no colour; the capability
 colours are "the only colour on the site". Then on 2026-09-09 he ruled the light should come from
 behind the headline: "i don't want the top of the page to be the lightest area… i want the lightness
 to come from behind the words to draw your eye."
+
+**This also removes a freedom.** The Aura is painted from the four capability colours — systems at
+88%/4%, research 6%/22%, product 74%/46%, strategy 20%/82% — so with this ground those four *are*
+the background. They can no longer be picked as four dots that merely read apart from each other;
+they have to work as four washes that sit together. Both Mediterranean palettes in the mixer were
+built that way. Retuning any one capability colour after this ships changes the ground.
 
 **Recommended: keep the Aura, but only across the first screen, and let it fade to flat limestone
 below the fold.** That is the version that satisfies the 2026-09-09 ruling — colour and light
@@ -59,10 +67,19 @@ flat limestone is one line less.
 
 ### The work, in order
 
-**1. Log the ruling first.** Append to `.claude/memory/DECISIONS.md`. This overturns two entries
-that are still current: the white-bloom-over-silver ground (2026-09-09) and Shrikhand as the display
-face (2026-09-08, "font looks good, ship it"). A session that reads DECISIONS.md after this lands
-must not see the old rulings as live.
+**1. Log the ruling first.** Append to `.claude/memory/DECISIONS.md`. This overturns three entries
+that are still current: the "Restraint" direction at `DECISIONS.md:427-431` (2026-09-02 — "white,
+near-black, Geist + Geist Mono… one system-blue accent for interaction only"), the
+white-bloom-over-silver ground (2026-09-09), and Shrikhand as the display face (2026-09-08, "font
+looks good, ship it"). A session that reads DECISIONS.md after this lands must not see the old
+rulings as live.
+
+Quote one clause of Restraint in the new entry, because it argues *for* the change rather than
+against it: the direction also required that the site "must not read as default-AI design". In
+September 2026 the default-AI look is warm off-white — Anthropic, Cursor, Perplexity, Mistral and
+Granola all sit within a few points of `#FAF9F5`. Limestone is about ten points below that band, and
+its accent is green rather than clay-orange. Restraint's ground and faces are being overturned; that
+clause is being kept.
 
 **2. Fonts, on all thirteen pages.** Every page carries the same `<link>`. Replace:
 
@@ -172,6 +189,19 @@ geometry and its three axes, what the four capabilities mean, the oral-care clie
 ---
 
 ## Waiting on a ruling from Wyatt
+
+**Limestone & Cypress, or Whitewash & Aegean?** Wyatt told this session to plan the restyle with
+Limestone & Cypress, so that is what the plan above is built on. Reported second-hand the same day
+and not confirmed live: he told another session his pick was Ivory & Clay but that the swatch looked
+"too close to anthropic colors… it can still be earthy mediterrean tones but just like different
+ones", and that session's recommendation was Whitewash & Aegean — a limewashed grey-white ground
+with a deep Aegean blue accent, on the argument that moving the accent from warm to cool is what
+actually breaks the resemblance, whichever way the ground is tuned.
+
+Both are in the mixer. The real difference: Limestone commits to a warm stone ground with a green
+accent; Whitewash keeps a near-white ground and spends its whole distinction on the blue. **One line
+from him settles it, and the answer only changes the token values — every step of the plan above is
+identical either way.**
 
 **The two rails disagree about unnamed clients.** The Pour study's rail says the facility is "not
 named"; the oral-care study's says "unnamed by agreement". Both are true, but a reader who opens
