@@ -103,9 +103,15 @@ const ENTRY_DELAY_MS = 350;
 const LABEL_MARGIN = 72;
 const DEPTH_LABEL_ANGLE = (6 * Math.PI) / 180;
 
-// Idle drift: a very slow yaw so the depth is visible at rest without anyone touching it.
-const DRIFT_AMPL = 0.035;
-const DRIFT_PERIOD_MS = 14000;
+// Idle swivel: until someone touches the graph, the camera eases from its starting view round to a
+// view from the other side of the volume, and back. Wyatt, 2026-09-12, with a screenshot of the far
+// end: "goes between its starting point and here ... keep the movement speed slow and gradual".
+// The far end was matched to that screenshot in a browser. The period is set so the fastest moment
+// of the swing — the middle — turns at the rate the old ±2° drift did, about 0.9° a second: a much
+// longer swing at the same speed, so 70 seconds each way.
+const SWIVEL_THETA = 0.4;
+const SWIVEL_PHI = 0;
+const SWIVEL_PERIOD_MS = 140000;
 
 // ─── Wander: a cube visits every quadrant its project drew techniques from ────
 // Wyatt, 2026-09-12: *"The intention behind this whole movement piece is to show that each project
@@ -161,7 +167,7 @@ export const DRIFT = {
   reachAmpl: 0.07,      // idle drift along reach (toward the viewer and away), as a fraction of
                         // half the reach span
   reachMs: 13000,
-  tiltDeg: 2.6,         // how far a cube rolls as it goes
+  tiltDeg: 0,           // how far a cube rolls as it goes. 0 by ruling: any roll made them look wonky
   tiltMs: 17000,
   phaseSpread: 0.87,    // 0 = the eight set off together, 1 = their first crossings are spread
                         // across a whole leg. It delays each cube's start; it never displaces one
@@ -746,6 +752,23 @@ export function initScene(projects, { onSelect } = {}) {
   const phi = makeSpring(START_PHI);
   let depthLabelOpacity = 0;
   let hasInteracted = false;
+  let swivelStart = startedAt;
+
+  // How far the idle swivel has carried the camera off the resting view, as [theta, phi]. Starts at
+  // zero with zero speed, so the swing eases out of the start and into the far end.
+  function swivelAt(now) {
+    if (hasInteracted || reduceMotion) return [0, 0];
+    const k = (1 - Math.cos(((now - swivelStart) / SWIVEL_PERIOD_MS) * TAU)) / 2;
+    return [(SWIVEL_THETA - START_THETA) * k, (SWIVEL_PHI - START_PHI) * k];
+  }
+  // The first touch ends the swivel WHERE IT IS. The old drift was ±2° and simply dropped to zero;
+  // dropping a swing this wide would snap the view back the moment someone reached for it.
+  function stopSwivel() {
+    const [t, p] = swivelAt(performance.now());
+    theta.current += t; theta.target += t;
+    phi.current += p; phi.target += p;
+    hasInteracted = true;
+  }
 
   // Rotated labels flip 180° so they read the right way up. Near ±90° a plain threshold flips
   // every frame and the label flickers; keep the last decision until the angle clearly crosses.
@@ -764,7 +787,7 @@ export function initScene(projects, { onSelect } = {}) {
   // A tap opens a study only when it goes down and comes up on the same tile: a finger that
   // starts on the grid and drifts onto a tile while orbiting was opening studies by accident.
   let dragging = false, moved = 0, lastX = 0, lastY = 0, downHit = null;
-  function pointerDown(x, y) { hasInteracted = true; dragging = true; moved = 0; lastX = x; lastY = y; downHit = pickAt(x, y); }
+  function pointerDown(x, y) { stopSwivel(); dragging = true; moved = 0; lastX = x; lastY = y; downHit = pickAt(x, y); }
   function pointerMove(x, y) {
     if (!dragging) return;
     const dx = x - lastX, dy = y - lastY;
@@ -953,10 +976,10 @@ export function initScene(projects, { onSelect } = {}) {
     tickSpring(theta, DRAG_STIFFNESS, DRAG_DAMPING);
     tickSpring(phi, DRAG_STIFFNESS, DRAG_DAMPING);
 
-    const drift = (!hasInteracted && !reduceMotion) ? Math.sin((now - startedAt) / DRIFT_PERIOD_MS * Math.PI * 2) * DRIFT_AMPL : 0;
+    const [swivelTheta, swivelPhi] = swivelAt(now);
     const dist = fitDistance() * (CAM_ZOOM_MIN + zoom.current * (CAM_ZOOM_MAX - CAM_ZOOM_MIN));
     const pos = new THREE.Vector3(0, 0, dist);
-    pos.applyQuaternion(new THREE.Quaternion().setFromEuler(new THREE.Euler(phi.current, theta.current + drift, 0, 'YXZ')));
+    pos.applyQuaternion(new THREE.Quaternion().setFromEuler(new THREE.Euler(phi.current + swivelPhi, theta.current + swivelTheta, 0, 'YXZ')));
     camera.position.copy(pos);
     camera.lookAt(CAM_TARGET);
     camera.updateMatrixWorld();
@@ -1076,7 +1099,7 @@ export function initScene(projects, { onSelect } = {}) {
     }
 
     // Depth labels appear only once the view is off-axis enough for depth to read.
-    const offAxis = Math.abs(theta.current + drift) + Math.abs(phi.current);
+    const offAxis = Math.abs(theta.current + swivelTheta) + Math.abs(phi.current + swivelPhi);
     const want = offAxis > DEPTH_LABEL_ANGLE ? 1 : 0;
     depthLabelOpacity += (want - depthLabelOpacity) * frameRateAdjusted(0.09, dt);
     const edgeX = R * 1.04, edgeY = -R * 1.04;
@@ -1144,9 +1167,9 @@ export function initScene(projects, { onSelect } = {}) {
         return { id: m.userData.project.id, left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
       });
     },
-    zoomIn() { hasInteracted = true; zoom.target = clamp(zoom.target - ZOOM_STEP, 0, 1); },
-    zoomOut() { hasInteracted = true; zoom.target = clamp(zoom.target + ZOOM_STEP, 0, 1); },
-    reset() { resetView(); hasInteracted = false; },
+    zoomIn() { stopSwivel(); zoom.target = clamp(zoom.target - ZOOM_STEP, 0, 1); },
+    zoomOut() { stopSwivel(); zoom.target = clamp(zoom.target + ZOOM_STEP, 0, 1); },
+    reset() { resetView(); hasInteracted = false; swivelStart = performance.now(); },
     dispose() {
       cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', updateRunning);
