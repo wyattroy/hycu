@@ -51,45 +51,31 @@ re: fonts frequently." The hard consequence: **nothing needing a paid licence ma
 and drawing a trial face into a PNG does not sidestep its licence — it is the same question in a
 different file format. Logged in `DECISIONS.md`.
 
-### Font costs, priced 2026-09-12 — the answer is $35, once
+### Settled: the wordmark is Gloock, and the total cost is nothing
 
-Every text face in the plan is **SIL OFL 1.1 and free**, confirmed by reading the actual licence
-file in Google's own `ofl/` tree, not by assuming: EB Garamond, Hanken Grotesk, DM Mono, and the
-three the site uses today (Geist, Geist Mono, Shrikhand). No fee, no pageview tiers, no domain
-limit, commercial use and logo use both permitted. **So changing your mind about type costs nothing,
-as long as the choices stay inside Google Fonts.**
+Wyatt chose Gloock on 2026-09-12, and `assets/wordmark.svg` is drawn from it. **Every face in the
+set is now free** — Gloock (SIL OFL) for the wordmark, EB Garamond, Hanken Grotesk and DM Mono (all
+SIL OFL) for the site. Confirmed by reading each licence file in Google's own `ofl/` tree, and
+Fontshare's licence separately, which states outright that wordmarks made with it may be registered
+as trademarks.
 
-Arsenica is the only paid item, and the licence that fits is not the expensive one:
+**The Zetafonts licence is not being bought.** For the record, had it been: the Logo licence at the
+solo tier is €29 / $35 one-time and perpetual, which is *cheaper* than a single desktop weight
+(€69), and it is what grants the right to outline the letters — outlining is a licensed act, not a
+way round the licence. Their standard Desktop and Web licences both exclude logo use explicitly, and
+the trial file cannot ship at all: the non-commercial terms forbid websites, and it has no digits.
+Buy direct rather than through MyFonts, which rents webfonts annually at $45/year and sells no logo
+licence.
 
-| What | Licence | Price | Note |
-|---|---|---|---|
-| Arsenica, one weight, as the drawn wordmark | **Logo**, "up to 3 employees" tier | **€29 / $35 one-time, perpetual** | What we need. Covers outlining the letters and showing the result on websites, print, packaging, signage and social |
-| Arsenica, one weight, as live web text | Web, up to 25k pageviews/month | €35 / $43 one-time | Not needed — the wordmark is an image, so no font file is served |
-| Both together | Logo + Web 25k | €64 / $77 one-time | Only if some page also sets live text in Arsenica |
-| Arsenica full family, 41 styles | Logo | €121 / $146 (30% off, live) | Not needed for a wordmark |
-| Arsenica Regular via MyFonts | Webfont | $45 **per year** | Avoid. MyFonts rents webfonts annually and sells no Logo licence at all — buy direct from Zetafonts |
+The one thing the money would have bought is contrast: Arsenica's thick-to-thin measures 13.7 and
+nothing free reaches it. Gloock is 5.9, the highest among the faces closest in shape; Fraunces at
+wght 400 with WONK on is 9.5 if that gap ever starts to matter.
 
-**Three things the EULA settles.** Zetafonts' standard Desktop and Web licences both *exclude* logo
-use explicitly — the Web terms say any other use "e.g., desktop, app, broadcast, server or logo
-design… requires a separate license". Outlining is not a loophole either, and their EULA is not
-silent about it: the Logo licence is what *grants* the right to "outline, customize, or adapt
-characters… solely to produce a non-editable, final logo artwork". And the trial file in the type
-proof cannot ship under any reading — the Non-Commercial terms forbid embedding in websites, and
-its digits are stripped.
-
-The saving grace: at the solo tier the Logo licence (€29) costs *less* than a single desktop weight
-(€69), and because no font file is served, it is the only thing that ever needs buying.
-
-**Recommendation: buy the €29 Logo licence and ship the Arsenica wordmark.** It is one-time and
-perpetual, it is the cheapest licence Zetafonts sells, and the wordmark is the element least likely
-to churn — the faces around it stay free and swappable. Ship the EB Garamond wordmark only if the
-site has to go live before the purchase clears; the swap is one file either way.
-
-**A note on "Timeless", the body face in the type proof: do not ship it.** The file embedded in that
-proof reports itself as "Timeless-Normal", version 1.0 dated 2002, with no designer, vendor or
-licence records of any kind — an orphan freeware file, and a flared humanist sans rather than URW's
-commercial Times-alike of the same name, so that foundry's $89.99 does not apply to it. It is not in
-this plan anyway: the body face is Hanken Grotesk, which is OFL.
+**A note on "Timeless" from the type proof: do not ship it.** It reports itself as
+"Timeless-Normal", version 1.0 dated 2002, with no designer, vendor or licence records of any kind —
+an orphan file, and a flared humanist sans rather than URW's commercial Times-alike of the same
+name, so that foundry's price does not apply to it. It is not in this plan; the body face is Hanken
+Grotesk.
 
 ### The work, in order
 

@@ -168,8 +168,30 @@ export const DRIFT = {
   tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
   clearance: 1.1,       // how far apart in depth two cubes must be before they stop caring, as a
                         // multiple of a cube's own depth. 1.0 is faces just touching
-  yieldRate: 2,         // the FASTEST a cube may give way, in its own widths per second. This is
-                        // the ceiling that keeps the yield gentle; see the note where it is used
+  approach: 1.4,        // where the negotiation STARTS, in the x/y plane, as a multiple of a
+                        // cube's own width. This is the number that stops the bumping: at 1.0 two
+                        // cubes begin to give way only once their boxes already touch, and no rate
+                        // under the gentle ceiling can open a gap by then. 1.4 opens the
+                        // conversation about 1.2 seconds early, and a correction takes 0.55.
+                        //
+                        // WIDER IS WORSE, which is not obvious. Measured on a phone: 1.4 leaves no
+                        // overlap at all, 1.75 leaves 1.1% of frames, 2.3 leaves 6.4%. Past about
+                        // 1.5 so many pairs are negotiating at once that the depth axis itself gets
+                        // crowded, and cubes given way to by one neighbour are pushed into the
+                        // space a third was using. Lead time is worth exactly as much as the
+                        // correction needs and no more
+  yieldRate: 0.4,       // the FASTEST a cube may give way, in its own widths per second — the
+                        // ceiling that keeps the yield gentle. It was 2 until 2026-09-12, which
+                        // measured as a peak of 2.12 widths a second: four times the tour's own
+                        // pace, and the reason giving way read as flinching rather than stepping
+                        // aside. Wyatt: *"the most important thing is that their movements always
+                        // seem intentional and intelligent and smooth and gentle."* At 0.4 nothing
+                        // on the graph exceeds 0.73, and the tour itself runs at about 0.54, so a
+                        // cube giving way now moves at the speed it travels at
+  yieldEase: 0.12,      // how eagerly a cube eases TOWARD the gap it owes (per frame, at 60fps).
+                        // Was 0.45, chosen when giving way had to be PROMPT because it started too
+                        // late to be anything else. Starting early instead (see `approach`) buys
+                        // the room to be slow, and slow is the point
   settleInMs: 2600,     // cubes appear exactly on their data point, then set off on the tour
   holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
 };
@@ -627,9 +649,22 @@ export function initScene(projects, { onSelect } = {}) {
   // Note the yield is a target, eased in through `push` below, and its weight falls back to nought
   // before the crossing ends — so a cube lands exactly where it was going, every time.
   const REST_YIELD = 0.15;               // a resting cube's share, when nothing else can resolve it
+  const PASSES = 4;                      // see the relaxation note below
   function yieldThroughReach() {
     for (const m of tiles) m.userData.pushTo.set(0, 0, 0);
     if (DRIFT.clearance <= 0) return;
+    // RELAXED, NOT SOLVED IN ONE PASS. Every pair is negotiated against the offsets the other pairs
+    // have already asked for, four times over, rather than once against the untouched paths.
+    //
+    // One pass was the other half of the bumping Wyatt reported. The pair maths read `want`, the
+    // position a cube would hold if nothing had given way — but what a cube actually occupies is
+    // want PLUS its push. So a cube that had stepped back for one neighbour was, as far as every
+    // other pair was concerned, still standing where it began: the solver could not see the hole it
+    // had just moved into. Measured, that shows up as a pair nobody negotiated: Pastry Pirates and
+    // ClaudeKit reached 35% inside one another on a desktop while both were busy giving way to
+    // someone else. Each pass here starts from the provisional positions, so by the last one the
+    // offsets are consistent with each other and a chain of three resolves as a chain.
+    for (let pass = 0; pass < PASSES; pass++) {
     for (let i = 0; i < tiles.length; i++) {
       for (let j = i + 1; j < tiles.length; j++) {
         const a = tiles[i].userData, b = tiles[j].userData;
@@ -637,10 +672,25 @@ export function initScene(projects, { onSelect } = {}) {
         const hw = ((sa.w + sb.w) / 2) * tileScale();
         const hh = ((sa.h + sb.h) / 2) * tileScale();
         const hd = ((sa.d + sb.d) / 2) * tileScale() * DRIFT.clearance;
-        const dx = b.want.x - a.want.x, dy = b.want.y - a.want.y, dz = b.want.z - a.want.z;
-        // Solids only overlap when all three axes do. Clear of any one of them and there is
-        // nothing to negotiate, however close they look on the glass.
-        if (Math.abs(dx) >= hw || Math.abs(dy) >= hh || Math.abs(dz) >= hd) continue;
+        // The plane is never pushed — giving way happens in depth only — so x and y come straight
+        // from `want`. Depth is read from where the pair PROVISIONALLY sits, this pass included.
+        const dx = b.want.x - a.want.x, dy = b.want.y - a.want.y;
+        const dz = (b.want.z + b.pushTo.z) - (a.want.z + a.pushTo.z);
+        const ex = Math.abs(dx), ey = Math.abs(dy), ez = Math.abs(dz);
+        // Solids only overlap when all three axes do — but waiting for all three is what made the
+        // cubes bump. The plane gate is therefore WIDER than a cube by DRIFT.approach, and what the
+        // pair owes each other in depth ramps with how far through that gate they have come:
+        // nothing at the outer edge, the full clearance by the time their boxes really do overlap
+        // in x and y. Both plane axes have to be closing for it to count; clear of either one and
+        // two solids cannot meet.
+        const mx = hw * Math.max(DRIFT.approach, 1), my = hh * Math.max(DRIFT.approach, 1);
+        if (ex >= mx || ey >= my) continue;
+        const closing = Math.min(
+          clamp((mx - ex) / Math.max(mx - hw, 1e-6), 0, 1),
+          clamp((my - ey) / Math.max(my - hh, 1e-6), 0, 1),
+        );
+        const owed = hd * closing;
+        if (ez >= owed) continue;
         // A TRAVELLING CUBE GIVES WAY FIRST, but a resting one is not immovable — it keeps a small
         // floor of its own. Two resting cubes CAN collide, which an earlier note here denied: with
         // Teaching Forgiveness and What They're Buying both visiting Strategy, their stops sit
@@ -652,11 +702,41 @@ export function initScene(projects, { onSelect } = {}) {
         // than sitting inside one another for the whole of a dwell.
         const wa = Math.max(a.crossing, REST_YIELD), wb = Math.max(b.crossing, REST_YIELD);
         const total = wa + wb;
-        const need = hd - Math.abs(dz);
+        const need = owed - ez;
+        // THE DIRECTION IS THE SIGN OF dz, EVERY FRAME, AND MUST STAY THAT WAY. It reads like
+        // frame-to-frame chatter worth smoothing, and smoothing it is a trap this file fell into on
+        // 2026-09-12 and measured: `need` is only the distance to `owed` if the push goes the way
+        // the pair is ALREADY leaning. Held over from an earlier frame, or chosen for any other
+        // reason — which way the box has room, say — the same magnitude pushed the other way closes
+        // the gap instead of opening it, and a locked direction then holds two cubes inside each
+        // other for a whole encounter. Interpenetration went from 11% of frames to 77%.
         const dir = dz >= 0 ? 1 : -1;         // whichever is already nearer keeps coming forward
-        a.pushTo.z -= need * (wa / total) * dir;
-        b.pushTo.z += need * (wb / total) * dir;
+        // AND IF ONE OF THEM IS AGAINST A WALL, THE OTHER TAKES ITS SHARE. The box is 12 units
+        // deep and a correction is about two, so there is room almost everywhere — but not for a
+        // cube already at the front: Teaching Forgiveness sits at reach 0.98, half a cube from the
+        // near face, and reach is the axis it is being asked to move along. Its share of the
+        // correction used to be handed to clampZ and silently dropped, which left exactly that pair
+        // 11% inside one another for the whole of every encounter, the single most persistent
+        // overlap on the graph.
+        //
+        // The share is capped at what each cube can actually travel and the shortfall goes to
+        // whichever has slack. Note this redistributes MAGNITUDE, never direction: pushed the other
+        // way, the same number closes the gap instead of opening it (see the note above).
+        const halfD = (u) => ((u.project.selected ? TILE : TILE_SMALL).d / 2) * tileScale();
+        const roomFor = (u, sign) => {
+          const at = u.want.z + u.pushTo.z;
+          return Math.max(0, sign > 0 ? (Z_NEAR - halfD(u)) - at : at - (Z_FAR + halfD(u)));
+        };
+        const roomA = roomFor(a, -dir), roomB = roomFor(b, dir);
+        let takeA = Math.min(need * (wa / total), roomA);
+        let takeB = Math.min(need * (wb / total), roomB);
+        let deficit = need - takeA - takeB;
+        if (deficit > 0) { const add = Math.min(deficit, roomB - takeB); takeB += add; deficit -= add; }
+        if (deficit > 0) { const add = Math.min(deficit, roomA - takeA); takeA += add; deficit -= add; }
+        a.pushTo.z -= takeA * dir;
+        b.pushTo.z += takeB * dir;
       }
+    }
     }
   }
 
@@ -939,11 +1019,16 @@ export function initScene(projects, { onSelect } = {}) {
     yieldThroughReach();
     tiles.forEach((mesh) => {
       const u = mesh.userData;
-      // Giving way is PROMPT; coming back is leisurely — 0.45 while the yield grows, 0.14 while it
-      // decays. One rate could not do both: at the gentle rate a phone cube, drawn double size and
-      // closing fast, reached the yield after the overlap had already happened (lag, not margin —
-      // more `clearance` did not help). At the prompt rate in both directions it snaps back the
-      // instant it is clear, which reads as a flinch.
+      // Giving way is now SLOW in both directions — DRIFT.yieldEase while the gap opens, 0.14
+      // while it closes. It used to be prompt (0.45) because it began too late to be anything
+      // else; the note here recorded that as unavoidable, *"lag, not margin — more clearance did
+      // not help"*, and it was right that clearance could not help. Clearance widens the depth
+      // gate, and depth is not the axis cubes approach along. Widening the PLANE gate instead
+      // (DRIFT.approach) starts the same correction over a second earlier, which is what buys the
+      // right to be gentle. Wyatt's ruling, 2026-09-12: *"It is okay if sometimes corners of them
+      // overlap, but the most important thing is that their movements always seem intentional and
+      // intelligent and smooth and gentle."* So the target is no longer zero overlap at any speed;
+      // it is the gentlest motion that keeps overlap to corners.
       //
       // AND THE WHOLE THING IS SPEED-CAPPED, because prompt easing alone produced a snap. Measured
       // per frame over 90 seconds, the tour itself never exceeds 0.97 world units a second, and the
@@ -956,7 +1041,7 @@ export function initScene(projects, { onSelect } = {}) {
       // yield needed to be prompt in the first place.
       const giving = u.pushTo.lengthSq() > u.push.lengthSq();
       const step = yieldStep.copy(u.pushTo).sub(u.push)
-        .multiplyScalar(giving ? frameRateAdjusted(0.45, dt) : fade);
+        .multiplyScalar(giving ? frameRateAdjusted(DRIFT.yieldEase, dt) : fade);
       const ceiling = DRIFT.yieldRate * TILE.w * tileScale() * (dt / 1000);
       const len = step.length();
       if (len > ceiling && len > 0) step.multiplyScalar(ceiling / len);
