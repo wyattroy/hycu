@@ -4,6 +4,37 @@
 
 ---
 
+## 2026-09-12 — One backlog, half the spacing, a wider swivel, blue emphasis, no roll
+
+Five rulings in one message, all the same afternoon.
+
+**One backlog.** *"combine both backlogs."* `BACKLOG.md` at the root is the only list; the
+engineering half that lived in `.claude/BACKLOG.md` under `HY-<n>` numbers is folded in as plain
+headings, and that file is gone. Items that were already done or overtaken were dropped rather than
+carried. This retires the "not the same list" line that used to open `BACKLOG.md`.
+
+**Section spacing is halved.** *"the padding is insane between sections. reduce it 50%."* Every
+vertical gap between blocks in `style.css` — bands, study heads and bodies, beats, the next-study
+link, the studio hero, the contact page, the footer, the Work list rows — is exactly half what it
+was, including both ends of each `clamp()`. Buttons, fields, nav and grid gutters are untouched: they
+are not space between sections. This overturns "the spacing, the margins" in the restyle plan's
+list of things that do not change.
+
+**The idle camera swivels from its starting view to the far side and back.** Wyatt sent a
+screenshot of the far end: *"goes between its starting point and here ... keep the movement speed
+slow and gradual."* The far end, matched in a browser, is theta 0.4 / phi 0 against the start's
+−0.3 / 0.14. The round trip takes 140 seconds, chosen so the fastest moment turns at the same rate
+the old ±2° drift did. A touch stops it where it is rather than snapping back.
+
+**The headline's "see" and "design" are blue**, `#1f4e8c`, 6.60:1 on the stone. Not the strategy
+slate — a capability colour used for emphasis reads as naming a capability. This replaces the
+restyle plan's cypress for those two words.
+
+**Cubes do not roll.** *"remove the cube tilt ... the cubes look wonky with it."* `DRIFT.tiltDeg` is
+0. It is one of the numbers he dialled in the tuner earlier the same day; this is him changing it.
+
+---
+
 ## 2026-09-12 — Gentleness outranks separation
 
 **A corner may overlap. Nothing may lurch.** Wyatt, 2026-09-12: *"The thing I care about most is
