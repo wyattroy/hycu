@@ -105,6 +105,55 @@ const DEPTH_LABEL_ANGLE = (6 * Math.PI) / 180;
 const DRIFT_AMPL = 0.035;
 const DRIFT_PERIOD_MS = 14000;
 
+// ─── Wander: a cube visits every capability its project used ──────────────────
+// A project is rarely one capability. Pastry Pirates is product design AND systems design; Cited
+// by AI is strategy AND user research. `capabilities` in data/projects.json has always recorded
+// that — it is an ordered list — but the graph only ever drew the first entry, because a point can
+// only be in one place. So the cube moves: it tours one anchor per capability in its own list,
+// easing between them and resting at each, with a slower sway, reach-bob and tilt running
+// underneath so a cube between anchors is never dead still.
+//
+// THE FIRST CAPABILITY IS STILL THE TRUTH. Its anchor sits all but on the data point, and
+// `crossMidline` is off, which clamps every anchor to the primary's own quadrant — so the quadrant
+// a cube reads as, and the colour it carries, are still the ones scripts/check.mjs asserts against
+// the data. This is a reading of the data at runtime, never a second source of it.
+//
+// Every number here is live: assign to window.__drift and the next frame uses it. That is how the
+// tuner page dials it, and what the numbers below were dialled to.
+export const DRIFT = {
+  enabled: true,        // master switch; prefers-reduced-motion turns it off regardless
+  speed: 1,             // multiplies every clock at once — the one dial to slow the whole thing
+  travelMs: 9000,       // time gliding from one capability's anchor to the next
+  dwellMs: 5200,        // time resting at an anchor before it sets off again
+  ease: 2.6,            // 1 is linear; higher softens both ends of the glide
+  primaryPull: 0.10,    // how far the FIRST capability's anchor leaves the data point (0 = on it)
+  secondaryPull: 0.46,  // how far the others pull toward their own quadrant's caption
+  maxExcursion: 2.0,    // hard cap in world units on how far any anchor can sit from home
+  crossMidline: false,  // let an anchor cross into another quadrant. Off: the colour never lies
+  sway: 0.09,           // idle breath in the x/y plane, world units
+  swayMs: 11000,
+  reachAmpl: 0.42,      // idle drift along reach (toward and away from the viewer), world units
+  reachMs: 13000,
+  tiltDeg: 2.6,         // how far a cube rolls as it goes
+  tiltMs: 17000,
+  phaseSpread: 1,       // 0 = the eight move in lockstep, 1 = evenly spread around the tour
+  tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
+  separation: 0.92,     // keep cubes this many half-widths apart (0 turns the push off)
+  separationPush: 0.55, // how hard a pair shoves apart when they do meet
+  settleInMs: 2600,     // cubes appear exactly on their data point, then ease out into the tour
+  holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
+};
+if (typeof window !== 'undefined') window.__drift = DRIFT;
+
+const TAU = Math.PI * 2;
+// 1 is linear, 2 is smoothstep, higher is softer still — one dial across the whole family.
+const easeShape = (t, p) => {
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  const a = Math.pow(t, p), b = Math.pow(1 - t, p);
+  return a / (a + b);
+};
+
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const makeSpring = (v = 0) => ({ current: v, target: v, velocity: 0 });
 function tickSpring(s, k, d) {
@@ -257,6 +306,10 @@ const QUADRANTS = [
   { x:  1, y: -1, label: 'Product design' },
   { x:  1, y:  1, label: 'Systems design' },
 ];
+
+// A capability's home corner, in the same axis space as a tile's ax/ay. The captions on the back
+// wall sit at the middle of each quadrant, so that is where a cube heads when it goes to visit one.
+const capQuadrant = (cap) => QUADRANTS.find((q) => q.label === cap) || null;
 
 // The scaffold is the site's rule greys taken 20% darker (Wyatt, 2026-09-09: the graph lines were
 // "getting lost on the background"). The tokens themselves are left alone — the same greys are
@@ -418,10 +471,109 @@ export function initScene(projects, { onSelect } = {}) {
       project: p, face, edge, back, outline, ax, ay,
       scale: makeSpring(1), opacity: 0,
       revealAt: ENTRY_DELAY_MS + i * ENTRY_STAGGER_MS,
+      // The tour: one stop per capability the project actually used, in the data's own order, so
+      // the first stop is the primary — the one that names the quadrant and colours the cube.
+      quads: (p.capabilities || []).map(capQuadrant).filter(Boolean),
+      // Each cube keeps its own clock, so a hovered one can freeze without stopping the others.
+      // The seeds are the golden ratio walked twice: eight cubes spread around the tour without
+      // landing on an obvious 1/8 rhythm, and deterministic, so a reload looks like the last one.
+      clock: 0,
+      hold: 1,
+      phaseSeed: (i * 0.6180339887) % 1,
+      tempoSeed: ((i * 0.7548776662) % 1) - 0.5,
+      want: new THREE.Vector3(x, y, z),
+      push: new THREE.Vector3(),
+      pushTo: new THREE.Vector3(),
     };
     scene.add(mesh);
     tiles.push(mesh);
   });
+
+  // ─── Wander ─────────────────────────────────────────────────────────────────
+  // Everything below reads DRIFT fresh every frame rather than baking anchors at load, so the
+  // tuner page can move a slider and see the answer without a reload.
+
+  // Where a cube goes to show capability `n`. Stop 0 is its data point, barely moved; the rest
+  // lean toward the caption of their own quadrant, capped two ways — `maxExcursion` in world
+  // units, and, unless crossMidline is on, at the primary quadrant's own half of each axis, which
+  // is what keeps a cube's position agreeing with its colour.
+  function anchorFor(u, n) {
+    const q = u.quads[n];
+    const pull = n === 0 ? DRIFT.primaryPull : DRIFT.secondaryPull;
+    const home = u.quads[0] || q;
+    let ax = u.ax + (q.x * R * 0.5 - u.ax) * pull;
+    let ay = u.ay + (q.y * R * 0.5 - u.ay) * pull;
+    if (!DRIFT.crossMidline && home) {
+      // Stay on the primary's side of both midlines, and no nearer than the cube's own half-width
+      // so it never straddles an axis it is supposed to sit clear of.
+      const half = ((u.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale() / Math.max(spread(), 0.01);
+      ax = home.x < 0 ? Math.min(ax, -half) : Math.max(ax, half);
+      ay = home.y < 0 ? Math.min(ay, -half) : Math.max(ay, half);
+    }
+    const dx = ax - u.ax, dy = ay - u.ay;
+    const d = Math.hypot(dx, dy) * spread();
+    if (d > DRIFT.maxExcursion && d > 0) {
+      const k = DRIFT.maxExcursion / d;
+      ax = u.ax + dx * k; ay = u.ay + dy * k;
+    }
+    return { x: ax, y: ay };
+  }
+
+  // The tour: rest at a stop, glide to the next, repeat. Plus a sway and a reach-bob on their own
+  // periods, so two cubes resting at the same moment are still not doing the same thing.
+  const tempoOf = (u) => 1 + u.tempoSeed * 2 * DRIFT.tempoVariance;
+  function tourPoint(u) {
+    const phase = u.phaseSeed * DRIFT.phaseSpread;
+    const n = u.quads.length;
+    let x = u.ax, y = u.ay;
+    if (n > 0) {
+      const leg = Math.max(DRIFT.travelMs + DRIFT.dwellMs, 1);
+      const t = u.clock / (leg * n) + phase;
+      const w = (t - Math.floor(t)) * n;
+      const i = Math.floor(w);
+      const local = (w - i) * leg;                       // ms into this leg
+      const e = easeShape(clamp((local - DRIFT.dwellMs) / Math.max(DRIFT.travelMs, 1), 0, 1), DRIFT.ease);
+      const a = anchorFor(u, i % n), b = anchorFor(u, (i + 1) % n);
+      x = a.x + (b.x - a.x) * e;
+      y = a.y + (b.y - a.y) * e;
+    }
+    const sway = DRIFT.sway / Math.max(spread(), 0.01);
+    x += Math.sin(u.clock / Math.max(DRIFT.swayMs, 1) * TAU + phase * TAU) * sway;
+    y += Math.cos(u.clock / Math.max(DRIFT.swayMs * 1.27, 1) * TAU + phase * TAU * 1.7) * sway;
+    const z = Math.sin(u.clock / Math.max(DRIFT.reachMs, 1) * TAU + phase * TAU * 2.3) * DRIFT.reachAmpl;
+    return { x, y, z };
+  }
+
+  // Reach stays inside the box however far the bob pushes it: the same inset tileZ uses.
+  function clampZ(p, z) {
+    const halfD = ((p.selected ? TILE : TILE_SMALL).d / 2) * tileScale();
+    return clamp(z, Z_FAR + halfD, Z_NEAR - halfD);
+  }
+
+  // Two cubes may share a quadrant; they may not share a point (DECISIONS.md, 2026-09-09 — at 0.08
+  // apart on a phone, tapping one opened the other). Moving cubes can wander into each other, so
+  // any overlapping pair is shoved apart in the x/y plane. Reach is left alone: it is data.
+  function separate() {
+    if (DRIFT.separation <= 0) return;
+    for (const m of tiles) m.userData.pushTo.set(0, 0, 0);
+    for (let i = 0; i < tiles.length; i++) {
+      for (let j = i + 1; j < tiles.length; j++) {
+        const a = tiles[i].userData, b = tiles[j].userData;
+        const ra = ((a.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale();
+        const rb = ((b.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale();
+        const min = (ra + rb) * DRIFT.separation;
+        let dx = b.want.x - a.want.x, dy = b.want.y - a.want.y;
+        const dz = Math.abs(b.want.z - a.want.z);
+        if (dz > min) continue;                          // far apart in depth: they never touch
+        let d = Math.hypot(dx, dy);
+        if (d >= min) continue;
+        if (d < 1e-4) { dx = 1; dy = 0; d = 1; }         // dead centre on each other: pick an axis
+        const k = ((min - d) / 2) * DRIFT.separationPush / d;
+        a.pushTo.x -= dx * k; a.pushTo.y -= dy * k;
+        b.pushTo.x += dx * k; b.pushTo.y += dy * k;
+      }
+    }
+  }
 
   // ─── Camera state ───────────────────────────────────────────────────────────
   const zoom = makeSpring(CAM_START_FRAC);
@@ -664,6 +816,7 @@ export function initScene(projects, { onSelect } = {}) {
     }
 
     const elapsed = now - startedAt;
+    const wander = DRIFT.enabled && !reduceMotion;
     tiles.forEach((mesh) => {
       const u = mesh.userData;
       const entry = reduceMotion ? 1 : clamp((elapsed - u.revealAt) / ENTRY_FADE_MS, 0, 1);
@@ -673,9 +826,35 @@ export function initScene(projects, { onSelect } = {}) {
       u.outline.material.color.set(hovered === mesh ? capColor(u.project) : (u.project.selected ? C.ruleStrong : C.ruleMid));
       u.scale.target = hovered === mesh ? HOVER_SCALE : 1;
       mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING) * tileScale());
-      mesh.position.x = u.ax * spread(); // re-read every frame so a rotation or a resize lands
-      mesh.position.y = u.ay * spread();
-      mesh.position.z = tileZ(u.project); // the inset depends on tileScale(), which a resize changes
+
+      // A hovered cube freezes rather than snapping home: it has to stay under the cursor long
+      // enough to be clicked. Easing `hold` rather than gating the clock keeps the stop soft.
+      const moving = wander && !(DRIFT.holdOnHover && hovered === mesh);
+      u.hold += ((moving ? 1 : 0) - u.hold) * fade;
+      u.clock += dt * u.hold * DRIFT.speed * tempoOf(u);
+
+      // Cubes arrive exactly on their data point and only then ease out into the tour, so the
+      // first thing anyone sees is the graph the data describes.
+      const ramp = wander
+        ? easeShape(clamp((elapsed - u.revealAt - ENTRY_FADE_MS) / Math.max(DRIFT.settleInMs, 1), 0, 1), 2)
+        : 0;
+      const pt = tourPoint(u);
+      u.want.set(
+        (u.ax + (pt.x - u.ax) * ramp) * spread(), // re-read every frame so a rotation or a resize lands
+        (u.ay + (pt.y - u.ay) * ramp) * spread(),
+        clampZ(u.project, tileZ(u.project) + pt.z * ramp) // the inset depends on tileScale(), which a resize changes
+      );
+
+      const tilt = ((DRIFT.tiltDeg * Math.PI) / 180) * ramp;
+      mesh.rotation.x = Math.sin(u.clock / Math.max(DRIFT.tiltMs, 1) * TAU + u.phaseSeed * TAU) * tilt;
+      mesh.rotation.y = Math.cos(u.clock / Math.max(DRIFT.tiltMs * 1.19, 1) * TAU + u.phaseSeed * TAU * 1.4) * tilt;
+    });
+
+    separate();
+    tiles.forEach((mesh) => {
+      const u = mesh.userData;
+      u.push.lerp(u.pushTo, fade);                       // eased, so a shove reads as a drift too
+      mesh.position.set(u.want.x + u.push.x, u.want.y + u.push.y, u.want.z);
     });
 
     const origin = project(CAM_TARGET);
