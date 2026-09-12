@@ -4,6 +4,157 @@
 
 ---
 
+## 2026-09-12 — Gentle is a ceiling, not a setting
+
+**Nothing on the graph may move faster than the tour itself.** Wyatt, 2026-09-12: *"within the
+first couple seconds, all of the cubes seem to move more quickly than usual to a new position ...
+i want them to always be moving gently."* He was right, and there turned out to be two separate
+breaches, neither of them intentional.
+
+**The opening lurch: the eight are staggered by a LATE START, never by a phase offset.**
+`phaseSpread` used to shift each cube's POSITION IN THE TOUR, so at clock zero most of them were
+already mid-journey, and the settle-in then dragged each from its data point to wherever its tour
+had reached — inside `settleInMs`. A crossing worth 18 seconds, done in 2.6: **up to seven times
+cruising speed, every cube at once, on load.** Delaying the clock instead means clock zero is the
+start of a cube's dwell at home, so every cube opens parked exactly where the data puts it and
+waits its turn. The long-run spread is identical. **Keep `settleInMs` below `dwellMs`** — the ramp
+then finishes while a cube is still parked, and can never attenuate a crossing and let it snap.
+
+**The yield snap: giving way is speed-capped, at `yieldRate` cube-widths a second.** Measured per
+frame, the tour never exceeds 0.97 world units a second and the yield was reaching **20** — the
+prompt 0.45 ease-in that had been added to cure the yield's lag. Easing shapes the movement;
+`yieldRate` is the ceiling on it. It is in cube widths, so a phone, where cubes are larger and
+close faster, may yield proportionally faster. After: 3.7 u/s, and the opening peaks at **0.60× of
+cruising speed** — the first seconds are now gentler than the steady state.
+
+**And a correction to the entry below: TWO RESTING CUBES CAN COLLIDE.** It claimed none ever did,
+on a measurement that was true only of the old phase offsets. Teaching Forgiveness and What They're
+Buying both rest in Strategy, 0.44 apart in x and 1.43 in depth, with cubes 1.80 either way — they
+overlap standing still, and staggering the start brought them together for the first time. So a
+resting cube is not immovable: it keeps a floor of 0.15 against a traveller's 1.0, which leaves a
+traveller taking six-sevenths of any correction it is involved in, and lets two resting cubes share
+one evenly rather than sitting inside each other for a whole dwell. **The rule is "a traveller
+gives way FIRST", not "a resting cube never moves."**
+
+## 2026-09-12 — A cube BEHIND another is fine; a cube INSIDE another is not
+
+**Occlusion is depth and the reader pivots past it. Interpenetration is true from every angle, and
+it is not allowed.** Wyatt, 2026-09-12: *"It's okay if one of the cubes is fully behind another
+cube, and the user could pivot the graph to see the one behind ... frequently, a cube is, like,
+substantially twenty to ninety percent inside of another cube, and that is something that we don't
+wanna have happen."* Measured before the fix, over three minutes of the real tour: **12% of frames
+had a pair more than a fifth inside another, worst case 56% of a whole cube.**
+
+**The rule: A CUBE THAT IS TRAVELLING GIVES WAY FIRST.** At the time this was written, not one of
+those interpenetrations involved two resting cubes, which made it look as though homes and
+reflections were always clear of each other and only paths ever collided. **That turned out to be
+an artifact of the phasing, not a property of the geometry — see the entry above.** So giving way never
+compromises a claim about the work; it only negotiates transit. A cube's right to yield rises from
+nought as it leaves a stop, peaks mid-crossing, and returns to nought before it arrives, so it
+always lands exactly on the position its capabilities earned it.
+
+**And it gives way THROUGH REACH.** Depth is the one axis where moving costs nothing: it cannot
+change which quadrant a cube appears to be in, it cannot carry one across a midline, and what it
+produces — one cube passing in front of another — is the thing ruled fine above. **Do not make it
+yield sideways.** Sideways is where the meaning lives, and a wide enough sidestep crosses a midline.
+
+**Two cubes turning shoulder-on in a corridor, not two cubes shoving.** Giving way eases in at 0.45
+and decays at 0.14 — prompt out, leisurely back. One rate could not do both: at the gentle rate a
+phone cube, drawn double size and closing fast, arrived at the yield after the overlap had already
+happened, and more `clearance` did not fix it because the fault was lag, not margin. At the prompt
+rate in both directions a cube snaps back the instant it is clear, which reads as a flinch.
+
+**Result, measured the same way at both widths: 0.0% of frames above 20%, worst case 18% on a phone
+and 11% on desktop.** `separation` and `separationPush` are retired — one pushed in the plane,
+which is forbidden, and the other resolved 5% of an overlap per frame against a target rebuilt each
+frame, so it converged on 5% of the fix. One dial replaces them: `clearance`, a multiple of a
+cube's own depth. `window.__graph.worldBoxes()` exists so this is measurable in world space;
+screen boxes cannot tell a cube in front of another from a cube inside it, which is the whole
+distinction the graph turns on.
+
+## 2026-09-12 — A covered cube is meant to be untappable
+
+**Cubes hiding one another is not a fault. The reader swivels the graph.** Wyatt, 2026-09-12:
+*"a covered cube SHOULD be untappable"* and *"the user is able to swivel the graph to uncover it."*
+This is the same ruling he made about the axis labels on 2026-09-08, applied to the cubes: what is
+in front of what is information about depth, not damage to be engineered away.
+
+**What this struck down.** A pass had measured how often one cube covered another — 81% of frames
+on desktop, 88% on a phone — treated it as a defect, and rewrote `separate()` to push cubes apart
+**on the screen**, so that no cube was ever hidden from the current angle. It worked (0% obscured
+on a phone) and it was wrong: it moved cubes off the positions their capabilities earned them for a
+reason that lasts only as long as the reader holds still. **It is unwound.** `separate()` pushes
+apart only pairs genuinely close in space — where no angle would separate them, which is the
+2026-09-09 rule — and deliberately skips pairs that merely stack up under perspective.
+
+**The browser pass now holds the cubes still for its click/tap check.** That check reads a tile's
+position and taps a beat later, and it caught the movement honestly: a tap meant for Cited by AI
+opened Spatial Equity. Freezing is the right fix rather than a cover-up, precisely because of the
+ruling above — the check exists to prove a tile routes to its study and that nothing invisible
+covers the canvas, not that a moving target can be hit blind, which no visitor attempts.
+
+## 2026-09-12 — The cubes move, and a cube may leave its own quadrant
+
+**A cube tours the quadrants of every capability its project used, and it is allowed to cross the
+midline into them.** Wyatt, 2026-09-12: *"make the cubes on the 3d graph gently move between the
+areas of the graph that describe the components of the project -- eg. pastry pirates is both
+systems design and product design; cited by ai is both strategy and user research."*
+
+`data/projects.json` has always recorded that a project is more than one capability — `capabilities`
+is an ordered list — and the graph only ever drew the first entry, because a point can only be in
+one place. Now the cube visits the rest.
+
+**A stop is a DESTINATION, not a lean.** Wyatt, 2026-09-12: *"The intention behind this whole
+movement piece is to show that each project uses techniques from multiple quadrants. It's to move
+each project from its home quadrant INTO the other quadrants where it also used those
+techniques."* A first attempt aimed each stop at the quadrant's caption and leashed the distance;
+measured, **four of its eleven stops never left the home quadrant at all** — Pastry Pirates never
+reached systems design, ClaudeKit never reached product design — and every stop that did arrive
+crossed by a hair before turning round. It also dragged all eight cubes toward four midpoints.
+
+**The rule that replaced it: a visit is the project's own position REFLECTED into the quadrant
+being visited.** On the axis the two quadrants agree about, nothing moves — Pastry Pirates is far
+into Make and both its capabilities are Make-side, so it keeps its own far-right x. On the axis
+they differ about, the sign flips and the magnitude is kept, so a cube is as deep into the
+capability it is visiting as it is into the one it lives in. Arrival is guaranteed by construction:
+the destination IS a point in that quadrant, and all nine visits land. One dial, `visitDepth`,
+slides the landing point between just inside the far quadrant's edge and the full reflection.
+`secondaryPull`, `maxExcursion` and `crossMidline` are retired — they all existed to limit a
+journey that is now defined by where it ends.
+**A cube out visiting is a project being read as two things at once. Do not clamp it back to
+protect the colour rule** — the rule that `capabilities[0]` names the quadrant, colours the cube and
+is the word every page prints (2026-09-09, above) is a rule about **the data**, and
+`scripts/check.mjs` still asserts it against `data/projects.json`. Motion is a reading of that data
+at runtime, never a second source of it.
+
+**The twenty numbers in `DRIFT` at the top of `js/scene.js` are his, dialled in a tuner page on
+2026-09-12, not defaults anyone guessed.** The ones that carry a judgement: a 12.5s glide over a
+5.2s rest, so a cube is travelling more often than it is parked; `secondaryPull` 0.64, which is far
+enough to read as an arrival rather than a lean; and `separation` 1.6 with `separationPush` 0.05 —
+a wide net and a feather touch, so a pair eases out of each other's way instead of bouncing. Change
+one and say which, rather than re-dialling the set.
+
+**Every one of those numbers is a ratio or a duration, never a length.** Wyatt, same day:
+*"separation (in fact all these numbers) should be ratios, not absolute values, right? that way
+they apply across scales."* Three of them were lengths. The reason it mattered is not the obvious
+one — the box is `R = 5.5` at every screen width, so a world length is already a fixed share of it.
+What differs is `spread()`, 0.88 on desktop and 1.15 on a phone, **and the clamp was applied after
+it**: `maxExcursion: 2.35` let a desktop cube stray 0.49 of a half-axis and a phone cube only 0.37.
+The same dial said two different things about the same project. `maxExcursion` and `sway` are
+fractions of a half-axis now, applied before spread, and `reachAmpl` is a fraction of half the
+reach span. **The desktop values he approved are unchanged** — 2.35 became 0.486, 0.09 became
+0.0186, 0.42 became 0.07 — and a phone simply stops holding its cubes 31% tighter than his ruling.
+
+**`separation` was already a ratio**, and so was everything else: it is a multiple of the two
+cubes' own half-widths with `tileScale()` inside it, so it already grew with the phone's larger
+cubes. Durations are durations at every width. If a new dial is ever added, it is a ratio or it
+is a duration — there is no third kind.
+
+**What is not negotiable underneath it:** cubes land exactly on their data point and only then ease
+out (`settleInMs`), a hovered cube freezes where it stands rather than snapping home, and
+`prefers-reduced-motion` parks all of it. Overlapping pairs are pushed apart in the x/y plane only
+— reach is data.
+
 ## 2026-09-09 — One capability word, and it lives in the data
 
 **`data/projects.json` `capabilities` is the only place a capability is written. Every page prints

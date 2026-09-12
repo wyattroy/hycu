@@ -105,6 +105,83 @@ const DEPTH_LABEL_ANGLE = (6 * Math.PI) / 180;
 const DRIFT_AMPL = 0.035;
 const DRIFT_PERIOD_MS = 14000;
 
+// ─── Wander: a cube visits every quadrant its project drew techniques from ────
+// Wyatt, 2026-09-12: *"The intention behind this whole movement piece is to show that each project
+// uses techniques from multiple quadrants. It's to move each project from its home quadrant INTO
+// the other quadrants where it also used those techniques."*
+//
+// So a stop is not a lean, it is a destination. A cube leaves its own quadrant and arrives in the
+// next one on its `capabilities` list, rests there, and comes back round. Pastry Pirates is in
+// systems design as surely as it is in product design; Cited by AI is in user research as surely
+// as it is in strategy. The data has always said so — `capabilities` is an ordered list — and the
+// graph only ever drew the first entry, because a point can only be in one place.
+//
+// WHERE A VISIT LANDS: the project's own position, REFLECTED into the quadrant being visited.
+//   · On an axis the two quadrants agree about, nothing moves. Pastry Pirates is far into Make,
+//     and product design and systems design are both Make-side, so it keeps its own far-right x.
+//   · On an axis they differ about, the sign flips and the magnitude is kept. It sits 3.3 below
+//     the Product/Idea midline, so its systems-design stop is 3.3 ABOVE it — as deep into the
+//     capability it is visiting as it is into the one it lives in.
+// Arrival is therefore guaranteed by construction: the destination IS a point in that quadrant.
+// This replaces a first attempt that aimed each stop at the quadrant's caption and leashed the
+// distance — under which four of the eleven stops never left home at all (Pastry Pirates never
+// reached systems design), and every stop that did arrive crossed by a hair. It also dragged all
+// eight cubes toward four midpoints, which is what made them hide one another 81-88% of frames.
+//
+// THE FIRST CAPABILITY IS STILL HOME. Stop 0 is the data point, barely nudged; a cube starts
+// there, returns there, and keeps its colour the whole way round. What scripts/check.mjs asserts
+// against data/projects.json is untouched — this is a reading of that data at runtime, never a
+// second source of it.
+//
+// UNITS: every number below is a ratio or a duration, never a length in world units. Wyatt,
+// 2026-09-12: *"separation (in fact all these numbers) should be ratios, not absolute values,
+// right? that way they apply across scales."* The reason it matters is not the obvious one — the
+// box is R=5.5 on every screen, so a world length is already a fixed share of it. What differs is
+// `spread()`, 0.88 on desktop and 1.15 on a phone, and lengths were being applied after it, so the
+// same dial meant two different things about the same project. `sway` is a fraction of a half-axis
+// and `reachAmpl` a fraction of half the reach span; `clearance` is a multiple of a cube's own
+// depth, with tileScale() inside it, so it already grows with the phone's larger cubes. Durations
+// are durations at every width. Anything added later is one or the other; there is no third kind.
+//
+// Every number here is live: assign to window.__drift and the next frame uses it. That is how the
+// tuner page dials it, and every number below is one Wyatt dialled there on 2026-09-12.
+export const DRIFT = {
+  enabled: true,        // master switch; prefers-reduced-motion turns it off regardless
+  speed: 1,             // multiplies every clock at once — the one dial to slow the whole thing
+  travelMs: 18000,      // time crossing from one quadrant to the next
+  dwellMs: 5200,        // time spent in a quadrant before setting off again
+  ease: 2.6,            // 1 is linear; higher softens both ends of the crossing
+  primaryPull: 0.10,    // how far the HOME stop leaves the data point (0 = sits exactly on it)
+  visitDepth: 1,        // how far into the visited quadrant the cube goes: 1 is the full
+                        // reflection of its home position, 0 is just inside that quadrant's edge
+  sway: 0.0186,         // idle breath in the x/y plane, as a fraction of a half-axis
+  swayMs: 11000,
+  reachAmpl: 0.07,      // idle drift along reach (toward the viewer and away), as a fraction of
+                        // half the reach span
+  reachMs: 13000,
+  tiltDeg: 2.6,         // how far a cube rolls as it goes
+  tiltMs: 17000,
+  phaseSpread: 0.87,    // 0 = the eight set off together, 1 = their first crossings are spread
+                        // across a whole leg. It delays each cube's start; it never displaces one
+  tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
+  clearance: 1.1,       // how far apart in depth two cubes must be before they stop caring, as a
+                        // multiple of a cube's own depth. 1.0 is faces just touching
+  yieldRate: 2,         // the FASTEST a cube may give way, in its own widths per second. This is
+                        // the ceiling that keeps the yield gentle; see the note where it is used
+  settleInMs: 2600,     // cubes appear exactly on their data point, then set off on the tour
+  holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
+};
+if (typeof window !== 'undefined') window.__drift = DRIFT;
+
+const TAU = Math.PI * 2;
+// 1 is linear, 2 is smoothstep, higher is softer still — one dial across the whole family.
+const easeShape = (t, p) => {
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  const a = Math.pow(t, p), b = Math.pow(1 - t, p);
+  return a / (a + b);
+};
+
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const makeSpring = (v = 0) => ({ current: v, target: v, velocity: 0 });
 function tickSpring(s, k, d) {
@@ -258,6 +335,10 @@ const QUADRANTS = [
   { x:  1, y:  1, label: 'Systems design' },
 ];
 
+// A capability's home corner, in the same axis space as a tile's ax/ay. The captions on the back
+// wall sit at the middle of each quadrant, so that is where a cube heads when it goes to visit one.
+const capQuadrant = (cap) => QUADRANTS.find((q) => q.label === cap) || null;
+
 // The scaffold is the site's rule greys taken 20% darker (Wyatt, 2026-09-09: the graph lines were
 // "getting lost on the background"). The tokens themselves are left alone — the same greys are
 // right for a border on a page, where they sit against copy rather than against a gradient with a
@@ -384,6 +465,7 @@ export function initScene(projects, { onSelect } = {}) {
     return (Z_FAR + halfD) + p.axes.reach * ((Z_NEAR - Z_FAR) - 2 * halfD);
   };
 
+  const yieldStep = new THREE.Vector3();
   const tiles = [];
   const startedAt = performance.now();
   const ordered = [...projects].sort((a, b) => b.axes.reach - a.axes.reach); // nearest first
@@ -418,10 +500,163 @@ export function initScene(projects, { onSelect } = {}) {
       project: p, face, edge, back, outline, ax, ay,
       scale: makeSpring(1), opacity: 0,
       revealAt: ENTRY_DELAY_MS + i * ENTRY_STAGGER_MS,
+      // The tour: one stop per capability the project actually used, in the data's own order, so
+      // the first stop is the primary — the one that names the quadrant and colours the cube.
+      quads: (p.capabilities || []).map(capQuadrant).filter(Boolean),
+      // Each cube keeps its own clock, so a hovered one can freeze without stopping the others.
+      // The seeds are the golden ratio walked twice: eight cubes spread around the tour without
+      // landing on an obvious 1/8 rhythm, and deterministic, so a reload looks like the last one.
+      clock: 0,
+      hold: 1,
+      phaseSeed: (i * 0.6180339887) % 1,
+      tempoSeed: ((i * 0.7548776662) % 1) - 0.5,
+      want: new THREE.Vector3(x, y, z), crossing: 0,
+      push: new THREE.Vector3(),
+      pushTo: new THREE.Vector3(),
     };
     scene.add(mesh);
     tiles.push(mesh);
   });
+
+  // ─── Wander ─────────────────────────────────────────────────────────────────
+  // Everything below reads DRIFT fresh every frame rather than baking anchors at load, so the
+  // tuner page can move a slider and see the answer without a reload.
+
+  // Where a cube goes to show capability `n`, in the same axis space as its ax/ay.
+  //
+  // Stop 0 is home: the data point, nudged a touch toward its own caption so it is not perfectly
+  // static. Every other stop is home REFLECTED into that capability's quadrant — see the rule at
+  // the top of this file. `visitDepth` slides the landing point between just inside that
+  // quadrant's edge (0) and the full reflection (1); at 0 it still lands a clear half-cube past
+  // the midline, so a cube never parks straddling an axis.
+  function anchorFor(u, n) {
+    const q = u.quads[n];
+    if (n === 0) {
+      return {
+        x: u.ax + (q.x * R * 0.5 - u.ax) * DRIFT.primaryPull,
+        y: u.ay + (q.y * R * 0.5 - u.ay) * DRIFT.primaryPull,
+      };
+    }
+    const home = u.quads[0];
+    // Half a cube, in axis space, so "just inside the edge" means visibly inside it.
+    const half = ((u.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale() / Math.max(spread(), 0.01);
+    const reflect = (v, homeSign, toSign) => {
+      if (homeSign === toSign) return v;              // the axis they agree about: do not move
+      const depth = Math.max(Math.abs(v), half);      // as deep in as it is deep in at home
+      return toSign * (half + (depth - half) * clamp(DRIFT.visitDepth, 0, 1));
+    };
+    return { x: reflect(u.ax, home.x, q.x), y: reflect(u.ay, home.y, q.y) };
+  }
+
+  // The tour: rest at a stop, glide to the next, repeat. Plus a sway and a reach-bob on their own
+  // periods, so two cubes resting at the same moment are still not doing the same thing.
+  const tempoOf = (u) => 1 + u.tempoSeed * 2 * DRIFT.tempoVariance;
+  function tourPoint(u) {
+    const phase = u.phaseSeed;                           // seeds the sway and the roll, below
+    const n = u.quads.length;
+    let x = u.ax, y = u.ay, crossing = 0;
+    if (n > 0) {
+      const leg = Math.max(DRIFT.travelMs + DRIFT.dwellMs, 1);
+      // THE EIGHT ARE SPREAD BY A LATE START, NOT BY A PHASE OFFSET, and the difference is the
+      // whole of what a visitor sees in the first three seconds. `phaseSpread` used to shift each
+      // cube's POSITION IN THE TOUR, so at clock zero most of them were already mid-journey — and
+      // the settle-in then dragged each one from its data point to wherever its tour had got to,
+      // inside settleInMs. A crossing that takes 18s, done in 2.6s: up to seven times cruising
+      // speed, every cube at once, on load. Wyatt caught it, 2026-09-12: *"within the first couple
+      // seconds, all of the cubes seem to move more quickly than usual ... i want them to always
+      // be moving gently."*
+      //
+      // Delaying the clock instead means clock zero is the start of a cube's dwell AT HOME, so
+      // every cube opens parked exactly where the data puts it and simply waits its turn. The
+      // long-run spread is identical — after the first leg the eight are distributed the same way
+      // — but nothing ever moves faster than a crossing, because everything IS a crossing.
+      //
+      // KEEP settleInMs BELOW dwellMs. The ramp then finishes while a cube is still parked, so it
+      // only ever eases in the sway, and can never attenuate a crossing and let it snap back.
+      const t = Math.max(0, u.clock - u.phaseSeed * DRIFT.phaseSpread * leg) / (leg * n);
+      const w = (t - Math.floor(t)) * n;
+      const i = Math.floor(w);
+      const local = (w - i) * leg;                       // ms into this leg
+      const s = clamp((local - DRIFT.dwellMs) / Math.max(DRIFT.travelMs, 1), 0, 1);
+      const e = easeShape(s, DRIFT.ease);
+      // How much of a crossing this cube is in the middle of: nought at both ends, one halfway.
+      // It is what buys a cube the right to give way, and it returns to nought before it arrives,
+      // so a cube always lands on the exact position its capabilities earned it.
+      crossing = Math.sin(Math.PI * s);
+      const a = anchorFor(u, i % n), b = anchorFor(u, (i + 1) % n);
+      x = a.x + (b.x - a.x) * e;
+      y = a.y + (b.y - a.y) * e;
+    }
+    const sway = DRIFT.sway * R;
+    x += Math.sin(u.clock / Math.max(DRIFT.swayMs, 1) * TAU + phase * TAU) * sway;
+    y += Math.cos(u.clock / Math.max(DRIFT.swayMs * 1.27, 1) * TAU + phase * TAU * 1.7) * sway;
+    const z = Math.sin(u.clock / Math.max(DRIFT.reachMs, 1) * TAU + phase * TAU * 2.3)
+      * DRIFT.reachAmpl * ((Z_NEAR - Z_FAR) / 2);
+    return { x, y, z, crossing };
+  }
+
+  // Reach stays inside the box however far the bob pushes it: the same inset tileZ uses.
+  function clampZ(p, z) {
+    const halfD = ((p.selected ? TILE : TILE_SMALL).d / 2) * tileScale();
+    return clamp(z, Z_FAR + halfD, Z_NEAR - halfD);
+  }
+
+  // Two cubes may share a quadrant; they may not share a POINT (DECISIONS.md, 2026-09-09), and
+  // now that they cross the box to visit a quadrant they were passing straight THROUGH one another
+  // — 12% of frames had a pair more than a fifth inside another, worst case 56% of a whole cube.
+  //
+  // A CUBE BEHIND ANOTHER IS FINE. A CUBE INSIDE ANOTHER IS NOT. Wyatt, 2026-09-12: *"It's okay if
+  // one of the cubes is fully behind another cube, and the user could pivot the graph to see the
+  // one behind ... frequently, a cube is, like, substantially twenty to ninety percent inside of
+  // another cube, and that is something that we don't wanna have happen."* Occlusion is depth and
+  // the reader resolves it by turning the volume; interpenetration is true from every angle.
+  //
+  // THE RULE: A CUBE THAT IS TRAVELLING GIVES WAY. A CUBE THAT HAS ARRIVED NEVER MOVES.
+  // Measured over three minutes of the real tour, not one interpenetration involved two resting
+  // cubes — homes and reflections are already clear of each other. Only paths collide. So giving
+  // way never has to compromise a claim about the work; it only has to negotiate transit.
+  //
+  // AND IT GIVES WAY THROUGH REACH. Depth is the one axis where moving costs nothing: it cannot
+  // change which quadrant a cube appears to be in, it cannot carry one across a midline, and what
+  // it produces — one cube passing in front of another — is the thing Wyatt has already ruled is
+  // fine. Bending the path sideways would look better and is wrong: sideways is where the meaning
+  // lives. Two people turning shoulder-on in a corridor, not two people shoving.
+  //
+  // Note the yield is a target, eased in through `push` below, and its weight falls back to nought
+  // before the crossing ends — so a cube lands exactly where it was going, every time.
+  const REST_YIELD = 0.15;               // a resting cube's share, when nothing else can resolve it
+  function yieldThroughReach() {
+    for (const m of tiles) m.userData.pushTo.set(0, 0, 0);
+    if (DRIFT.clearance <= 0) return;
+    for (let i = 0; i < tiles.length; i++) {
+      for (let j = i + 1; j < tiles.length; j++) {
+        const a = tiles[i].userData, b = tiles[j].userData;
+        const sa = a.project.selected ? TILE : TILE_SMALL, sb = b.project.selected ? TILE : TILE_SMALL;
+        const hw = ((sa.w + sb.w) / 2) * tileScale();
+        const hh = ((sa.h + sb.h) / 2) * tileScale();
+        const hd = ((sa.d + sb.d) / 2) * tileScale() * DRIFT.clearance;
+        const dx = b.want.x - a.want.x, dy = b.want.y - a.want.y, dz = b.want.z - a.want.z;
+        // Solids only overlap when all three axes do. Clear of any one of them and there is
+        // nothing to negotiate, however close they look on the glass.
+        if (Math.abs(dx) >= hw || Math.abs(dy) >= hh || Math.abs(dz) >= hd) continue;
+        // A TRAVELLING CUBE GIVES WAY FIRST, but a resting one is not immovable — it keeps a small
+        // floor of its own. Two resting cubes CAN collide, which an earlier note here denied: with
+        // Teaching Forgiveness and What They're Buying both visiting Strategy, their stops sit
+        // 0.44 apart in x and 1.43 in depth, and a cube is 1.80 either way. They overlap standing
+        // still. It went unseen because the old phase offsets never put those two at those stops
+        // at the same moment; staggering the START instead, which is what made the opening gentle,
+        // brought them together. With the floor, a traveller meeting a resting cube still takes
+        // roughly six-sevenths of the correction, and two resting cubes share it evenly rather
+        // than sitting inside one another for the whole of a dwell.
+        const wa = Math.max(a.crossing, REST_YIELD), wb = Math.max(b.crossing, REST_YIELD);
+        const total = wa + wb;
+        const need = hd - Math.abs(dz);
+        const dir = dz >= 0 ? 1 : -1;         // whichever is already nearer keeps coming forward
+        a.pushTo.z -= need * (wa / total) * dir;
+        b.pushTo.z += need * (wb / total) * dir;
+      }
+    }
+  }
 
   // ─── Camera state ───────────────────────────────────────────────────────────
   const zoom = makeSpring(CAM_START_FRAC);
@@ -664,6 +899,7 @@ export function initScene(projects, { onSelect } = {}) {
     }
 
     const elapsed = now - startedAt;
+    const wander = DRIFT.enabled && !reduceMotion;
     tiles.forEach((mesh) => {
       const u = mesh.userData;
       const entry = reduceMotion ? 1 : clamp((elapsed - u.revealAt) / ENTRY_FADE_MS, 0, 1);
@@ -673,9 +909,57 @@ export function initScene(projects, { onSelect } = {}) {
       u.outline.material.color.set(hovered === mesh ? capColor(u.project) : (u.project.selected ? C.ruleStrong : C.ruleMid));
       u.scale.target = hovered === mesh ? HOVER_SCALE : 1;
       mesh.scale.setScalar(tickSpring(u.scale, SCALE_STIFFNESS, SCALE_DAMPING) * tileScale());
-      mesh.position.x = u.ax * spread(); // re-read every frame so a rotation or a resize lands
-      mesh.position.y = u.ay * spread();
-      mesh.position.z = tileZ(u.project); // the inset depends on tileScale(), which a resize changes
+
+      // A hovered cube freezes rather than snapping home: it has to stay under the cursor long
+      // enough to be clicked. Easing `hold` rather than gating the clock keeps the stop soft.
+      const moving = wander && !(DRIFT.holdOnHover && hovered === mesh);
+      u.hold += ((moving ? 1 : 0) - u.hold) * fade;
+      u.clock += dt * u.hold * DRIFT.speed * tempoOf(u);
+
+      // Cubes arrive exactly on their data point and only then ease out into the tour, so the
+      // first thing anyone sees is the graph the data describes.
+      const ramp = wander
+        ? easeShape(clamp((elapsed - u.revealAt - ENTRY_FADE_MS) / Math.max(DRIFT.settleInMs, 1), 0, 1), 2)
+        : 0;
+      const pt = tourPoint(u);
+      u.crossing = pt.crossing * ramp;
+      u.want.set(
+        (u.ax + (pt.x - u.ax) * ramp) * spread(), // re-read every frame so a rotation or a resize lands
+        (u.ay + (pt.y - u.ay) * ramp) * spread(),
+        clampZ(u.project, tileZ(u.project) + pt.z * ramp) // the inset depends on tileScale(), which a resize changes
+      );
+
+      const tilt = ((DRIFT.tiltDeg * Math.PI) / 180) * ramp;
+      mesh.rotation.x = Math.sin(u.clock / Math.max(DRIFT.tiltMs, 1) * TAU + u.phaseSeed * TAU) * tilt;
+      mesh.rotation.y = Math.cos(u.clock / Math.max(DRIFT.tiltMs * 1.19, 1) * TAU + u.phaseSeed * TAU * 1.4) * tilt;
+    });
+
+    yieldThroughReach();
+    tiles.forEach((mesh) => {
+      const u = mesh.userData;
+      // Giving way is PROMPT; coming back is leisurely — 0.45 while the yield grows, 0.14 while it
+      // decays. One rate could not do both: at the gentle rate a phone cube, drawn double size and
+      // closing fast, reached the yield after the overlap had already happened (lag, not margin —
+      // more `clearance` did not help). At the prompt rate in both directions it snaps back the
+      // instant it is clear, which reads as a flinch.
+      //
+      // AND THE WHOLE THING IS SPEED-CAPPED, because prompt easing alone produced a snap. Measured
+      // per frame over 90 seconds, the tour itself never exceeds 0.97 world units a second, and the
+      // yield was reaching 20 — eleven times faster than anything else on screen, which is exactly
+      // the fault Wyatt caught at load: *"i want them to always be moving gently."* Gentle is not a
+      // property of one mechanism, it is a ceiling that every mechanism has to sit under.
+      //
+      // The cap is in CUBE WIDTHS per second, so a phone, where cubes are larger and close on each
+      // other faster, is allowed to give way proportionally faster — which is the whole reason the
+      // yield needed to be prompt in the first place.
+      const giving = u.pushTo.lengthSq() > u.push.lengthSq();
+      const step = yieldStep.copy(u.pushTo).sub(u.push)
+        .multiplyScalar(giving ? frameRateAdjusted(0.45, dt) : fade);
+      const ceiling = DRIFT.yieldRate * TILE.w * tileScale() * (dt / 1000);
+      const len = step.length();
+      if (len > ceiling && len > 0) step.multiplyScalar(ceiling / len);
+      u.push.add(step);
+      mesh.position.set(u.want.x, u.want.y, clampZ(u.project, u.want.z + u.push.z));
     });
 
     const origin = project(CAM_TARGET);
@@ -747,6 +1031,19 @@ export function initScene(projects, { onSelect } = {}) {
     screenPositions() {
       const r = canvas.getBoundingClientRect();
       return tiles.map((m) => { const s = project(m.position); return { id: m.userData.project.id, url: m.userData.project.url, selected: m.userData.project.selected, x: r.left + s.x, y: r.top + s.y }; });
+    },
+    /* For tests: each cube as a box in WORLD space. Screen boxes cannot tell a cube in front of
+       another from a cube inside it, and that is the whole distinction this graph turns on. */
+    worldBoxes() {
+      return tiles.map((m) => {
+        const size = m.userData.project.selected ? TILE : TILE_SMALL;
+        return {
+          id: m.userData.project.id,
+          x: m.position.x, y: m.position.y, z: m.position.z,
+          hw: (size.w / 2) * m.scale.x, hh: (size.h / 2) * m.scale.y, hd: (size.d / 2) * m.scale.z,
+          crossing: m.userData.crossing,
+        };
+      });
     },
     /* For tests: each tile's whole cube as a screen-space bounding box, in CSS pixels. */
     screenRects() {
