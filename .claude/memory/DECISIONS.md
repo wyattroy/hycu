@@ -32,6 +32,22 @@ enough to read as an arrival rather than a lean; and `separation` 1.6 with `sepa
 a wide net and a feather touch, so a pair eases out of each other's way instead of bouncing. Change
 one and say which, rather than re-dialling the set.
 
+**Every one of those numbers is a ratio or a duration, never a length.** Wyatt, same day:
+*"separation (in fact all these numbers) should be ratios, not absolute values, right? that way
+they apply across scales."* Three of them were lengths. The reason it mattered is not the obvious
+one — the box is `R = 5.5` at every screen width, so a world length is already a fixed share of it.
+What differs is `spread()`, 0.88 on desktop and 1.15 on a phone, **and the clamp was applied after
+it**: `maxExcursion: 2.35` let a desktop cube stray 0.49 of a half-axis and a phone cube only 0.37.
+The same dial said two different things about the same project. `maxExcursion` and `sway` are
+fractions of a half-axis now, applied before spread, and `reachAmpl` is a fraction of half the
+reach span. **The desktop values he approved are unchanged** — 2.35 became 0.486, 0.09 became
+0.0186, 0.42 became 0.07 — and a phone simply stops holding its cubes 31% tighter than his ruling.
+
+**`separation` was already a ratio**, and so was everything else: it is a multiple of the two
+cubes' own half-widths with `tileScale()` inside it, so it already grew with the phone's larger
+cubes. Durations are durations at every width. If a new dial is ever added, it is a ratio or it
+is a duration — there is no third kind.
+
 **What is not negotiable underneath it:** cubes land exactly on their data point and only then ease
 out (`settleInMs`), a hovered cube freezes where it stands rather than snapping home, and
 `prefers-reduced-motion` parks all of it. Overlapping pairs are pushed apart in the x/y plane only

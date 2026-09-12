@@ -120,6 +120,20 @@ const DRIFT_PERIOD_MS = 14000;
 // 2026-09-12, having watched both. A cube out visiting is a project being read as two things at
 // once, which is what the capabilities list says it is. `maxExcursion` is what holds it.
 //
+// UNITS: every number below is a ratio or a duration, never a length in world units. Wyatt,
+// 2026-09-12: *"separation (in fact all these numbers) should be ratios, not absolute values,
+// right? that way they apply across scales."* Three of them were lengths, and the reason it
+// mattered is not the one you would guess — the box is R=5.5 on every screen, so a world length is
+// already a fixed share of it. What differs is `spread()`, 0.88 on desktop and 1.15 on a phone,
+// and the clamp was applied AFTER it. So `maxExcursion: 2.35` let a desktop cube stray 0.49 of a
+// half-axis and a phone cube only 0.37 — the same dial saying two different things about the same
+// project. They are fractions of a half-axis now, applied before spread, and the desktop numbers
+// he approved are unchanged: a phone simply stops holding its cubes 31% tighter than his ruling.
+//
+// Everything else was already scale-free, `separation` included: it is a multiple of the two
+// cubes' own half-widths with tileScale() inside it, so it already grew with the phone's larger
+// cubes. Durations are durations; a second is a second at every width.
+//
 // Every number here is live: assign to window.__drift and the next frame uses it. That is how the
 // tuner page dials it, and every number below is one Wyatt dialled there on 2026-09-12.
 export const DRIFT = {
@@ -130,12 +144,14 @@ export const DRIFT = {
   ease: 2.6,            // 1 is linear; higher softens both ends of the glide
   primaryPull: 0.10,    // how far the FIRST capability's anchor leaves the data point (0 = on it)
   secondaryPull: 0.64,  // how far the others pull toward their own quadrant's caption
-  maxExcursion: 2.35,   // hard cap in world units on how far any anchor can sit from home —
-                        // with crossMidline on this is the ONLY thing bounding a visit
+  maxExcursion: 0.486,  // hard cap on how far any anchor sits from home, AS A FRACTION OF A
+                        // HALF-AXIS — with crossMidline on this is the only thing bounding a
+                        // visit. His 2.35 world units, converted (see the note on units below)
   crossMidline: true,   // let an anchor cross into another quadrant (his ruling, see above)
-  sway: 0.09,           // idle breath in the x/y plane, world units
+  sway: 0.0186,         // idle breath in the x/y plane, as a fraction of a half-axis
   swayMs: 11000,
-  reachAmpl: 0.42,      // idle drift along reach (toward and away from the viewer), world units
+  reachAmpl: 0.07,      // idle drift along reach (toward the viewer and away), as a fraction of
+                        // half the reach span
   reachMs: 13000,
   tiltDeg: 2.6,         // how far a cube rolls as it goes
   tiltMs: 17000,
@@ -498,8 +514,8 @@ export function initScene(projects, { onSelect } = {}) {
   // tuner page can move a slider and see the answer without a reload.
 
   // Where a cube goes to show capability `n`. Stop 0 is its data point, barely moved; the rest
-  // lean toward the caption of their own quadrant. `maxExcursion` caps the lean in world units and
-  // is the live bound, crossMidline being on. Turning crossMidline off adds a second cap — the
+  // lean toward the caption of their own quadrant. `maxExcursion` caps the lean as a fraction of a
+  // half-axis and is the live bound, crossMidline being on. Turning crossMidline off adds a second cap — the
   // primary quadrant's own half of each axis — which pins a cube's position to its colour; that is
   // how this shipped for half a day before Wyatt saw both and chose the crossing.
   function anchorFor(u, n) {
@@ -516,7 +532,7 @@ export function initScene(projects, { onSelect } = {}) {
       ay = home.y < 0 ? Math.min(ay, -half) : Math.max(ay, half);
     }
     const dx = ax - u.ax, dy = ay - u.ay;
-    const d = Math.hypot(dx, dy) * spread();
+    const d = Math.hypot(dx, dy) / R;                    // fraction of a half-axis, not world units
     if (d > DRIFT.maxExcursion && d > 0) {
       const k = DRIFT.maxExcursion / d;
       ax = u.ax + dx * k; ay = u.ay + dy * k;
@@ -542,10 +558,11 @@ export function initScene(projects, { onSelect } = {}) {
       x = a.x + (b.x - a.x) * e;
       y = a.y + (b.y - a.y) * e;
     }
-    const sway = DRIFT.sway / Math.max(spread(), 0.01);
+    const sway = DRIFT.sway * R;
     x += Math.sin(u.clock / Math.max(DRIFT.swayMs, 1) * TAU + phase * TAU) * sway;
     y += Math.cos(u.clock / Math.max(DRIFT.swayMs * 1.27, 1) * TAU + phase * TAU * 1.7) * sway;
-    const z = Math.sin(u.clock / Math.max(DRIFT.reachMs, 1) * TAU + phase * TAU * 2.3) * DRIFT.reachAmpl;
+    const z = Math.sin(u.clock / Math.max(DRIFT.reachMs, 1) * TAU + phase * TAU * 2.3)
+      * DRIFT.reachAmpl * ((Z_NEAR - Z_FAR) / 2);
     return { x, y, z };
   }
 
