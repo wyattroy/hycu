@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-09-12 — A cube BEHIND another is fine; a cube INSIDE another is not
+
+**Occlusion is depth and the reader pivots past it. Interpenetration is true from every angle, and
+it is not allowed.** Wyatt, 2026-09-12: *"It's okay if one of the cubes is fully behind another
+cube, and the user could pivot the graph to see the one behind ... frequently, a cube is, like,
+substantially twenty to ninety percent inside of another cube, and that is something that we don't
+wanna have happen."* Measured before the fix, over three minutes of the real tour: **12% of frames
+had a pair more than a fifth inside another, worst case 56% of a whole cube.**
+
+**The rule: A CUBE THAT IS TRAVELLING GIVES WAY. A CUBE THAT HAS ARRIVED NEVER MOVES.** The number
+that made this possible: of all those interpenetrations, **not one involved two resting cubes.**
+Homes and reflections are already clear of each other — only paths collide. So giving way never
+compromises a claim about the work; it only negotiates transit. A cube's right to yield rises from
+nought as it leaves a stop, peaks mid-crossing, and returns to nought before it arrives, so it
+always lands exactly on the position its capabilities earned it.
+
+**And it gives way THROUGH REACH.** Depth is the one axis where moving costs nothing: it cannot
+change which quadrant a cube appears to be in, it cannot carry one across a midline, and what it
+produces — one cube passing in front of another — is the thing ruled fine above. **Do not make it
+yield sideways.** Sideways is where the meaning lives, and a wide enough sidestep crosses a midline.
+
+**Two cubes turning shoulder-on in a corridor, not two cubes shoving.** Giving way eases in at 0.45
+and decays at 0.14 — prompt out, leisurely back. One rate could not do both: at the gentle rate a
+phone cube, drawn double size and closing fast, arrived at the yield after the overlap had already
+happened, and more `clearance` did not fix it because the fault was lag, not margin. At the prompt
+rate in both directions a cube snaps back the instant it is clear, which reads as a flinch.
+
+**Result, measured the same way at both widths: 0.0% of frames above 20%, worst case 18% on a phone
+and 11% on desktop.** `separation` and `separationPush` are retired — one pushed in the plane,
+which is forbidden, and the other resolved 5% of an overlap per frame against a target rebuilt each
+frame, so it converged on 5% of the fix. One dial replaces them: `clearance`, a multiple of a
+cube's own depth. `window.__graph.worldBoxes()` exists so this is measurable in world space;
+screen boxes cannot tell a cube in front of another from a cube inside it, which is the whole
+distinction the graph turns on.
+
 ## 2026-09-12 — A covered cube is meant to be untappable
 
 **Cubes hiding one another is not a fault. The reader swivels the graph.** Wyatt, 2026-09-12:
