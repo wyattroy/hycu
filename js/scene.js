@@ -113,33 +113,37 @@ const DRIFT_PERIOD_MS = 14000;
 // easing between them and resting at each, with a slower sway, reach-bob and tilt running
 // underneath so a cube between anchors is never dead still.
 //
-// THE FIRST CAPABILITY IS STILL THE TRUTH. Its anchor sits all but on the data point, and
-// `crossMidline` is off, which clamps every anchor to the primary's own quadrant — so the quadrant
-// a cube reads as, and the colour it carries, are still the ones scripts/check.mjs asserts against
-// the data. This is a reading of the data at runtime, never a second source of it.
+// THE FIRST CAPABILITY IS STILL WHERE A CUBE LIVES. Its anchor sits all but on the data point,
+// every cube arrives exactly on that point before easing out, and the colour never changes — so
+// what scripts/check.mjs asserts against data/projects.json is untouched. What a cube may now do
+// is LEAVE, all the way into its second capability's quadrant: Wyatt turned `crossMidline` on,
+// 2026-09-12, having watched both. A cube out visiting is a project being read as two things at
+// once, which is what the capabilities list says it is. `maxExcursion` is what holds it.
 //
 // Every number here is live: assign to window.__drift and the next frame uses it. That is how the
-// tuner page dials it, and what the numbers below were dialled to.
+// tuner page dials it, and every number below is one Wyatt dialled there on 2026-09-12.
 export const DRIFT = {
   enabled: true,        // master switch; prefers-reduced-motion turns it off regardless
   speed: 1,             // multiplies every clock at once — the one dial to slow the whole thing
-  travelMs: 9000,       // time gliding from one capability's anchor to the next
+  travelMs: 12500,      // time gliding from one capability's anchor to the next
   dwellMs: 5200,        // time resting at an anchor before it sets off again
   ease: 2.6,            // 1 is linear; higher softens both ends of the glide
   primaryPull: 0.10,    // how far the FIRST capability's anchor leaves the data point (0 = on it)
-  secondaryPull: 0.46,  // how far the others pull toward their own quadrant's caption
-  maxExcursion: 2.0,    // hard cap in world units on how far any anchor can sit from home
-  crossMidline: false,  // let an anchor cross into another quadrant. Off: the colour never lies
+  secondaryPull: 0.64,  // how far the others pull toward their own quadrant's caption
+  maxExcursion: 2.35,   // hard cap in world units on how far any anchor can sit from home —
+                        // with crossMidline on this is the ONLY thing bounding a visit
+  crossMidline: true,   // let an anchor cross into another quadrant (his ruling, see above)
   sway: 0.09,           // idle breath in the x/y plane, world units
   swayMs: 11000,
   reachAmpl: 0.42,      // idle drift along reach (toward and away from the viewer), world units
   reachMs: 13000,
   tiltDeg: 2.6,         // how far a cube rolls as it goes
   tiltMs: 17000,
-  phaseSpread: 1,       // 0 = the eight move in lockstep, 1 = evenly spread around the tour
+  phaseSpread: 0.87,    // 0 = the eight move in lockstep, 1 = evenly spread around the tour
   tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
-  separation: 0.92,     // keep cubes this many half-widths apart (0 turns the push off)
-  separationPush: 0.55, // how hard a pair shoves apart when they do meet
+  separation: 1.6,      // keep cubes this many half-widths apart (0 turns the push off)
+  separationPush: 0.05, // how hard a pair shoves apart when they do meet. Wide net, feather
+                        // touch: a pair reads as easing out of each other's way, not bouncing
   settleInMs: 2600,     // cubes appear exactly on their data point, then ease out into the tour
   holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
 };
@@ -494,9 +498,10 @@ export function initScene(projects, { onSelect } = {}) {
   // tuner page can move a slider and see the answer without a reload.
 
   // Where a cube goes to show capability `n`. Stop 0 is its data point, barely moved; the rest
-  // lean toward the caption of their own quadrant, capped two ways — `maxExcursion` in world
-  // units, and, unless crossMidline is on, at the primary quadrant's own half of each axis, which
-  // is what keeps a cube's position agreeing with its colour.
+  // lean toward the caption of their own quadrant. `maxExcursion` caps the lean in world units and
+  // is the live bound, crossMidline being on. Turning crossMidline off adds a second cap — the
+  // primary quadrant's own half of each axis — which pins a cube's position to its colour; that is
+  // how this shipped for half a day before Wyatt saw both and chose the crossing.
   function anchorFor(u, n) {
     const q = u.quads[n];
     const pull = n === 0 ? DRIFT.primaryPull : DRIFT.secondaryPull;

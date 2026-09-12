@@ -4,6 +4,39 @@
 
 ---
 
+## 2026-09-12 — The cubes move, and a cube may leave its own quadrant
+
+**A cube tours the quadrants of every capability its project used, and it is allowed to cross the
+midline into them.** Wyatt, 2026-09-12: *"make the cubes on the 3d graph gently move between the
+areas of the graph that describe the components of the project -- eg. pastry pirates is both
+systems design and product design; cited by ai is both strategy and user research."*
+
+`data/projects.json` has always recorded that a project is more than one capability — `capabilities`
+is an ordered list — and the graph only ever drew the first entry, because a point can only be in
+one place. Now the cube visits the rest.
+
+**The crossing was his call, made against the alternative.** It shipped first with `crossMidline`
+off, which clamped every anchor to the primary's own quadrant so a cube's position could never
+contradict its colour. He was given both in a tuner and turned it **on**. So a cube now goes right
+into its second capability's quadrant, and what bounds a visit is `maxExcursion` alone, at 2.35.
+**A cube out visiting is a project being read as two things at once. Do not put the clamp back to
+protect the colour rule** — the rule that `capabilities[0]` names the quadrant, colours the cube and
+is the word every page prints (2026-09-09, above) is a rule about **the data**, and
+`scripts/check.mjs` still asserts it against `data/projects.json`. Motion is a reading of that data
+at runtime, never a second source of it.
+
+**The twenty numbers in `DRIFT` at the top of `js/scene.js` are his, dialled in a tuner page on
+2026-09-12, not defaults anyone guessed.** The ones that carry a judgement: a 12.5s glide over a
+5.2s rest, so a cube is travelling more often than it is parked; `secondaryPull` 0.64, which is far
+enough to read as an arrival rather than a lean; and `separation` 1.6 with `separationPush` 0.05 —
+a wide net and a feather touch, so a pair eases out of each other's way instead of bouncing. Change
+one and say which, rather than re-dialling the set.
+
+**What is not negotiable underneath it:** cubes land exactly on their data point and only then ease
+out (`settleInMs`), a hovered cube freezes where it stands rather than snapping home, and
+`prefers-reduced-motion` parks all of it. Overlapping pairs are pushed apart in the x/y plane only
+— reach is data.
+
 ## 2026-09-09 — One capability word, and it lives in the data
 
 **`data/projects.json` `capabilities` is the only place a capability is written. Every page prints
