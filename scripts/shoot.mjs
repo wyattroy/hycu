@@ -264,6 +264,18 @@ for (const [label, vp, touch] of [['desktop', { width: 1440, height: 900 }, fals
     // Graph: a real selected tile, whichever is nearest the headline, must be under the canvas,
     // give a pointer cursor (desktop), and open its study when clicked or tapped.
     if (p === '/') {
+      // HOLD THE CUBES STILL FOR THIS CHECK. Since 2026-09-12 they wander between the quadrants
+      // their project drew techniques from, and this check reads a tile's position, then taps it a
+      // beat later — so it was tapping where a cube USED to be. It caught itself doing that once,
+      // reporting that a tap meant for Cited by AI opened Spatial Equity.
+      //
+      // Freezing is the honest fix, not a cover-up, because a cube hidden behind another is MEANT
+      // to be unreachable (Wyatt, 2026-09-12: "a covered cube SHOULD be untappable ... the user is
+      // able to swivel the graph to uncover it"). What this check exists to prove is that a tile
+      // routes to its study and that nothing invisible is sitting over the canvas — not that a
+      // moving target can be hit blind, which no real visitor ever attempts.
+      await page.evaluate(() => { if (window.__drift) window.__drift.enabled = false; });
+      await page.waitForTimeout(500);
       const tiles = await page.evaluate(() => (window.__graph?.screenPositions() || []).filter((t) => t.selected));
       if (!tiles.length) { errors.push(`${label} home: no tile positions exposed`); continue; }
       const h1 = await page.evaluate(() => { const r = document.querySelector('.hero-text h1').getBoundingClientRect(); return { x: r.left, y: r.top }; });

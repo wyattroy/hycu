@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-09-12 — A covered cube is meant to be untappable
+
+**Cubes hiding one another is not a fault. The reader swivels the graph.** Wyatt, 2026-09-12:
+*"a covered cube SHOULD be untappable"* and *"the user is able to swivel the graph to uncover it."*
+This is the same ruling he made about the axis labels on 2026-09-08, applied to the cubes: what is
+in front of what is information about depth, not damage to be engineered away.
+
+**What this struck down.** A pass had measured how often one cube covered another — 81% of frames
+on desktop, 88% on a phone — treated it as a defect, and rewrote `separate()` to push cubes apart
+**on the screen**, so that no cube was ever hidden from the current angle. It worked (0% obscured
+on a phone) and it was wrong: it moved cubes off the positions their capabilities earned them for a
+reason that lasts only as long as the reader holds still. **It is unwound.** `separate()` pushes
+apart only pairs genuinely close in space — where no angle would separate them, which is the
+2026-09-09 rule — and deliberately skips pairs that merely stack up under perspective.
+
+**The browser pass now holds the cubes still for its click/tap check.** That check reads a tile's
+position and taps a beat later, and it caught the movement honestly: a tap meant for Cited by AI
+opened Spatial Equity. Freezing is the right fix rather than a cover-up, precisely because of the
+ruling above — the check exists to prove a tile routes to its study and that nothing invisible
+covers the canvas, not that a moving target can be hit blind, which no visitor attempts.
+
 ## 2026-09-12 — The cubes move, and a cube may leave its own quadrant
 
 **A cube tours the quadrants of every capability its project used, and it is allowed to cross the
@@ -15,11 +36,24 @@ systems design and product design; cited by ai is both strategy and user researc
 is an ordered list — and the graph only ever drew the first entry, because a point can only be in
 one place. Now the cube visits the rest.
 
-**The crossing was his call, made against the alternative.** It shipped first with `crossMidline`
-off, which clamped every anchor to the primary's own quadrant so a cube's position could never
-contradict its colour. He was given both in a tuner and turned it **on**. So a cube now goes right
-into its second capability's quadrant, and what bounds a visit is `maxExcursion` alone, at 2.35.
-**A cube out visiting is a project being read as two things at once. Do not put the clamp back to
+**A stop is a DESTINATION, not a lean.** Wyatt, 2026-09-12: *"The intention behind this whole
+movement piece is to show that each project uses techniques from multiple quadrants. It's to move
+each project from its home quadrant INTO the other quadrants where it also used those
+techniques."* A first attempt aimed each stop at the quadrant's caption and leashed the distance;
+measured, **four of its eleven stops never left the home quadrant at all** — Pastry Pirates never
+reached systems design, ClaudeKit never reached product design — and every stop that did arrive
+crossed by a hair before turning round. It also dragged all eight cubes toward four midpoints.
+
+**The rule that replaced it: a visit is the project's own position REFLECTED into the quadrant
+being visited.** On the axis the two quadrants agree about, nothing moves — Pastry Pirates is far
+into Make and both its capabilities are Make-side, so it keeps its own far-right x. On the axis
+they differ about, the sign flips and the magnitude is kept, so a cube is as deep into the
+capability it is visiting as it is into the one it lives in. Arrival is guaranteed by construction:
+the destination IS a point in that quadrant, and all nine visits land. One dial, `visitDepth`,
+slides the landing point between just inside the far quadrant's edge and the full reflection.
+`secondaryPull`, `maxExcursion` and `crossMidline` are retired — they all existed to limit a
+journey that is now defined by where it ends.
+**A cube out visiting is a project being read as two things at once. Do not clamp it back to
 protect the colour rule** — the rule that `capabilities[0]` names the quadrant, colours the cube and
 is the word every page prints (2026-09-09, above) is a rule about **the data**, and
 `scripts/check.mjs` still asserts it against `data/projects.json`. Motion is a reading of that data

@@ -105,49 +105,55 @@ const DEPTH_LABEL_ANGLE = (6 * Math.PI) / 180;
 const DRIFT_AMPL = 0.035;
 const DRIFT_PERIOD_MS = 14000;
 
-// ─── Wander: a cube visits every capability its project used ──────────────────
-// A project is rarely one capability. Pastry Pirates is product design AND systems design; Cited
-// by AI is strategy AND user research. `capabilities` in data/projects.json has always recorded
-// that — it is an ordered list — but the graph only ever drew the first entry, because a point can
-// only be in one place. So the cube moves: it tours one anchor per capability in its own list,
-// easing between them and resting at each, with a slower sway, reach-bob and tilt running
-// underneath so a cube between anchors is never dead still.
+// ─── Wander: a cube visits every quadrant its project drew techniques from ────
+// Wyatt, 2026-09-12: *"The intention behind this whole movement piece is to show that each project
+// uses techniques from multiple quadrants. It's to move each project from its home quadrant INTO
+// the other quadrants where it also used those techniques."*
 //
-// THE FIRST CAPABILITY IS STILL WHERE A CUBE LIVES. Its anchor sits all but on the data point,
-// every cube arrives exactly on that point before easing out, and the colour never changes — so
-// what scripts/check.mjs asserts against data/projects.json is untouched. What a cube may now do
-// is LEAVE, all the way into its second capability's quadrant: Wyatt turned `crossMidline` on,
-// 2026-09-12, having watched both. A cube out visiting is a project being read as two things at
-// once, which is what the capabilities list says it is. `maxExcursion` is what holds it.
+// So a stop is not a lean, it is a destination. A cube leaves its own quadrant and arrives in the
+// next one on its `capabilities` list, rests there, and comes back round. Pastry Pirates is in
+// systems design as surely as it is in product design; Cited by AI is in user research as surely
+// as it is in strategy. The data has always said so — `capabilities` is an ordered list — and the
+// graph only ever drew the first entry, because a point can only be in one place.
+//
+// WHERE A VISIT LANDS: the project's own position, REFLECTED into the quadrant being visited.
+//   · On an axis the two quadrants agree about, nothing moves. Pastry Pirates is far into Make,
+//     and product design and systems design are both Make-side, so it keeps its own far-right x.
+//   · On an axis they differ about, the sign flips and the magnitude is kept. It sits 3.3 below
+//     the Product/Idea midline, so its systems-design stop is 3.3 ABOVE it — as deep into the
+//     capability it is visiting as it is into the one it lives in.
+// Arrival is therefore guaranteed by construction: the destination IS a point in that quadrant.
+// This replaces a first attempt that aimed each stop at the quadrant's caption and leashed the
+// distance — under which four of the eleven stops never left home at all (Pastry Pirates never
+// reached systems design), and every stop that did arrive crossed by a hair. It also dragged all
+// eight cubes toward four midpoints, which is what made them hide one another 81-88% of frames.
+//
+// THE FIRST CAPABILITY IS STILL HOME. Stop 0 is the data point, barely nudged; a cube starts
+// there, returns there, and keeps its colour the whole way round. What scripts/check.mjs asserts
+// against data/projects.json is untouched — this is a reading of that data at runtime, never a
+// second source of it.
 //
 // UNITS: every number below is a ratio or a duration, never a length in world units. Wyatt,
 // 2026-09-12: *"separation (in fact all these numbers) should be ratios, not absolute values,
-// right? that way they apply across scales."* Three of them were lengths, and the reason it
-// mattered is not the one you would guess — the box is R=5.5 on every screen, so a world length is
-// already a fixed share of it. What differs is `spread()`, 0.88 on desktop and 1.15 on a phone,
-// and the clamp was applied AFTER it. So `maxExcursion: 2.35` let a desktop cube stray 0.49 of a
-// half-axis and a phone cube only 0.37 — the same dial saying two different things about the same
-// project. They are fractions of a half-axis now, applied before spread, and the desktop numbers
-// he approved are unchanged: a phone simply stops holding its cubes 31% tighter than his ruling.
-//
-// Everything else was already scale-free, `separation` included: it is a multiple of the two
-// cubes' own half-widths with tileScale() inside it, so it already grew with the phone's larger
-// cubes. Durations are durations; a second is a second at every width.
+// right? that way they apply across scales."* The reason it matters is not the obvious one — the
+// box is R=5.5 on every screen, so a world length is already a fixed share of it. What differs is
+// `spread()`, 0.88 on desktop and 1.15 on a phone, and lengths were being applied after it, so the
+// same dial meant two different things about the same project. `sway` is a fraction of a half-axis
+// and `reachAmpl` a fraction of half the reach span. `separation` was always a ratio — a multiple
+// of the two cubes' own half-widths with tileScale() inside it. Durations are durations at every
+// width. Anything added later is one or the other; there is no third kind.
 //
 // Every number here is live: assign to window.__drift and the next frame uses it. That is how the
 // tuner page dials it, and every number below is one Wyatt dialled there on 2026-09-12.
 export const DRIFT = {
   enabled: true,        // master switch; prefers-reduced-motion turns it off regardless
   speed: 1,             // multiplies every clock at once — the one dial to slow the whole thing
-  travelMs: 12500,      // time gliding from one capability's anchor to the next
-  dwellMs: 5200,        // time resting at an anchor before it sets off again
-  ease: 2.6,            // 1 is linear; higher softens both ends of the glide
-  primaryPull: 0.10,    // how far the FIRST capability's anchor leaves the data point (0 = on it)
-  secondaryPull: 0.64,  // how far the others pull toward their own quadrant's caption
-  maxExcursion: 0.486,  // hard cap on how far any anchor sits from home, AS A FRACTION OF A
-                        // HALF-AXIS — with crossMidline on this is the only thing bounding a
-                        // visit. His 2.35 world units, converted (see the note on units below)
-  crossMidline: true,   // let an anchor cross into another quadrant (his ruling, see above)
+  travelMs: 12500,      // time crossing from one quadrant to the next
+  dwellMs: 5200,        // time spent in a quadrant before setting off again
+  ease: 2.6,            // 1 is linear; higher softens both ends of the crossing
+  primaryPull: 0.10,    // how far the HOME stop leaves the data point (0 = sits exactly on it)
+  visitDepth: 1,        // how far into the visited quadrant the cube goes: 1 is the full
+                        // reflection of its home position, 0 is just inside that quadrant's edge
   sway: 0.0186,         // idle breath in the x/y plane, as a fraction of a half-axis
   swayMs: 11000,
   reachAmpl: 0.07,      // idle drift along reach (toward the viewer and away), as a fraction of
@@ -158,9 +164,8 @@ export const DRIFT = {
   phaseSpread: 0.87,    // 0 = the eight move in lockstep, 1 = evenly spread around the tour
   tempoVariance: 0.18,  // ± fraction on each cube's own clock, so they never re-sync
   separation: 1.6,      // keep cubes this many half-widths apart (0 turns the push off)
-  separationPush: 0.05, // how hard a pair shoves apart when they do meet. Wide net, feather
-                        // touch: a pair reads as easing out of each other's way, not bouncing
-  settleInMs: 2600,     // cubes appear exactly on their data point, then ease out into the tour
+  separationPush: 0.05, // how hard a genuinely-coincident pair shoves apart
+  settleInMs: 2600,     // cubes appear exactly on their data point, then set off on the tour
   holdOnHover: true,    // a hovered cube freezes where it is, so it stays under the cursor
 };
 if (typeof window !== 'undefined') window.__drift = DRIFT;
@@ -513,31 +518,30 @@ export function initScene(projects, { onSelect } = {}) {
   // Everything below reads DRIFT fresh every frame rather than baking anchors at load, so the
   // tuner page can move a slider and see the answer without a reload.
 
-  // Where a cube goes to show capability `n`. Stop 0 is its data point, barely moved; the rest
-  // lean toward the caption of their own quadrant. `maxExcursion` caps the lean as a fraction of a
-  // half-axis and is the live bound, crossMidline being on. Turning crossMidline off adds a second cap — the
-  // primary quadrant's own half of each axis — which pins a cube's position to its colour; that is
-  // how this shipped for half a day before Wyatt saw both and chose the crossing.
+  // Where a cube goes to show capability `n`, in the same axis space as its ax/ay.
+  //
+  // Stop 0 is home: the data point, nudged a touch toward its own caption so it is not perfectly
+  // static. Every other stop is home REFLECTED into that capability's quadrant — see the rule at
+  // the top of this file. `visitDepth` slides the landing point between just inside that
+  // quadrant's edge (0) and the full reflection (1); at 0 it still lands a clear half-cube past
+  // the midline, so a cube never parks straddling an axis.
   function anchorFor(u, n) {
     const q = u.quads[n];
-    const pull = n === 0 ? DRIFT.primaryPull : DRIFT.secondaryPull;
-    const home = u.quads[0] || q;
-    let ax = u.ax + (q.x * R * 0.5 - u.ax) * pull;
-    let ay = u.ay + (q.y * R * 0.5 - u.ay) * pull;
-    if (!DRIFT.crossMidline && home) {
-      // Stay on the primary's side of both midlines, and no nearer than the cube's own half-width
-      // so it never straddles an axis it is supposed to sit clear of.
-      const half = ((u.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale() / Math.max(spread(), 0.01);
-      ax = home.x < 0 ? Math.min(ax, -half) : Math.max(ax, half);
-      ay = home.y < 0 ? Math.min(ay, -half) : Math.max(ay, half);
+    if (n === 0) {
+      return {
+        x: u.ax + (q.x * R * 0.5 - u.ax) * DRIFT.primaryPull,
+        y: u.ay + (q.y * R * 0.5 - u.ay) * DRIFT.primaryPull,
+      };
     }
-    const dx = ax - u.ax, dy = ay - u.ay;
-    const d = Math.hypot(dx, dy) / R;                    // fraction of a half-axis, not world units
-    if (d > DRIFT.maxExcursion && d > 0) {
-      const k = DRIFT.maxExcursion / d;
-      ax = u.ax + dx * k; ay = u.ay + dy * k;
-    }
-    return { x: ax, y: ay };
+    const home = u.quads[0];
+    // Half a cube, in axis space, so "just inside the edge" means visibly inside it.
+    const half = ((u.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale() / Math.max(spread(), 0.01);
+    const reflect = (v, homeSign, toSign) => {
+      if (homeSign === toSign) return v;              // the axis they agree about: do not move
+      const depth = Math.max(Math.abs(v), half);      // as deep in as it is deep in at home
+      return toSign * (half + (depth - half) * clamp(DRIFT.visitDepth, 0, 1));
+    };
+    return { x: reflect(u.ax, home.x, q.x), y: reflect(u.ay, home.y, q.y) };
   }
 
   // The tour: rest at a stop, glide to the next, repeat. Plus a sway and a reach-bob on their own
@@ -572,12 +576,25 @@ export function initScene(projects, { onSelect } = {}) {
     return clamp(z, Z_FAR + halfD, Z_NEAR - halfD);
   }
 
-  // Two cubes may share a quadrant; they may not share a point (DECISIONS.md, 2026-09-09 — at 0.08
-  // apart on a phone, tapping one opened the other). Moving cubes can wander into each other, so
-  // any overlapping pair is shoved apart in the x/y plane. Reach is left alone: it is data.
+  // Two cubes may share a quadrant; they may not share a POINT (DECISIONS.md, 2026-09-09). That is
+  // the whole of the rule, and it is about space, not about the glass.
+  //
+  // A CUBE COVERED BY ANOTHER IS MEANT TO BE UNREACHABLE. Wyatt, 2026-09-12: *"a covered cube
+  // SHOULD be untappable ... the user is able to swivel the graph to uncover it."* Same ruling he
+  // made about the axis labels on 2026-09-08 — the reader turns the volume, and what is in front
+  // of what is information about depth, not a fault to be engineered away.
+  //
+  // So this pushes apart only pairs that are genuinely close IN SPACE, where no angle would ever
+  // separate them, and deliberately skips pairs that merely stack up under perspective. An earlier
+  // pass here measured overlap on the screen instead and shoved depth-separated cubes apart until
+  // nothing was ever hidden — it took obscured frames from 56% to 0% on a phone, and it was
+  // solving a problem Wyatt does not have. It is unwound. If you find yourself moving a cube off
+  // the position its capabilities earned it so that another cube can be seen, read this first.
+  //
+  // Reach is left alone either way: it is data.
   function separate() {
-    if (DRIFT.separation <= 0) return;
     for (const m of tiles) m.userData.pushTo.set(0, 0, 0);
+    if (DRIFT.separation <= 0) return;
     for (let i = 0; i < tiles.length; i++) {
       for (let j = i + 1; j < tiles.length; j++) {
         const a = tiles[i].userData, b = tiles[j].userData;
@@ -585,11 +602,10 @@ export function initScene(projects, { onSelect } = {}) {
         const rb = ((b.project.selected ? TILE : TILE_SMALL).w / 2) * tileScale();
         const min = (ra + rb) * DRIFT.separation;
         let dx = b.want.x - a.want.x, dy = b.want.y - a.want.y;
-        const dz = Math.abs(b.want.z - a.want.z);
-        if (dz > min) continue;                          // far apart in depth: they never touch
+        if (Math.abs(b.want.z - a.want.z) > min) continue;   // far apart in depth: swivelling separates them
         let d = Math.hypot(dx, dy);
         if (d >= min) continue;
-        if (d < 1e-4) { dx = 1; dy = 0; d = 1; }         // dead centre on each other: pick an axis
+        if (d < 1e-4) { dx = 1; dy = 0; d = 1; }
         const k = ((min - d) / 2) * DRIFT.separationPush / d;
         a.pushTo.x -= dx * k; a.pushTo.y -= dy * k;
         b.pushTo.x += dx * k; b.pushTo.y += dy * k;
