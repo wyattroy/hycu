@@ -13,8 +13,8 @@ verified build. Lines marked *(default)* were not asked of him — correct them 
 - **test-command:** node scripts/check.mjs
 - **trial-report:** .claude/TEST-REPORT.md
 - **verdicts:** .claude/reviews/
-- **backlog:** .claude/BACKLOG.md
-- **backlog-id-pattern:** HY-\d+
+- **backlog:** BACKLOG.md (one list since 2026-09-12; items are headings, not numbered)
+- **backlog-id-pattern:** none
 - **ledger:** .claude/CTO-LEDGER.md
 - **questions:** .claude/CTO-QUESTIONS.md
 - **lock:** .claude/.cto-lock

@@ -8,7 +8,7 @@ officer reads these in order and starts with the organisation's judgment intact.
 | What Wyatt has DECIDED, with the reason | [`DECISIONS.md`](DECISIONS.md) | anyone, the moment he rules |
 | Verdicts on the work — newest at the TOP | [`../CEO-REVIEWS.md`](../CEO-REVIEWS.md) | the CEO, after every review |
 | Facts about this repo the officers need | [`../OFFICERS.md`](../OFFICERS.md) | when the repo changes |
-| What is open | [`../BACKLOG.md`](../BACKLOG.md) | whoever finds it |
+| What is open | [`../../BACKLOG.md`](../../BACKLOG.md) | whoever finds it |
 | What is waiting on him | [`../CTO-QUESTIONS.md`](../CTO-QUESTIONS.md) | anyone who needs him |
 
 **Point, do not restate.** If a fact lives in one of these, link to it.
