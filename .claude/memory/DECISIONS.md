@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-09-12 — The swing is 30 seconds each way, and links show a preview card
+
+**The idle camera swing is 30 seconds each way**, a 60-second round trip. Wyatt, the same evening:
+*"make the camera swing faster, 30 seconds each way."* This replaces the 70 seconds in the entry
+below; the two ends of the swing are unchanged. At its fastest, mid-swing, it turns about 2° a second.
+
+**A shared link shows `assets/og.png`.** *"create a new preview image for the website ... using this
+image plus the wordmark and the color aura."* 1200×630: the wordmark on the left, the Studio page's
+tesseract on the right, frozen at the moment that matches the frame he sent (t=480 in
+`js/site.js`'s rotation), over the four capability washes. Every page carries the same `og:image`.
+`node scripts/og-image.mjs` rebuilds it — rerun it if the wordmark, the ink or the palette changes,
+because the PNG bakes all three in.
+
+---
+
 ## 2026-09-12 — One backlog, half the spacing, a wider swivel, blue emphasis, no roll
 
 Five rulings in one message, all the same afternoon.
