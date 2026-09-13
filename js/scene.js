@@ -106,12 +106,12 @@ const DEPTH_LABEL_ANGLE = (6 * Math.PI) / 180;
 // Idle swivel: until someone touches the graph, the camera eases from its starting view round to a
 // view from the other side of the volume, and back. Wyatt, 2026-09-12, with a screenshot of the far
 // end: "goes between its starting point and here ... keep the movement speed slow and gradual".
-// The far end was matched to that screenshot in a browser. The period is set so the fastest moment
-// of the swing — the middle — turns at the rate the old ±2° drift did, about 0.9° a second: a much
-// longer swing at the same speed, so 70 seconds each way.
+// The far end was matched to that screenshot in a browser. 30 seconds each way (Wyatt, same day:
+// "make the camera swing faster, 30 seconds each way"), after 70 proved too slow to notice. The
+// fastest moment, mid-swing, turns about 2° a second.
 const SWIVEL_THETA = 0.4;
 const SWIVEL_PHI = 0;
-const SWIVEL_PERIOD_MS = 140000;
+const SWIVEL_PERIOD_MS = 60000;
 
 // ─── Wander: a cube visits every quadrant its project drew techniques from ────
 // Wyatt, 2026-09-12: *"The intention behind this whole movement piece is to show that each project
