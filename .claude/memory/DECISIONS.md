@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-09-14 — Review 39's open questions, ruled
+
+- **Pastry Pirates shipped in four weeks and is still improving.** Wyatt: *"shipped in 4 weeks with
+  ongoing improvements. July 2026, ongoing is great."* The rail's Duration is "July 2026, ongoing";
+  the four weeks stay in the headline, the Work card and the graph tile.
+- **Xavaar stays on the Spatial Equity With row, and "illustrations" stays after Julia Mattis.**
+  Wyatt: *"Yes Xavaar stays on the With row. Don't drop 'illustrations'."* The With row credits the
+  team; the team-credit ruling below is about prose.
+- **"Customers" is right on the What They're Buying card.** Wyatt: *"the research was with the
+  brand's existing customers."*
+- **Pour's facility is "a healthcare facility"** in the study headline and on the Work page (card
+  and intro line). Wyatt: *"make both say 'healthcare facility'."* The eyebrow and rail keep "a
+  residential eating-disorder facility".
+- **The book is about institutions, and its method applies to any organization.** Wyatt: *"keep
+  institutions; but the methodology applies to organizations too (you read the book)."* The study
+  headline and the Work card both say "changing an institution / institutions, or any organization".
+
+---
+
 ## 2026-09-14 — Credit the team, not individual contributions
 
 **Study copy does not credit individual team members for their parts of the work.** Wyatt, removing
