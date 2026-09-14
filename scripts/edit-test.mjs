@@ -127,6 +127,22 @@ try {
     const hits = work.split('DUP-EDIT').length - 1;
     check(hits === 1, `duplicate edit landed ${hits} time(s), expected 1`);
     check(work.lastIndexOf('<span data-cap="research">User research</span>') < work.indexOf('DUP-EDIT'), 'duplicate edit did not land on the last tag');
+
+    // Text inside a Work card (the whole card is a link) drag-selects while editing, the card cannot
+    // be dragged away, and the card is draggable again once editing ends (Wyatt, 2026-09-14).
+    await p.goto(BASE + '/work/', { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
+    const cardHead = p.locator('.work-item h3').first();
+    await cardHead.scrollIntoViewIfNeeded();
+    const cardLine = await cardHead.evaluate((el) => { const r = document.createRange(); r.selectNodeContents(el); const q = r.getClientRects()[0]; return { x: q.x, y: q.y + q.height / 2, w: q.width }; });
+    await cardHead.dblclick();
+    check((await p.evaluate(() => document.querySelector('.work-item').getAttribute('draggable'))) === 'false', 'the Work card link is still draggable while its text is being edited');
+    await p.waitForTimeout(600);
+    await p.mouse.move(cardLine.x + cardLine.w * 0.15, cardLine.y); await p.mouse.down(); await p.mouse.move(cardLine.x + cardLine.w * 0.6, cardLine.y, { steps: 12 }); await p.mouse.up();
+    const cardSel = await p.evaluate(() => getSelection().toString());
+    check(cardSel.length > 3, `dragging inside a Work card selected "${cardSel}"`);
+    check(p.url().endsWith('/work/'), `dragging inside a Work card navigated to ${p.url()}`);
+    await p.keyboard.press('Escape');
+    check((await p.evaluate(() => document.querySelector('.work-item').getAttribute('draggable'))) === null, 'the Work card link stayed undraggable after editing ended');
   } finally { fs.writeFileSync(WORK, workOriginal); }
 
   await p.goto(BASE + '/contact/', { waitUntil: 'networkidle' });

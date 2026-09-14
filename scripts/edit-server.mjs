@@ -68,6 +68,12 @@ const EDITOR = String.raw`
   const SKIP = '#axis-labels, #graph-hover, .hero-controls, .nav-toggle, .visually-hidden, #graph-2d, .edit-bar';
   const changes = [];
   let active = null;
+  // The link around the text being edited, if any. The Work cards are whole <a> elements, and a drag
+  // that starts inside a link drags the link instead of selecting text (Wyatt, 2026-09-14: "click
+  // dragging is a problem on the /work page"). While editing, that link is made undraggable.
+  let activeLink = null;
+  const holdLink = (t) => { activeLink = t.parentElement && t.parentElement.closest('a'); if (activeLink) activeLink.setAttribute('draggable', 'false'); };
+  const releaseLink = () => { if (activeLink) activeLink.removeAttribute('draggable'); activeLink = null; };
 
   const bar = document.createElement('div');
   bar.className = 'edit-bar';
@@ -91,6 +97,7 @@ const EDITOR = String.raw`
     '.edit-bar button{font:inherit;color:#111112;background:#fff;border:0;border-radius:999px;padding:6px 12px;cursor:pointer}',
     'body{padding-top:36px}#nav{top:36px}',
     '.hero-copy,.hero-text{pointer-events:auto !important}', /* the site lets clicks pass through the headline to the graph; editing needs the headline */
+    'a[draggable="false"]{-webkit-user-drag:none}[contenteditable]{-webkit-user-select:text;user-select:text}',
     '[data-editing]{outline:2px solid #0a5cff;outline-offset:4px;border-radius:2px;background:rgba(10,92,255,.04)}',
     '[data-saved]{outline:2px solid #1fa084;outline-offset:4px;border-radius:2px;transition:outline-color 1.2s}',
     '[data-failed]{outline:2px solid #d9622b;outline-offset:4px;border-radius:2px}',
@@ -134,6 +141,7 @@ const EDITOR = String.raw`
     t.dataset.before = html;
     t.dataset.occurrence = String(twins.indexOf(t));
     t.dataset.pageCount = String(twins.length);
+    holdLink(t);
     t.setAttribute('contenteditable', 'true');
     t.dataset.editing = '1';
     t.focus();
@@ -163,7 +171,7 @@ const EDITOR = String.raw`
     if (at) { sel.removeAllRanges(); sel.addRange(at); }
   }, true);
   const inActive = (n) => active && n && active.contains(n.nodeType === 1 ? n : n.parentElement);
-  document.addEventListener('dragstart', (e) => { if (inActive(e.target)) e.preventDefault(); }, true);
+  document.addEventListener('dragstart', (e) => { if (inActive(e.target) || (activeLink && activeLink.contains(e.target.nodeType === 1 ? e.target : e.target.parentElement))) e.preventDefault(); }, true);
   document.addEventListener('drop', (e) => { if (inActive(e.target)) e.preventDefault(); }, true);
   // Paste as plain text. Text copied from a page carries its font size and weight as inline styles,
   // and saved that way it overrides the site's type (the Forgiveness "What we found" headline,
@@ -177,10 +185,10 @@ const EDITOR = String.raw`
   document.addEventListener('focusout', (e) => { if (active && e.target === active) setTimeout(() => { if (active === e.target) commit(); }, 0); });
 
   function cleanup(t) {
-    t.removeAttribute('contenteditable'); delete t.dataset.editing;
+    t.removeAttribute('contenteditable'); delete t.dataset.editing; releaseLink();
   }
   function cancel() {
-    const t = active; active = null;
+    const t = active; active = null; releaseLink();
     t.outerHTML = t.dataset.before; say('Cancelled.');
   }
   async function commit() {
