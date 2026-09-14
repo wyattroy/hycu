@@ -29,7 +29,7 @@ cd ~/Documents/Projects/hycu && npm run edit
 
 Then open http://127.0.0.1:8788. Double-click any piece of text, change it, press Enter (or click
 away). It is written straight into the source file, and the bar at the top says which one. Esc
-cancels. Links don't navigate while editing; ⌘-click one to follow it. If an edit can't be
+cancels. Shift+Enter starts a new paragraph; it becomes its own paragraph in the file when you save. Links don't navigate while editing; ⌘-click one to follow it. If an edit can't be
 located uniquely in the file, it goes in a list and a "Copy all changes" button appears; paste
 that to Claude.
 

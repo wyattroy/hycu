@@ -51,7 +51,11 @@ function save({ page, before, after, occurrence = 0, pageCount = 1 }) {
     let idx = -1;
     for (let k = 0; k <= occurrence; k++) idx = src.indexOf(candidate, idx + 1);
     // Keep the file's own spelling: if the original was found via entities, write entities back.
-    const replacement = encoded ? encode(after) : after;
+    // A paragraph split with Shift+Enter comes back as several elements joined by U+2029: each new one
+    // goes on its own line, at the indentation of the one it came from.
+    const lineStart = src.lastIndexOf('\n', idx - 1) + 1;
+    const indent = /^[ \t]*$/.test(src.slice(lineStart, idx)) ? src.slice(lineStart, idx) : '';
+    const replacement = (encoded ? encode(after) : after).split(' ').join('\n' + indent);
     fs.writeFileSync(file, src.slice(0, idx) + replacement + src.slice(idx + candidate.length));
     return { ok: true, file: path.relative(ROOT, file), occurrence: n > 1 ? `${occurrence + 1} of ${n}` : undefined };
   }
@@ -67,11 +71,16 @@ const EDITOR = String.raw`
 
   const bar = document.createElement('div');
   bar.className = 'edit-bar';
-  bar.innerHTML = '<span class="eb-dot"></span><span class="eb-msg">Editing · double-click any text · Enter or click away saves to the source · Esc cancels · ⌘-click follows links</span><button class="eb-copy" hidden>Copy all changes</button>';
+  bar.innerHTML = '<span class="eb-dot"></span><span class="eb-msg">Editing · double-click any text · Enter or click away saves to the source · Shift+Enter new paragraph · Esc cancels · ⌘-click follows links</span><button class="eb-copy" hidden>Copy all changes</button>';
   document.body.prepend(bar);
   const msg = bar.querySelector('.eb-msg');
   const copyBtn = bar.querySelector('.eb-copy');
   const say = (t, ok) => { msg.textContent = t; bar.dataset.state = ok === undefined ? '' : ok ? 'ok' : 'bad'; };
+  // The editor's own marks (the green saved flash, the orange failed outline) are not in the file. If
+  // they ride along in the text sent to find an element there, it is never found, and every later
+  // edit to an element that failed once, or was re-edited within the flash, fails too.
+  const MARKS = ['contenteditable', 'data-editing', 'data-saved', 'data-failed', 'data-before', 'data-occurrence', 'data-page-count'];
+  const sourceHTML = (el) => { const c = el.cloneNode(true); MARKS.forEach((m) => c.removeAttribute(m)); return c.outerHTML; };
 
   const style = document.createElement('style');
   style.textContent = [
@@ -111,18 +120,24 @@ const EDITOR = String.raw`
     if (!t || t === active) return;
     if (active) commit();
     e.preventDefault();
+    // Keep the word the double-click selected, rather than jumping the caret to the end. Taken before
+    // contenteditable goes on, which clears the selection.
+    const sel = window.getSelection();
+    const picked = sel && sel.rangeCount && t.contains(sel.getRangeAt(0).commonAncestorContainer) ? sel.getRangeAt(0).cloneRange() : null;
     active = t;
     // Whole elements, tag and attributes included: text alone can also live inside a meta tag or a
     // longer sentence, and a match there would rewrite the wrong thing.
     // Count twins BEFORE stamping any data-* attribute on the element, or it has none.
-    const twins = [...document.querySelectorAll('*')].filter((el) => el.outerHTML === t.outerHTML);
-    t.dataset.before = t.outerHTML;
+    delete t.dataset.saved; delete t.dataset.failed;
+    const html = sourceHTML(t);
+    const twins = [...document.querySelectorAll(t.tagName)].filter((el) => sourceHTML(el) === html);
+    t.dataset.before = html;
     t.dataset.occurrence = String(twins.indexOf(t));
     t.dataset.pageCount = String(twins.length);
     t.setAttribute('contenteditable', 'true');
     t.dataset.editing = '1';
     t.focus();
-    const sel = window.getSelection(); if (sel && sel.rangeCount) sel.collapseToEnd();
+    if (picked) { sel.removeAllRanges(); sel.addRange(picked); }
     say('Editing. Enter or click away to save, Esc to cancel.');
   });
 
@@ -130,7 +145,35 @@ const EDITOR = String.raw`
     if (!active) return;
     if (e.key === 'Escape') { e.preventDefault(); cancel(); }
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(); }
+    // Shift+Enter starts a new paragraph (split into separate <p>s on save). Headings, labels and
+    // list items take no line breaks.
+    if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); if (active.matches('p')) document.execCommand('insertLineBreak'); }
   });
+
+  // Inside the box being edited, a drag always selects. Browsers otherwise treat a drag that starts on
+  // already-selected text as picking that text up to move it, which looks like selection is broken
+  // and can silently rearrange words. Collapsing the selection at the press point first makes the
+  // browser start a fresh selection there. Double/triple-click and Shift-click extend are left alone.
+  document.addEventListener('mousedown', (e) => {
+    if (!active || !active.contains(e.target) || e.button !== 0 || e.detail > 1 || e.shiftKey) return;
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) return;
+    let at = document.caretRangeFromPoint ? document.caretRangeFromPoint(e.clientX, e.clientY) : null;
+    if (!at && document.caretPositionFromPoint) { const pos = document.caretPositionFromPoint(e.clientX, e.clientY); if (pos) { at = document.createRange(); at.setStart(pos.offsetNode, pos.offset); } }
+    if (at) { sel.removeAllRanges(); sel.addRange(at); }
+  }, true);
+  const inActive = (n) => active && n && active.contains(n.nodeType === 1 ? n : n.parentElement);
+  document.addEventListener('dragstart', (e) => { if (inActive(e.target)) e.preventDefault(); }, true);
+  document.addEventListener('drop', (e) => { if (inActive(e.target)) e.preventDefault(); }, true);
+  // Paste as plain text. Text copied from a page carries its font size and weight as inline styles,
+  // and saved that way it overrides the site's type (the Forgiveness "What we found" headline,
+  // 2026-09-14).
+  document.addEventListener('paste', (e) => {
+    if (!inActive(e.target)) return;
+    e.preventDefault();
+    const text = (e.clipboardData ? e.clipboardData.getData('text/plain') : '').replace(/\s*\n\s*/g, ' ');
+    if (text) document.execCommand('insertText', false, text);
+  }, true);
   document.addEventListener('focusout', (e) => { if (active && e.target === active) setTimeout(() => { if (active === e.target) commit(); }, 0); });
 
   function cleanup(t) {
@@ -145,7 +188,21 @@ const EDITOR = String.raw`
     const before = t.dataset.before; const occurrence = Number(t.dataset.occurrence || 0); const pageCount = Number(t.dataset.pageCount || 1);
     delete t.dataset.before; delete t.dataset.occurrence; delete t.dataset.pageCount; cleanup(t);
     t.innerHTML = t.innerHTML.replace(/(&nbsp;|\u00a0)+$/, '');
-    const after = t.outerHTML;
+    let after = sourceHTML(t);
+    // Line breaks from Shift+Enter (or the <div>s some browsers make instead) become separate
+    // paragraphs: one <p> per line with the same attributes, sent joined by U+2029 for the server to
+    // put on their own lines. The page gets the same paragraphs, so it keeps matching the file.
+    if (t.matches('p') && /<br|<div/i.test(t.innerHTML)) {
+      const lines = t.innerHTML.replace(/<div[^>]*>/gi, ' ').replace(/<\/div>/gi, '').replace(/<br[^>]*>/gi, ' ')
+        .split(' ').map((s) => s.replace(/^(\s|&nbsp;)+|(\s|&nbsp;)+$/g, '')).filter(Boolean);
+      if (lines.length) {
+        const shell = t.cloneNode(false); MARKS.forEach((m) => shell.removeAttribute(m));
+        const open = shell.outerHTML.slice(0, -'</p>'.length);
+        t.innerHTML = lines[0];
+        t.insertAdjacentHTML('afterend', lines.slice(1).map((l) => open + l + '</p>').join(''));
+        after = lines.map((l) => open + l + '</p>').join(' ');
+      }
+    }
     if (after === before) { say('No change.'); return; }
     try {
       const res = await fetch('/__save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: location.pathname, before, after, occurrence, pageCount }) });
@@ -161,7 +218,7 @@ const EDITOR = String.raw`
   }
 
   copyBtn.addEventListener('click', async () => {
-    const text = changes.map((c) => '## ' + c.page + '\nBEFORE: ' + c.before + '\nAFTER:  ' + c.after).join('\n\n');
+    const text = changes.map((c) => '## ' + c.page + '\nBEFORE: ' + c.before + '\nAFTER:  ' + c.after.split(' ').join('\n')).join('\n\n');
     try { await navigator.clipboard.writeText(text); say('Copied ' + changes.length + ' change(s). Paste them to Claude.', true); }
     catch { say('Could not copy; select the text in the console instead.', false); console.log(text); }
   });
