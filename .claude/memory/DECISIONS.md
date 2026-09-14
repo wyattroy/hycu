@@ -4,6 +4,62 @@
 
 ---
 
+## 2026-09-14 — Credit the team, not individual contributions
+
+**Study copy does not credit individual team members for their parts of the work.** Wyatt, removing
+"Xavaar Quaranto modeled the school's finances" from Spatial Equity: *"we worked as a team; we don't
+credit individual team members for their contributions."* The With row in each study's rail still
+names everyone who worked on it (see the collaborators ruling of 2026-09-02); prose says "we".
+
+---
+
+## 2026-09-14 — The site's ethos is the book and the care manifesto; copy stops being combative
+
+**`.claude/memory/ETHOS.md` is the standard for how the site sees people.** Wyatt, after reading copy
+full of "arguing": *"i'm so confused why so much of your content is combative. I want you to read my
+book and realize that THIS is my manifesto. THIS is the ethos i want to imbue in my site -- not
+necessarily through its language, but this is how I move through the world."* The sources are his
+book, How to Change Institutions, and the Pour care manifesto. Both are summarised in ETHOS.md, and
+the manifesto is reproduced in full. It shows in stance, not vocabulary: no opponents, curiosity
+first, findings offered as a gift, feedback and repair as care. This replaces the BACKLOG note that
+voice work needed the forgiveness-platform proposal as its reference.
+
+**Clarity beats sounding like Wyatt.** Wyatt, same day: *"I'm realizing that I'm not that great a
+writer, and I trained you to write like me, but my writing isn't very clear."* He asked for a tense
+audit and for every study to be clearer and about 30% shorter.
+
+**The tense rule** (ruled the same evening): past tense for what happened, present for what is still
+true, future for what hasn't happened yet. Wyatt's rulings on the audit's three questions:
+- *"headlines are fine"*: a beat headline may state a finding as a present-tense truth.
+- Pour's opening "Picture a counselor…" scene stays in present tense, the one exception: *"agree."*
+- **Polycam's brief:** *"it wasn't a test about WHETHER videos get cited by AI, we know they do. it
+  was testing whether they could INFLUENCE the videos cited by AI. we did that by turning existing
+  blog posts about ai-citable topics into scripts."*
+
+**Pastry Pirates dates:** *"i built it 7/4 to 8/2 launch publicly online."* That is about four weeks,
+not the six he gave earlier the same day; put back to him, not yet reconciled on the page.
+
+**Go-ahead:** *"yes apply the 30%ish cut rule to the 5 studies i finished"*: Spatial Equity, What
+They're Buying, Polycam, Global Forgiveness Movement, ClaudeKit. Pour, How to Change Institutions and
+Pastry Pirates wait until he finishes editing them.
+
+---
+
+## 2026-09-14 — The Forgiveness study is "Global Forgiveness Movement", and Wyatt is named on the With rows
+
+**The Forgiveness project is named "Global Forgiveness Movement"** everywhere a project name lives: the
+graph tile, the page title, the Work card and the study head, plus the next-study link from Polycam.
+Wyatt renamed the Work card in the inline editor, was asked whether to keep it or revert, and said:
+*"it should be Global Forgiveness Movement."* Replaces "Teaching Forgiveness".
+
+**Pastry Pirates shipped in six weeks, not seven.** Wyatt: *"Pastry Pirates was up in 6."*
+
+**Wyatt Roy is named on every study's With row.** Wyatt: *"Add me as a name in every 'with' section of
+the work pages."* He goes first. This amends the 2026-09-02 founder entry's "the site hides that it is
+a solo practice" only this far: the founder is credited alongside collaborators. "We" still stands.
+
+---
+
 ## 2026-09-12 — The swing is 30 seconds each way, and links show a preview card
 
 **The idle camera swing is 30 seconds each way**, a 60-second round trip. Wyatt, the same evening:
