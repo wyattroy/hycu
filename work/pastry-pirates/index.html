@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Pastry Pirates &middot; Hycu</title>
-  <meta name="description" content="A board game balanced by fifty thousand simulated games and shipped as an online multiplayer game in seven weeks.">
+  <meta name="description" content="A board game balanced by fifty thousand simulated games and shipped as an online multiplayer game in six weeks.">
   <link rel="canonical" href="https://hycudesign.com/work/pastry-pirates/">
   <meta property="og:image" content="https://hycudesign.com/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -37,7 +37,7 @@
   <header class="wrap study-head">
     <p class="eyebrow">Studio &middot; Product design &middot; 2026</p>
     <h1 class="proj">Pastry Pirates</h1>
-    <h2 class="h-lg">Fifty thousand simulated games, then a shipped multiplayer game, in seven weeks.</h2>
+    <h2 class="h-lg">Fifty thousand simulated games, then a shipped multiplayer game, in six weeks.</h2>
     <p class="study-intro">A board game about plundering the Caribbean for baking ingredients. We treated its rules as a system, simulated it until the numbers settled, and shipped it online at <a class="link" href="https://playpastrypirates.com/">playpastrypirates.com</a>.</p>
   </header>
 
@@ -53,19 +53,19 @@
       <section class="beat">
         <p class="eyebrow">What we found</p>
         <h2 class="h-md">Play it fifty thousand times and the rules tell you what they do.</h2>
-        <p>We wrote a simulation engine in Python and ran tournaments between strategies: the hoarder, the trader, the raider, the one who sails straight home. Roughly 50,000 games later we had win rates for every rule variant, the exact odds behind the coin flips, and a ruleset where no strategy wins more than its share. Several rules we were attached to went. One we'd thought was decorative turned out to be what kept games close.</p>
+        <p>We wrote a simulation engine in Python and ran tournaments between strategies: the hoarder, the trader, the raider, the one who sails straight home. Roughly 50,000 games later we had win rates for every rule variant, the exact odds behind the coin flips, and a ruleset where no strategy wins more than its share. Several rules we were attached to were removed. One we'd thought was decorative turned out to be what kept games close.</p>
         <p>The lesson we keep reusing: if you can simulate a system, do that before you argue about it.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
-        <h2 class="h-md">Shipped online, with the lab left open.</h2>
-        <p>The game now runs in the browser for two to four people, each on their own device, with bots filling empty seats. Alongside it is a rules lab where anyone can change any rule, watch bot games play out, scrub the timeline, and run a 400-game balance check of their own. A physical edition is in production from the same rules.</p>
-        <p>Building it this fast was its own experiment. Most of the code was written by AI agents working under a process we designed: one agent proves a defect exists before another is allowed to fix it, a tester plays the real game, and a checker trusts evidence rather than reports. We packaged that process as <a class="link" href="/work/claude-kit/">ClaudeKit</a>, and it ran the making of this site.</p>
+        <h2 class="h-md">Shipped online, with a physical edition.</h2>
+        <p>The game now runs in the browser for one to four people, each on their own device, with pirate bots filling empty seats. A physical edition is in production from the same rules.</p>
+        <p>Building it this fast was its own experiment. Most of the code was written by AI agents working under a process we designed: one agent proves a defect exists before another is allowed to fix it, a "Sea Trial" process QAs and tests the entire game automatically after every change, and a checker trusts evidence rather than reports. We packaged that process as <a class="link" href="/work/claude-kit/">ClaudeKit</a>, and it ran the making of this site.</p>
         <div class="figures">
           <div class="figure"><span class="n num">50,000</span><span class="l">simulated games behind the ruleset</span></div>
           <div class="figure"><span class="n num">2,134</span><span class="l">commits between July 14 and September 1</span></div>
-          <div class="figure"><span class="n num">2&ndash;4</span><span class="l">players online, bots fill the rest</span></div>
+          <div class="figure"><span class="n num">1&ndash;4</span><span class="l">players online, bots fill the rest</span></div>
         </div>
       </section>
 

@@ -38,7 +38,7 @@
     <p class="eyebrow">Polycam &middot; Strategy &middot; 2026</p>
     <h1 class="proj">Cited by AI</h1>
     <h2 class="h-lg">Video scripts written to be cited: an AEO framework for Polycam, and the six videos made with it.</h2>
-    <p class="study-intro">Polycam's videos were working on people and were close to invisible to the AI systems those same people were asking. The brief was to rewrite the next batch. We built the framework first, then rewrote against it, and made source-checking a step in production rather than a check at the end.</p>
+    <p class="study-intro">Polycam's videos were working on people but were largely invisible to the AI systems those same people were asking. The brief was to produce a batch of videos to test the company's capacity to influence AI citations. We built the framework first, wrote new scripts and storyboards with it, and made source-checking a step in production rather than a check at the end.</p>
   </header>
 
   <div class="wrap study-body">
@@ -46,36 +46,32 @@
       <section class="beat">
         <p class="eyebrow">Starting point</p>
         <h2 class="h-md">Turn the blog posts into scripts, in our voice.</h2>
-        <p>Polycam makes a 3D scanning app, and the audience for this work is architects, engineers, and contractors using phone scans for renovation documents, material estimates, and scan-to-CAD workflows. The brief that arrived was a rewrite job. Take the existing articles, turn each into about four hundred words of script, roughly three minutes on screen. They had a draft pipeline and a shelf of articles to work from.</p>
-        <p>Two things about those drafts were going to keep costing them. They were written for a person watching, so they opened with context and buried the answer, which is the wrong shape for a machine trying to lift one out. And they carried claims nobody had checked. A recording session earlier that year had gone out with a factual error about a competitor's product and had to be recorded again. On that second point the client was explicit: verification had to be a structural step in the workflow rather than a last look before recording.</p>
+        <p>Polycam makes a 3D scanning app, and the audience for this work is architects, engineers, and contractors using phone scans for renovation documents, material estimates, and scan-to-CAD workflows. The brief that arrived was to take existing blog articles, turn each into about four hundred words of script, roughly three minutes on screen. They had a draft pipeline and a shelf of articles to work from.</p>
+        <p>Two things about those drafts were not going to translate to the screen in a way LLM answer engines could use: they were written for a person watching, so they opened with context and buried the answer, which is the wrong shape for a machine trying to lift one out. And they carried claims that were unsubstantiated by third parties.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">A video gets quoted from somewhere other than the video.</h2>
-        <p>Answer engine optimization, or AEO, is writing so that an AI system answering someone's question quotes you rather than paraphrasing somebody else. For a blog post the mechanism is simple, because the model reads the text. For a video it reads the description, the chapter markers, the transcript, and, as far as we can tell, most reliably a dense summary paragraph at the close. The structure turned out not to fight with what keeps a person watching. If the first sentence states the answer, the hook can follow it rather than replace it.</p>
-        <p>The second thing was sitting in the source material. The scan-to-CAD script claimed accuracy "to within &plusmn;Y inches across spaces up to Z square feet", and both letters had come through from a template unfilled. A model won't cite a number that isn't there, and a viewer stops trusting you the moment they see one. Filling them meant going to Polycam's own stated specification, which is about an inch under typical indoor conditions. A 2024 field study gave us corroborating figures at close scanning distances, and we noted it without leaning on it, because its test conditions weren't indoor rooms.</p>
-        <p>The third was that the scripts described a workflow the app doesn't have. The takeoff script said to copy numbers out of the Spatial Report into Excel. The real export is a CSV with labelled columns for room, description, and value. The difference matters for citation as much as for accuracy. "Copy the numbers" is not something a model can quote as an instruction, and "export the CSV, then map the room and wall area columns to your takeoff template" is.</p>
+        <h2 class="h-md">A video speaks to more than its viewers.</h2>
+        <p>Answer engine optimization, or AEO, is the act of creating content such that an AI system answering someone's question quotes you rather than paraphrasing somebody else. For a blog post the mechanism is simple, because the model reads the text. For a video it reads the description, the chapter markers, the transcript, and, as far as we can tell, most reliably a dense summary paragraph at the close. This structure turned out not to fight with what keeps a person watching. If the first sentence states the answer, the hook can follow it rather than replace it.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
         <h2 class="h-md">Eight rules, and a fact basis stapled to every script.</h2>
-        <p>The framework is eight structural rules. Open with one sentence that answers the question in the title. Build each section as a question and an answer that survives being quoted on its own. Attach a source to every number. Close on a dense summary paragraph written for extraction rather than for a listener. Keep the call to action out of that paragraph so neither one dilutes the other. Say where the tool stops working, because a stated limit reads as trustworthy rather than as a caveat. Match the on-screen text to the spoken claim. Put the pain narrative after the answer instead of in front of it.</p>
-        <p>Six videos have gone out under it. The first four scripts covered a material takeoff from a phone scan, a scan-to-CAD DWG workflow, a comparison of five floor plan apps, and an explainer separating generative AI from the detection-based kind. Each script was delivered with a fact-basis appendix beside it: every competitor claim traced to that company's own pricing page or documentation, with the URL and the date we checked it.</p>
-        <p>Claude did the drafting and the critique at every stage, finding the questions nobody had answered, proposing structure, flagging the placeholders, hunting for primary sources. What it couldn't do was the part that decided things. Confirming an internal specification that isn't published anywhere. Judging which accuracy figure applies to which conditions. Deciding what a competitor claim needed before anyone stood in front of a camera and said it. No claim reached a final script on the model's confidence alone.</p>
-        <p>The comparison video was the hard one. Five companies' live pricing, some of it loading dynamically and returning nothing, some of it available only by contacting a salesperson. We had written up one competitor as unable to generate floor plans from phone scans, and a FAQ the client sent us said it could. We fixed that before the recording rather than after it, which was the whole point of the change.</p>
+        <p>The framework we designed used eight structural rules. Open with one sentence that answers the question in the title. Build each section as a question and an answer that survives being quoted on its own. Attach a source to every number. Close on a dense summary paragraph written for extraction, rather than storytelling for a listener. Keep the call to action out of that paragraph so neither one dilutes the other. Be honest: disclose where Polycam stops working, because a stated limit reads as trustworthy rather than as a caveat. Match the on-screen text to the spoken claim. Put the pain narrative after the answer instead of in front of it.</p>
+        <p>Six videos have been scripted, shot, edited, and launched using this pipeline. The first four scripts covered a material takeoff from a phone scan, a scan-to-CAD DWG workflow, a comparison of five floor plan apps, and an explainer separating generative AI from the detection-based kind. Each script was delivered with a fact-basis appendix beside it: every competitor claim traced to that company's own pricing page or documentation, with the URL and the date we checked it.</p>
+        <p>The comparison video between competitor products was the hardest one that required its own research pipeline. Five companies' live pricing, on products that all generate different outputs, have different pricing models, and require different devices. In order to compare apples to oranges we decided to create one hypothetical test case that we would price and spec for each product, and hold Polycam to the same standard as the others. This allowed us to write a script that presented genuinely new and useful knowledge about the entire 3D scanning industry, and Polycam saw it cited by AI soon after launch.</p>
         <div class="figures">
           <div class="figure"><span class="n num">2&times;</span><span class="l">AI citation rate after launch, Polycam's measurement over one month</span></div>
-          <div class="figure"><span class="n num">6</span><span class="l">videos published under the framework so far</span></div>
-          <div class="figure"><span class="n num">1 hr</span><span class="l">to scan what a client estimated at 16 hours by hand</span></div>
+          <div class="figure"><span class="n num">6</span><span class="l">videos published under the framework to date</span></div>
         </div>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What's next</p>
         <h2 class="h-md">The framework is the starting input now.</h2>
-        <p>The eight rules are a system prompt, and it goes in alongside the source article to produce each next draft. Polycam reported the citation rate doubling in the month after the first videos went up. That's their measurement rather than ours, and one month is a short window, so we'd treat it as an early signal instead of a settled result. The engagement is ongoing and the next scripts are in it.</p>
+        <p>The eight rules are a system prompt, and it goes in alongside the source article to produce each next video. Polycam reported the citation rate doubling in the month after the first videos went up. That's their measurement rather than ours, and one month is a short window, so we'd treat it as an early signal instead of a settled result. The engagement is ongoing.</p>
       </section>
     </article>
 
@@ -92,7 +88,7 @@
 
   <section class="wrap study-next">
     <p class="eyebrow">Next</p>
-    <a class="h-md link" href="/work/forgiveness/">Teaching Forgiveness &rarr;</a>
+    <a class="h-md link" href="/work/forgiveness/">Global Forgiveness Movement &rarr;</a>
   </section>
 </main>
 
