@@ -37,11 +37,14 @@ true, future for what hasn't happened yet. Wyatt's rulings on the audit's three 
   blog posts about ai-citable topics into scripts."*
 
 **Pastry Pirates dates:** *"i built it 7/4 to 8/2 launch publicly online."* That is about four weeks,
-not the six he gave earlier the same day; put back to him, not yet reconciled on the page.
+not the six he gave earlier the same day. The page, its meta description, the Work card and the
+graph tile all say four weeks (commit 7966e35). Still open with Wyatt: the page's rail says "July to
+September 2026" and a figure counts commits from July 14 to September 1 (Review 39).
 
 **Go-ahead:** *"yes apply the 30%ish cut rule to the 5 studies i finished"*: Spatial Equity, What
 They're Buying, Polycam, Global Forgiveness Movement, ClaudeKit. Pour, How to Change Institutions and
-Pastry Pirates wait until he finishes editing them.
+Pastry Pirates waited until he finished editing them; then: *"okay i'm finished with my edits. you
+can do the last three work pages."* All eight were rewritten in commit 7966e35.
 
 ---
 
@@ -53,6 +56,7 @@ Wyatt renamed the Work card in the inline editor, was asked whether to keep it o
 *"it should be Global Forgiveness Movement."* Replaces "Teaching Forgiveness".
 
 **Pastry Pirates shipped in six weeks, not seven.** Wyatt: *"Pastry Pirates was up in 6."*
+*(Superseded the same evening by his dates, July 4 to August 2: four weeks. See the entry above.)*
 
 **Wyatt Roy is named on every study's With row.** Wyatt: *"Add me as a name in every 'with' section of
 the work pages."* He goes first. This amends the 2026-09-02 founder entry's "the site hides that it is
