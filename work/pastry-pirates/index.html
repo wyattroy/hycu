@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Pastry Pirates &middot; Hycu</title>
-  <meta name="description" content="A board game balanced by fifty thousand simulated games and shipped as an online multiplayer game in six weeks.">
+  <meta name="description" content="A board game balanced by fifty thousand simulated games and shipped as an online multiplayer game in four weeks.">
   <link rel="canonical" href="https://hycudesign.com/work/pastry-pirates/">
   <meta property="og:image" content="https://hycudesign.com/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -37,8 +37,8 @@
   <header class="wrap study-head">
     <p class="eyebrow">Studio &middot; Product design &middot; 2026</p>
     <h1 class="proj">Pastry Pirates</h1>
-    <h2 class="h-lg">Fifty thousand simulated games, then a shipped multiplayer game, in six weeks.</h2>
-    <p class="study-intro">A board game about plundering the Caribbean for baking ingredients. We treated its rules as a system, simulated it until the numbers settled, and shipped it online at <a class="link" href="https://playpastrypirates.com/">playpastrypirates.com</a>.</p>
+    <h2 class="h-lg">Fifty thousand simulated games, then an online multiplayer game, in four weeks.</h2>
+    <p class="study-intro">A board game about plundering the Caribbean for baking ingredients. We simulated its rules until they balanced, then shipped it online at <a class="link" href="https://playpastrypirates.com/">playpastrypirates.com</a>.</p>
   </header>
 
   <div class="wrap study-body">
@@ -46,33 +46,33 @@
       <section class="beat">
         <p class="eyebrow">Starting point</p>
         <h2 class="h-md">A game that was fun and not fair.</h2>
-        <p>Pastry Pirates started as a physical board game: sail between islands, buy cocoa and flour, dodge the other captains, get home and bake. Everyone who played it liked it. Everyone who played it twice noticed that one strategy won too often. That's a rules problem, and a rules problem is a systems problem: which rules produce games that are close, quick, and different from each other?</p>
-        <p>We took it on as a studio project, which is how we test our own methods before we use them on a client's money.</p>
+        <p>Pastry Pirates began as a board game: sail between islands, buy cocoa and flour, dodge the other captains, get home and bake. People liked it, but repeat players saw one strategy win too often. So we asked which rules would make games close, quick and varied.</p>
+        <p>We took it on as a studio project, to test our methods before client work.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">Play it fifty thousand times and the rules tell you what they do.</h2>
-        <p>We wrote a simulation engine in Python and ran tournaments between strategies: the hoarder, the trader, the raider, the one who sails straight home. Roughly 50,000 games later we had win rates for every rule variant, the exact odds behind the coin flips, and a ruleset where no strategy wins more than its share. Several rules we were attached to were removed. One we'd thought was decorative turned out to be what kept games close.</p>
-        <p>The lesson we keep reusing: if you can simulate a system, do that before you argue about it.</p>
+        <h2 class="h-md">Simulation shows what each rule does.</h2>
+        <p>Our Python simulation had strategies play each other: the hoarder, the trader, the raider, and the one who sails straight home. We got win rates for each rule variant, exact coin-flip odds, and a ruleset where no strategy wins more than its share. We cut several rules we liked. One that seemed decorative turned out to keep games close.</p>
+        <p>The lesson we still use: simulate a system first, then decide together.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
-        <h2 class="h-md">Shipped online, with a physical edition.</h2>
-        <p>The game now runs in the browser for one to four people, each on their own device, with pirate bots filling empty seats. A physical edition is in production from the same rules.</p>
-        <p>Building it this fast was its own experiment. Most of the code was written by AI agents working under a process we designed: one agent proves a defect exists before another is allowed to fix it, a "Sea Trial" process QAs and tests the entire game automatically after every change, and a checker trusts evidence rather than reports. We packaged that process as <a class="link" href="/work/claude-kit/">ClaudeKit</a>, and it ran the making of this site.</p>
+        <h2 class="h-md">Online now, with a physical edition on the way.</h2>
+        <p>The game runs in the browser, each player on their own device. A physical edition with the same rules is in production.</p>
+        <p>AI agents wrote most of the code, under a process we designed. One agent proved a defect existed before another could fix it. A "Sea Trial" tested the whole game automatically after each change. A checker relied on evidence, not reports. We packaged the process as <a class="link" href="/work/claude-kit/">ClaudeKit</a> and used it to make this site.</p>
         <div class="figures">
           <div class="figure"><span class="n num">50,000</span><span class="l">simulated games behind the ruleset</span></div>
           <div class="figure"><span class="n num">2,134</span><span class="l">commits between July 14 and September 1</span></div>
-          <div class="figure"><span class="n num">1&ndash;4</span><span class="l">players online, bots fill the rest</span></div>
+          <div class="figure"><span class="n num">1&ndash;4</span><span class="l">players online, pirate bots fill the rest</span></div>
         </div>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What changed</p>
         <h2 class="h-md">A working game, and a working method.</h2>
-        <p>People play it. More usefully for the studio, we now have a repeatable way to balance any rule-based system by simulation, and a way to run AI teams that we trust with real work.</p>
+        <p>People play it. We can now balance rule-based systems by simulation, and run AI teams we trust with real work.</p>
       </section>
     </article>
 
