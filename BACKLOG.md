@@ -50,9 +50,6 @@ fallback's ground, and nothing reads it. Delete it and the comment. (CEO Review 
 **Editor: text inside the home Work cards cannot be drag-selected.** The cards are `<a>` elements,
 and browsers drag a link rather than select its text. Untested. (CEO Review 9)
 
-**Editor: one failed save leaves an element unmatchable until reload.** `data-failed` is never
-removed. Clear it on the next successful edit or after a delay. Fails safe today. (CEO Review 11)
-
 **Editor test: three branches nobody exercises.** The refusal when the page and the file disagree
 on a count; the meta-tag case against the substring matcher; and the trailing-nbsp strip with the
 caret collapse. (CEO Review 11)
@@ -62,10 +59,9 @@ directory it is run in, and once outlived its session by eleven hours; `EDITING.
 run `python3 -m http.server 8000` by hand. Make the script print its root, or derive the port from
 the working tree so two worktrees cannot collide, and make the two agree. (session, 2026-09-08)
 
-**Voice work needs its reference document.** Wyatt named the forgiveness-platform proposal as the
-standard for the site's voice, and two voice passes were written without it: it is not in this
-repo, and its password must not be automated. Before the next voice pass, get it readable by the
-session doing it. When counting demonstrative openers ("That looks like…"), match the tic itself,
+**Voice work has its reference now: `.claude/memory/ETHOS.md`.** On 2026-09-14 Wyatt named his book
+and the Pour care manifesto as the site's ethos, replacing the forgiveness-platform proposal (which
+was never readable here). When counting demonstrative openers ("That looks like…"), match the tic itself,
 not just "That/This + to be": the honest site-wide count is 2, both judged worth keeping —
 `work/spatial-equity/index.html:52` and `work/oral-care-research/index.html:52`. (CEO Reviews 25, 26)
 

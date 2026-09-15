@@ -129,6 +129,7 @@ not commit it and do not hand-merge it.
 
 | File | What it is |
 |---|---|
+| `.claude/memory/ETHOS.md` | **How the site sees people.** Wyatt's book and care manifesto, and what they mean for a sentence. Read it before writing any copy. |
 | `.claude/memory/DECISIONS.md` | **What Wyatt has already ruled.** Newest at top; append the moment he rules. Read it before proposing anything he has settled. |
 | `.claude/OFFICERS.md` | The officer adapter: settings, and the repo facts an officer needs. |
 | `.claude/reviews/` | Every CEO verdict, one per file. |

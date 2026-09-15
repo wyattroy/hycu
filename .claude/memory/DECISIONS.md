@@ -4,6 +4,85 @@
 
 ---
 
+## 2026-09-14 — Review 39's open questions, ruled
+
+- **Pastry Pirates shipped in four weeks and is still improving.** Wyatt: *"shipped in 4 weeks with
+  ongoing improvements. July 2026, ongoing is great."* The rail's Duration is "July 2026, ongoing";
+  the four weeks stay in the headline, the Work card and the graph tile.
+- **Xavaar stays on the Spatial Equity With row, and "illustrations" stays after Julia Mattis.**
+  Wyatt: *"Yes Xavaar stays on the With row. Don't drop 'illustrations'."* The With row credits the
+  team; the team-credit ruling below is about prose.
+- **"Customers" is right on the What They're Buying card.** Wyatt: *"the research was with the
+  brand's existing customers."*
+- **Pour's facility is "a healthcare facility"** in the study headline and on the Work page (card
+  and intro line). Wyatt: *"make both say 'healthcare facility'."* The eyebrow and rail keep "a
+  residential eating-disorder facility".
+- **The book is about institutions, and its method applies to any organization.** Wyatt: *"keep
+  institutions; but the methodology applies to organizations too (you read the book)."* The study
+  headline and the Work card both say "changing an institution / institutions, or any organization".
+
+---
+
+## 2026-09-14 — Credit the team, not individual contributions
+
+**Study copy does not credit individual team members for their parts of the work.** Wyatt, removing
+"Xavaar Quaranto modeled the school's finances" from Spatial Equity: *"we worked as a team; we don't
+credit individual team members for their contributions."* The With row in each study's rail still
+names everyone who worked on it (see the collaborators ruling of 2026-09-02); prose says "we".
+
+---
+
+## 2026-09-14 — The site's ethos is the book and the care manifesto; copy stops being combative
+
+**`.claude/memory/ETHOS.md` is the standard for how the site sees people.** Wyatt, after reading copy
+full of "arguing": *"i'm so confused why so much of your content is combative. I want you to read my
+book and realize that THIS is my manifesto. THIS is the ethos i want to imbue in my site -- not
+necessarily through its language, but this is how I move through the world."* The sources are his
+book, How to Change Institutions, and the Pour care manifesto. Both are summarised in ETHOS.md, and
+the manifesto is reproduced in full. It shows in stance, not vocabulary: no opponents, curiosity
+first, findings offered as a gift, feedback and repair as care. This replaces the BACKLOG note that
+voice work needed the forgiveness-platform proposal as its reference.
+
+**Clarity beats sounding like Wyatt.** Wyatt, same day: *"I'm realizing that I'm not that great a
+writer, and I trained you to write like me, but my writing isn't very clear."* He asked for a tense
+audit and for every study to be clearer and about 30% shorter.
+
+**The tense rule** (ruled the same evening): past tense for what happened, present for what is still
+true, future for what hasn't happened yet. Wyatt's rulings on the audit's three questions:
+- *"headlines are fine"*: a beat headline may state a finding as a present-tense truth.
+- Pour's opening "Picture a counselor…" scene stays in present tense, the one exception: *"agree."*
+- **Polycam's brief:** *"it wasn't a test about WHETHER videos get cited by AI, we know they do. it
+  was testing whether they could INFLUENCE the videos cited by AI. we did that by turning existing
+  blog posts about ai-citable topics into scripts."*
+
+**Pastry Pirates dates:** *"i built it 7/4 to 8/2 launch publicly online."* That is about four weeks,
+not the six he gave earlier the same day. The page, its meta description, the Work card and the
+graph tile all say four weeks (commit 7966e35). Still open with Wyatt: the page's rail says "July to
+September 2026" and a figure counts commits from July 14 to September 1 (Review 39).
+
+**Go-ahead:** *"yes apply the 30%ish cut rule to the 5 studies i finished"*: Spatial Equity, What
+They're Buying, Polycam, Global Forgiveness Movement, ClaudeKit. Pour, How to Change Institutions and
+Pastry Pirates waited until he finished editing them; then: *"okay i'm finished with my edits. you
+can do the last three work pages."* All eight were rewritten in commit 7966e35.
+
+---
+
+## 2026-09-14 — The Forgiveness study is "Global Forgiveness Movement", and Wyatt is named on the With rows
+
+**The Forgiveness project is named "Global Forgiveness Movement"** everywhere a project name lives: the
+graph tile, the page title, the Work card and the study head, plus the next-study link from Polycam.
+Wyatt renamed the Work card in the inline editor, was asked whether to keep it or revert, and said:
+*"it should be Global Forgiveness Movement."* Replaces "Teaching Forgiveness".
+
+**Pastry Pirates shipped in six weeks, not seven.** Wyatt: *"Pastry Pirates was up in 6."*
+*(Superseded the same evening by his dates, July 4 to August 2: four weeks. See the entry above.)*
+
+**Wyatt Roy is named on every study's With row.** Wyatt: *"Add me as a name in every 'with' section of
+the work pages."* He goes first. This amends the 2026-09-02 founder entry's "the site hides that it is
+a solo practice" only this far: the founder is credited alongside collaborators. "We" still stands.
+
+---
+
 ## 2026-09-12 — The swing is 30 seconds each way, and links show a preview card
 
 **The idle camera swing is 30 seconds each way**, a 60-second round trip. Wyatt, the same evening:
