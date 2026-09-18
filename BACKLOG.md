@@ -17,10 +17,6 @@ those numbers — `git show 03ad0f7:.claude/BACKLOG.md` is the file they point a
 named"; the oral-care study's says "unnamed by agreement". Both are true, but a reader who opens
 both sees two different house styles. Pick one form and both rails take it.
 
-**Polycam's position on the graph.** Its `reach` is 0.7 in `data/projects.json`. A CEO review argued
-for 0.5, which is the number Wyatt's own brief used: at 0.7, six scripts on a client's YouTube
-channel sit above a published book (0.66) and a shipped public game (0.48). His call.
-
 **One sentence on the Studio page.** On 2026-09-03 a session's commit swept up an edit Wyatt had
 made by hand at `studio/index.html:69`, replacing a sentence about local speech models with "A team
 hierarchy of agents that hold each other accountable." Nothing false shipped, but a specific
