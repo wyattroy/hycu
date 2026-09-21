@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ClaudeKit &middot; Hycu</title>
-  <meta name="description" content="ClaudeKit gives AI coding agents the structure of a company: a mentor, a crew with disjoint jobs, and officers who judge whether what was asked for actually happened.">
+  <meta name="description" content="ClaudeKit scores both halves of working with an AI model: a mentor grades the request before the work runs, a critic grades what came back, and a scorecard shows both on one board.">
   <link rel="canonical" href="https://hycudesign.com/work/claude-kit/">
   <meta property="og:image" content="https://hycudesign.com/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -37,37 +37,38 @@
   <header class="wrap study-head">
     <p class="eyebrow">Studio &middot; Systems design &middot; 2026</p>
     <h1 class="proj">ClaudeKit</h1>
-    <h2 class="h-lg">An operating system for AI agents that run like a company, and teach the person running them.</h2>
-    <p class="study-intro">AI coding agents are fast, capable, and forgetful. ClaudeKit gives them the structure of a small firm: a mentor, a crew, and two officers. We built this site with it, and until September 9 every push went through an officer's review.</p>
+    <h2 class="h-lg">Two scores for every request: one for how it was asked, one for what came back.</h2>
+    <p class="study-intro">ClaudeKit is our kit for working with Claude Code. A mentor grades each request before the work runs. A critic grades the result afterwards. A scorecard puts both numbers on one board, so the person asking is measured alongside the model answering.</p>
   </header>
 
   <div class="wrap study-body">
     <article>
       <section class="beat">
         <p class="eyebrow">Starting point</p>
-        <h2 class="h-md">Inside the work, the gaps are hard to see.</h2>
-        <p>While we built <a class="link" href="/work/pastry-pirates/">Pastry Pirates</a> with AI agents, one session took on a thirty-five-item playtest. It fixed twenty-two items, checked four, and reported the work done. Nothing in its report was false. From inside the work, the gap was hard to see.</p>
-        <p>The second problem was memory. AI chat sessions may sound human, but they work in utterly inhuman ways. Each session starts blank, so decisions were made twice and all the judgment rested on the person directing the work.</p>
+        <h2 class="h-md">Two people shape the work. Only one of them was being measured.</h2>
+        <p>When someone works with an AI model, the result comes from two places: the request they write, and what the model does with it. The model's half has always been easy to review, because you can read the change it made. The request that started it scrolls past and is rarely written down.</p>
+        <p>So any measure of the work was really a measure of the model alone. When a round went wrong, there was no way to tell whether the ask or the answer was the weak part.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">The memory lasts. Each agent starts fresh.</h2>
-        <p>The fixes were organizational, not technical. They mirror the way human organizations run. Accountability: someone other than the builder reviews the work, because fresh eyes see what the builder can't. Red-proofing: a failing check proves a defect exists before anyone fixes it. Institutional memory: each new agent first reads files that record what was decided and why, what the last reviewer found, and what waits on a human.</p>
-        <p>That freshness wears off. A reviewer who has been in the room all week comes to share your blind spots. Just like in the real world.</p>
+        <h2 class="h-md">The gap between the two scores is the useful number.</h2>
+        <p>The mentor grades the request before any work runs, before anyone knows how it will turn out. The critic grades what came back against what was asked. Read together, the two scores show where a round went wrong. A clear request that still missed points to the model. A vague request that landed anyway was luck, and luck isn't a process. When both are low, the mentor's note says why. When both are high, the process worked.</p>
+        <p>Each side has its own measures. A request is scored on its framing, its leverage and what it carried forward. A delivery is scored on whether the asked-for thing happened, the evidence behind it, and whether it stayed in scope.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
-        <h2 class="h-md">A mentor, a crew, and two officers.</h2>
-        <p>The mentor coaches the person, not the code. Before a request runs, it shows a clearer way to ask. The crew takes every task through the same steps. A measurer proves the fault. Builders work on separate files. A tester uses the real product. A checker reads the evidence, not just the report. A sweeper finds the same fault elsewhere.</p>
-        <p>The CTO looks after agents working unattended and keeps production safe. The CEO takes the person's request in their exact words and answers one question: did what they asked for happen? A one-page adapter in each repo gives the officers its facts, without copies that go stale.</p>
+        <h2 class="h-md">A mentor, a critic, and a scorecard.</h2>
+        <p>The mentor works before anything runs. It suggests how the request could be framed more clearly, then grades it. The critic is a new agent every time. It has no memory of how the work was made, only the request and the result, so it can see what the builder could not. The scorecard turns both sets of grades into XP, levels, streaks and badges on a single board.</p>
+        <p>Grades stay in the project where they were earned, in a record that is only ever added to. Everything on the board is worked out from that record each time it is shown, so a streak that ended two days ago reads zero. A section called &ldquo;What this could not see&rdquo; lists what is missing, such as a side left ungraded or turns where no grade followed. The kit asks the person using it what to call them, once, instead of guessing.</p>
       </section>
 
       <section class="beat">
-        <p class="eyebrow">What changed</p>
-        <h2 class="h-md">It reviewed this site's headline before you read it.</h2>
-        <p>The CEO's first review was the sentence at the top of our homepage. It found six bugs. Our takeaway: whenever we use a tool, we also build better ones, like a carpenter who spends an hour on a jig so each cut takes seconds. Fix the tool, redesign the system.</p>
+        <p class="eyebrow">What's next</p>
+        <h2 class="h-md">Smaller now, and clear about what it hasn't proved yet.</h2>
+        <p>In September 2026 we rebuilt the kit and took out what it had outgrown: two officer roles, a crew of six agents, and a safeguard built for <a class="link" href="/work/pastry-pirates/">Pastry Pirates</a>' unattended build. What remains is one plugin with three parts. The kit reviews its own work too. Its critic graded the rebuild partial, 72 out of 100, and was right.</p>
+        <p>The next step is the one everything else rests on. Nobody has yet installed the plugin and watched it run through a full live session, so that comes first.</p>
       </section>
     </article>
 
@@ -77,7 +78,7 @@
         <li><span class="k">Capabilities</span><span>Systems design, Product design</span></li>
         <li><span class="k">Engagement</span><span>Self-initiated</span></li>
         <li><span class="k">Duration</span><span>August 2026, ongoing</span></li>
-        <li><span class="k">Delivered</span><span>Mentor, team, and officer plugins for Claude Code; memory and adapter templates; an install that works on any machine</span></li>
+        <li><span class="k">Delivered</span><span>A Claude Code plugin with a mentor, a critic and a scorecard</span></li>
         <li><span class="k">With</span><span>Wyatt Roy</span></li>
       </ul>
     </aside>
