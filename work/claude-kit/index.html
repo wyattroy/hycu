@@ -37,38 +37,39 @@
   <header class="wrap study-head">
     <p class="eyebrow">Studio &middot; Systems design &middot; 2026</p>
     <h1 class="proj">ClaudeKit</h1>
-    <h2 class="h-lg">Two scores for every request: one for how it was asked, one for what came back.</h2>
-    <p class="study-intro">ClaudeKit is our kit for working with Claude Code. A mentor grades each request before the work runs. A critic grades the result afterwards. A scorecard puts both numbers on one board, so the person asking is measured alongside the model answering.</p>
+    <h2 class="h-lg">A suite of tools for teaching Claude, and its users, to work better</h2>
+    <p class="study-intro">ClaudeKit is our kit for working with Claude Code. A mentor grades each prompt before the work runs. A critic grades the result afterwards. A scorecard keeps everyone honest.</p>
   </header>
 
   <div class="wrap study-body">
     <article>
       <section class="beat">
         <p class="eyebrow">Starting point</p>
-        <h2 class="h-md">Two people shape the work. Only one of them was being measured.</h2>
-        <p>When someone works with an AI model, the result comes from two places: the request they write, and what the model does with it. The model's half has always been easy to review, because you can read the change it made. The request that started it scrolls past and is rarely written down.</p>
-        <p>So any measure of the work was really a measure of the model alone. When a round went wrong, there was no way to tell whether the ask or the answer was the weak part.</p>
+        <h2 class="h-md">AI Models aren't human.</h2>
+        <p>They don't have persistent memory, unless you tell them what to remember. They get "tired" when their context runs out. They don't communicate across sessions, unless you tell them to. Yet in many ways, humans aren't much better.</p>
+        <p>ClaudeKit is the designer's answer to an engineering problem. How can we help humans think more like the AIs they collaborate with? And how can we apply human accountability processes to AIs so the work they do is higher quality before human eyes see it?</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">The gap between the two scores is the useful number.</h2>
-        <p>The mentor grades the request before any work runs, before anyone knows how it will turn out. The critic grades what came back against what was asked. Read together, the two scores show where a round went wrong. A clear request that still missed points to the model. A vague request that landed anyway was luck, and luck isn't a process. When both are low, the mentor's note says why. When both are high, the process worked.</p>
-        <p>Each side has its own measures. A request is scored on its framing, its leverage and what it carried forward. A delivery is scored on whether the asked-for thing happened, the evidence behind it, and whether it stayed in scope.</p>
+        <h2 class="h-md">Everyone can learn.</h2>
+        <p>Both humans and AIs respond to feedback. We try, we fail, we adjust, we try again. What was missing in our AI development systems was the feedback loop: we didn't know how to get better; and neither did Claude. We both kept making the same mistakes when doing our parts of the work. As designers, we value feedback as the highest gift. So we built a tool to integrate it into every session, automatically.</p>
+        <p><br></p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
         <h2 class="h-md">A mentor, a critic, and a scorecard.</h2>
-        <p>The mentor works before anything runs. It suggests how the request could be framed more clearly, then grades it. The critic is a new agent every time. It has no memory of how the work was made, only the request and the result, so it can see what the builder could not. The scorecard turns both sets of grades into XP, levels, streaks and badges on a single board.</p>
-        <p>Grades stay in the project where they were earned, in a record that is only ever added to. Everything on the board is worked out from that record each time it is shown, so a streak that ended two days ago reads zero. A section called &ldquo;What this could not see&rdquo; lists what is missing, such as a side left ungraded or turns where no grade followed. The kit asks the person using it what to call them, once, instead of guessing.</p>
+        <p>The Mentor reads your prompt immediately, before sending it off to be executed. It evaluates how clear you have been with your intention and your directions. It gives you feedback about what you did well, and what will cost you, either in the AI making assumptions, or taking more resources to hunt down answers itself. It even grades you, and keeps track of your scores in a dashboard so you can try to improve over time. Every day it researches the newest best practices around using this specific AI model, and teaches you new tricks.</p>
+        <p>The Critic responds when called. Whenever you want the AI to verify its work before showing you, you can say "show your progress to the Critic and take its feedback before showing me," or simply "critic" which does the same thing. This spawns a separate agent who is fed two things: your instructions, and the work that was done. Then it critiques the work -- did it execute the instructions? Lessons from the failures are fed into a document called Hard Won Lessons so that the AI can also learn from its mistakes.</p>
+        <p><br></p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What's next</p>
-        <h2 class="h-md">Smaller now, and clear about what it hasn't proved yet.</h2>
-        <p>In September 2026 we rebuilt the kit and took out what it had outgrown: two officer roles, a crew of six agents, and a safeguard built for <a class="link" href="/work/pastry-pirates/">Pastry Pirates</a>' unattended build. What remains is one plugin with three parts. The kit reviews its own work too. Its critic graded the rebuild partial, 72 out of 100, and was right.</p>
-        <p>The next step is the one everything else rests on. Nobody has yet installed the plugin and watched it run through a full live session, so that comes first.</p>
+        <h2 class="h-md">More tools</h2>
+        <p>The Mentor and Critic are the only tools to make it public from our R&amp;D phase, because they were most genuinely useful. But ClaudeKit is ever evolving, as both we, and our AI pipelines, develop.</p>
+        <p>Clone the repo and add it to your next Claude Code project. Try it out. And most importantly: give us feedback.</p>
       </section>
     </article>
 
