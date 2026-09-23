@@ -61,13 +61,6 @@ was never readable here). When counting demonstrative openers ("That looks like�
 not just "That/This + to be": the honest site-wide count is 2, both judged worth keeping —
 `work/spatial-equity/index.html:52` and `work/oral-care-research/index.html:52`. (CEO Reviews 25, 26)
 
-### Parked — do not raise until Wyatt does
-
-**ClaudeKit going public.** Two changes land together the day the repo opens: add the line saying it
-is public (approved 2026-09-03), and raise the tile's `reach` in `data/projects.json` from 0.25 to
-0.8. Verify with `gh repo view wyattroy/claude-kit` first. Wyatt, 2026-09-03: leave 0.25 —
-"claude-kit needs serious work before it can be made public." (CEO Review 22)
-
 ### Known non-issue
 
 **`.claude/HANDOFF-GRAPH-CUBES.md` says `npm test` fails at 820px on `main`.** It does not
