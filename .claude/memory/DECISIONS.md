@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-09-22 — ClaudeKit is public, and its page describes the kit that exists
+
+**The claude-kit repo is public** (created 2026-09-22, verified with `gh repo view`), so the two
+changes parked since 2026-09-03 both landed: the study page links the repo, and the graph tile's
+`reach` in `data/projects.json` went from 0.25 to 0.8. Wyatt: *"yes link the repo and raise the
+reach, then merge it."*
+
+**The ClaudeKit page is Wyatt's own copy**, written in the inline editor, with a grammar pass and
+three claims corrected against claude-kit's `main` (7755b29): the critic writes a verdict and a
+lesson but no score since 2026-09-22, the playbook refreshes weekly rather than daily, and the
+scorecard ships alongside the Mentor and Critic. "Hard Won Lessons" is real —
+`plugins/kit/bin/lessons.mjs` writes `.claude/HARD-WON-LESSONS.md`.
+
+---
+
 ## 2026-09-14 — Review 39's open questions, ruled
 
 - **Pastry Pirates shipped in four weeks and is still improving.** Wyatt: *"shipped in 4 weeks with

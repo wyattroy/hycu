@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ClaudeKit &middot; Hycu</title>
-  <meta name="description" content="ClaudeKit gives AI coding agents the structure of a company: a mentor, a crew with disjoint jobs, and officers who judge whether what was asked for actually happened.">
+  <meta name="description" content="ClaudeKit scores both halves of working with an AI model: a mentor grades the request before the work runs, a critic grades what came back, and a scorecard shows both on one board.">
   <link rel="canonical" href="https://hycudesign.com/work/claude-kit/">
   <meta property="og:image" content="https://hycudesign.com/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -37,37 +37,37 @@
   <header class="wrap study-head">
     <p class="eyebrow">Studio &middot; Systems design &middot; 2026</p>
     <h1 class="proj">ClaudeKit</h1>
-    <h2 class="h-lg">An operating system for AI agents that run like a company, and teach the person running them.</h2>
-    <p class="study-intro">AI coding agents are fast, capable, and forgetful. ClaudeKit gives them the structure of a small firm: a mentor, a crew, and two officers. We built this site with it, and until September 9 every push went through an officer's review.</p>
+    <h2 class="h-lg">A suite of tools for teaching Claude, and its users, to work better.</h2>
+    <p class="study-intro">ClaudeKit is our kit for working with Claude Code. A mentor grades each prompt before the work runs. A critic reviews the result afterwards. A scorecard keeps everyone honest.</p>
   </header>
 
   <div class="wrap study-body">
     <article>
       <section class="beat">
         <p class="eyebrow">Starting point</p>
-        <h2 class="h-md">Inside the work, the gaps are hard to see.</h2>
-        <p>While we built <a class="link" href="/work/pastry-pirates/">Pastry Pirates</a> with AI agents, one session took on a thirty-five-item playtest. It fixed twenty-two items, checked four, and reported the work done. Nothing in its report was false. From inside the work, the gap was hard to see.</p>
-        <p>The second problem was memory. AI chat sessions may sound human, but they work in utterly inhuman ways. Each session starts blank, so decisions were made twice and all the judgment rested on the person directing the work.</p>
+        <h2 class="h-md">AI models aren't human.</h2>
+        <p>They don't have persistent memory, unless you tell them what to remember. They get "tired" when their context runs out. They don't communicate across sessions, unless you tell them to. Yet in many ways, humans aren't much better.</p>
+        <p>ClaudeKit is the designer's answer to an engineering problem. How can we help humans think more like the AIs they collaborate with? And how can we apply human accountability processes to AIs so the work they do is higher quality before human eyes see it?</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">What we found</p>
-        <h2 class="h-md">The memory lasts. Each agent starts fresh.</h2>
-        <p>The fixes were organizational, not technical. They mirror the way human organizations run. Accountability: someone other than the builder reviews the work, because fresh eyes see what the builder can't. Red-proofing: a failing check proves a defect exists before anyone fixes it. Institutional memory: each new agent first reads files that record what was decided and why, what the last reviewer found, and what waits on a human.</p>
-        <p>That freshness wears off. A reviewer who has been in the room all week comes to share your blind spots. Just like in the real world.</p>
+        <h2 class="h-md">Everyone can learn.</h2>
+        <p>Both humans and AIs respond to feedback. We try, we fail, we adjust, we try again. What was missing in our AI development systems was the feedback loop: we didn't know how to get better, and neither did Claude. We both kept making the same mistakes when doing our parts of the work. As designers, we value feedback as the highest gift. So we built a tool to integrate it into every session, automatically.</p>
       </section>
 
       <section class="beat">
         <p class="eyebrow">Where we went</p>
-        <h2 class="h-md">A mentor, a crew, and two officers.</h2>
-        <p>The mentor coaches the person, not the code. Before a request runs, it shows a clearer way to ask. The crew takes every task through the same steps. A measurer proves the fault. Builders work on separate files. A tester uses the real product. A checker reads the evidence, not just the report. A sweeper finds the same fault elsewhere.</p>
-        <p>The CTO looks after agents working unattended and keeps production safe. The CEO takes the person's request in their exact words and answers one question: did what they asked for happen? A one-page adapter in each repo gives the officers its facts, without copies that go stale.</p>
+        <h2 class="h-md">A mentor, a critic, and a scorecard.</h2>
+        <p>The Mentor reads your prompt immediately, before sending it off to be executed. It evaluates how clear you have been with your intention and your directions. It gives you feedback about what you did well, and what will cost you, either in the AI making assumptions or taking more resources to hunt down answers itself. It even grades you and keeps track of your scores in a dashboard so you can try to improve over time. Each week it checks whether its own advice has gone stale, researches what has changed in Claude Code, and teaches you the new tricks.</p>
+        <p>The Critic responds when called. Whenever you want the AI to verify its work before showing you, you can say "show your progress to the Critic and take its feedback before showing me," or simply "critic" which does the same thing. This spawns a separate agent who is fed two things: your instructions and the work that was done. Then it critiques the work: did it execute the instructions? Lessons from the failures are fed into a document called Hard Won Lessons so that the AI can also learn from its mistakes.</p>
       </section>
 
       <section class="beat">
-        <p class="eyebrow">What changed</p>
-        <h2 class="h-md">It reviewed this site's headline before you read it.</h2>
-        <p>The CEO's first review was the sentence at the top of our homepage. It found six bugs. Our takeaway: whenever we use a tool, we also build better ones, like a carpenter who spends an hour on a jig so each cut takes seconds. Fix the tool, redesign the system.</p>
+        <p class="eyebrow">What's next</p>
+        <h2 class="h-md">More tools.</h2>
+        <p>The Mentor, the Critic and the scorecard are the tools that made it out of our R&amp;D phase, because they were the most genuinely useful. But ClaudeKit is ever-evolving, as both we and our AI pipelines develop.</p>
+        <p>Clone <a class="link" href="https://github.com/wyattroy/claude-kit">the repo</a> and add it to your next Claude Code project. Try it out. And most importantly: give us feedback.</p>
       </section>
     </article>
 
@@ -77,7 +77,7 @@
         <li><span class="k">Capabilities</span><span>Systems design, Product design</span></li>
         <li><span class="k">Engagement</span><span>Self-initiated</span></li>
         <li><span class="k">Duration</span><span>August 2026, ongoing</span></li>
-        <li><span class="k">Delivered</span><span>Mentor, team, and officer plugins for Claude Code; memory and adapter templates; an install that works on any machine</span></li>
+        <li><span class="k">Delivered</span><span>A Claude Code plugin with a mentor, a critic and a scorecard</span></li>
         <li><span class="k">With</span><span>Wyatt Roy</span></li>
       </ul>
     </aside>
